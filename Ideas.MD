@@ -97,6 +97,8 @@ We don't need to build all the content, but the presentation must show these.
 
 ## Open questions
 
+_All answered on 9 Nov 2026 in `Design.MD`: Stages (D8), mocking internal systems (D14, ADR-0005, ADR-0006), personas (D12), real versus mocked (D15), data direction (D14: our app pushes live updates to the phone faces; personal data stays in the system of record, ADR-0005)._
+
 - Which of the six reference journey stages from the brief does the pathway builder map onto?
 - How do we mock the internal systems (Workday, Teams, IT provisioning) using public APIs or synthetic data only?
 - Which persona do we demo first, and which journeys carry the demo for each persona?

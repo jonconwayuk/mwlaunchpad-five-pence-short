@@ -1,0 +1,149 @@
+# New-joiner companion
+
+The LaunchPad '26 companion that takes a new joiner from unconditional offer to feeling connected and confident by Day 30. The whole onboarding journey is modelled, with the core concept as the focus. The demo leads with the internal orchestration side: the back end and pathway-building logic, with a front end over them (journey builder and library, pathway builder, observability). It is one web app with three faces: the Admin Portal (laptop-first), the Starter Preview (mobile) and the Manager and Buddy view (mobile). Changes made in the Admin Portal show up live in the mobile faces. Internal systems are mocked with synthetic data behind an interface. See ADR-0003.
+
+## Language
+
+**Journey**:
+A reusable, versioned template for one unit of onboarding work, such as Vetting or Device onboarding: a discrete, self-contained set of instructions. A Journey never refers to other Journeys and holds no dependencies or ordering; that logic belongs to the Pathway. Built and published by a journey owner. Tagged with job family, role, grade, platform and location so HR Partners can find it for a Pathway. Tag values come from fixed lists maintained by HR, not free text.
+_Avoid_: Journey block, journey package, step
+
+**Action**:
+One instruction inside a Journey. A Journey is an ordered list of Actions, each of one type:
+- **Read**: an info card the starter acknowledges.
+- **Notification**: a message sent to a chosen person; done as soon as it is sent. How chain reactions happen.
+- **Task**: one thing for one named owner (Starter, Line Manager, Buddy or HR) to do and tick off.
+- **Hidden automation**: a call to a mocked internal system behind an interface, never shown to the starter. Can set the Journey's Outcome.
+- **Choose**: the starter picks from options. The choice is kept with, and used only by, the Journey that asked; the Line Manager can see it. Journeys never share data with each other. A Choose can have a "flag answers at or below" setting: an answer at or below it creates a Task for the Line Manager.
+- **Provide**: the starter fills in a form or uploads something. The content is passed on to the system of record and not kept in the app; the app keeps only the fact that it was submitted.
+_Avoid_: Step, activity
+
+**To-do list**:
+A person's roll-up of the open Tasks they own, across every Journey and every starter they are involved with. A view, not something a journey owner builds.
+_Avoid_: Checklist, backlog, inbox
+
+**Pulse check**:
+A library Journey that asks the starter how connected and how confident they feel, each scored 1 to 5, and tells them their answers go to their Line Manager. Placed on a Pathway twice, unlocked by Timers at Day 14 and Day 30. A score of 2 or lower creates a Task for the Line Manager. Scores are seen only by the Line Manager, never the Buddy, and are rolled up by Pathway version to show whether a Pathway actually works.
+_Avoid_: Survey, feedback form, NPS
+
+**Pathway**:
+An HR Partner's arrangement of Journeys, as Pathway Items, that holds all the logic between them: which Journeys depend on which (Dependencies) and which apply to which Person (Conditions). Journeys with no unmet Dependencies can run at the same time, so one rule gives both sequence and parallel work. Because Conditions select Journeys by Person attributes, one Pathway can serve a whole family of similar starters rather than one starter. Tags on Journeys help HR find them, but tags do not create Pathways. Each Pathway has one live version, the only one that can be applied, plus a recorded version history and a count of how many times it has been applied. Only its owner publishes a new live version. Applying a Pathway snapshots the live version, so later changes reach only starters it is applied to afterwards (ADR-0002). A one-off change made for one starter is not saved as a new Pathway; it lives only in that starter's Applied Pathway.
+_Avoid_: Flow, process, plan, template
+
+**Pathway Item**:
+One Journey's place in a Pathway. Carries everything about how that Journey is used there: its Dependencies, its Condition, and whether it is mandatory. The same Journey can sit in many Pathways with different Pathway Items.
+_Avoid_: Step, node, slot
+
+**Dependency**:
+A rule on a Pathway Item that another Pathway Item or Milestone in the same Pathway must be Done (or hit), or a Timer must have fired, before this one becomes available. Defined only in the Pathway, never in the Journey.
+_Avoid_: Prerequisite, link, gate
+
+**Milestone**:
+A container on a Pathway that groups several Pathway Items which must be completed before the process moves on, such as "Cleared to start". A Milestone is hit when every mandatory Pathway Item inside it is Done; optional ones, and ones a Condition left out, do not hold it up. Pathway Items inside run at the same time unless they have Dependencies on each other. Other Pathway Items can depend on a Milestone as a whole. Milestones do not nest. The starter sees a Milestone being hit as a moment of progress, and sees what is left inside one not yet hit.
+_Avoid_: Group, container, scope, gate, phase
+
+**Timer**:
+A block on a Pathway that fires once, a set number of days after an Anchor, or before the Start date. It can unlock Pathway Items that depend on it, send a Reminder, or both. When an Anchor's date moves, the Timer's date moves with it.
+_Avoid_: Trigger, schedule, delay, wait
+
+**Anchor**:
+The event a Timer counts from. One of: Offer accepted, Start date, a chosen Pathway Item being Done, or a chosen Milestone being hit. Only the Start date can be counted back from.
+_Avoid_: Trigger event, start point
+
+**Reminder**:
+A one-off message a Timer sends to the starter, their Line Manager or their Buddy about a chosen Pathway Item. Skipped if that Pathway Item is already Done. Never repeats.
+_Avoid_: Nudge, notification, alert, chaser
+
+**Condition**:
+A rule on a Pathway Item that includes it only for Persons whose attributes match, such as location = Branch or job family = Technology, using the fixed tag lists. Resolved once, when the Pathway is applied to a Person. A Pathway Item with no Condition applies to everyone.
+_Avoid_: Branch, filter, rule
+
+**Applied Pathway**:
+One Pathway applied to one Person, recorded against that Person as a snapshot of the Pathway version used, including any one-off changes made for them, with a start date and each Journey's status. It cannot be reused for anyone else. Holds only the Pathway Items whose Conditions matched the Person when it was applied; a Dependency on a Pathway Item that was left out counts as met. A Line Manager can add Journeys to it but cannot change or remove the ones HR specified. Each Journey on it is pinned to the version the starter began with.
+_Avoid_: Assignment, instance, enrolment
+
+**Person**:
+A record for anyone in the organisation. Carries job family, role, grade, platform and location, using the same fixed lists as Journey tags, so matching is exact. A starter is a Person whose Status says they are joining or joined. Personal details such as home address are not held on the Person record in the app: they stay in the system of record and are fetched by a Hidden automation only when a Journey needs them.
+_Avoid_: User, employee, profile
+
+**Status**:
+Where a Person is in the joining process. Moves in order through **Joiner** (offer accepted, before their first day), **Starter** (from their first day until Day 30) and **Onboarded** (Day 30 reached).
+_Avoid_: Phase, state
+
+**Journey Status**:
+Where a starter is with one Journey. One of **Not started**, **In progress**, **Action required** (the starter needs to act), **Done** or **Cancelled** (stopped by a confirmed Hard Stop; sends no Reminders and unlocks nothing).
+_Avoid_: Journey state, progress
+
+**Admin Portal**:
+The laptop-first part of the app where journey owners and HR Partners work: the Journey library and builder, the Pathway builder, applying Pathways to Persons, and observability. Not designed for phones.
+_Avoid_: Console, back office, admin app
+
+**Manager and Buddy view**:
+The mobile-friendly part of the app where a starter's Line Manager and Buddy see what is left and act on it.
+_Avoid_: Manager app, manager portal
+
+**Starter Preview**:
+The phone-sized starter face of the app, built live from the back end, where a starter (or their Delegate) sees their Applied Pathway grouped by Stage and completes their own Actions: acknowledging Read cards, ticking Tasks, making choices, submitting Provide forms and answering Pulse checks. Shows Journey Status, waiting cards and what's next. A demo-grade version of the starter app, not the production one.
+_Avoid_: Starter app, mobile app, mock-up
+
+**Outcome**:
+The recorded result of a Journey for one starter. Every Journey records an Outcome in the database when it ends, with a timestamp, for later use (observability and reporting; never read by other Journeys): **Done**, **Cancelled**, **Skipped** (an optional Journey the starter marked "Not for me"), or, for Journeys that declare a pass/fail result such as Pre-employment checks, **Passed** or **Failed**. A Failed Outcome still counts as finished for Journey Duration, and can raise a Hard Stop.
+_Avoid_: Result, verdict, pass/fail status
+
+**Mandatory**:
+A setting on a Pathway Item. A mandatory Journey must be Done before any Milestone it sits in is hit, and the starter cannot skip it; the starter is not shown a "required" label. A Journey that is not mandatory is shown to the starter as "Suggested for you" and can be Skipped, which stops its Reminders and holds up nothing. Line Managers choose this for Journeys they add, defaulting to not mandatory. Mandatory Journeys still open at Day 30 each raise a Task for the Line Manager.
+_Avoid_: Required, compulsory, core
+
+**Hard Stop**:
+A block on a Pathway that stops work when a Pathway Item ends with a Failed Outcome, or when a Timer deadline passes and the Pathway Item it watches is not Done. It stops the Pathway Items and Milestones it is connected to, or the whole Applied Pathway. It never acts on its own: it raises a decision for a person to Confirm, Extend (deadlines only) or Dismiss, with a recorded reason. While a decision is pending the starter's view does not change; after Confirm the starter sees only that their recruiter will be in touch.
+_Avoid_: Termination, termination block, kill switch, cancel rule
+
+**Demo clock**:
+The single simulated "today" that every date calculation in the demo uses. Moves only forward; moving it fires everything that has become due, in date order. Shown on every face as "Simulated date".
+_Avoid_: Time travel, fake date, system time
+
+**Demo controls**:
+The panel in the Admin Portal header that sets the Demo clock, simulates Hidden automation results (Passed, Failed, Returned) and resets the demo data. Never shown on the mobile faces.
+_Avoid_: Admin tools, debug panel, god mode
+
+**Blocked Flag**:
+An internal flag on a Journey that shows it is waiting on something outside the starter's control, such as vetting. Raised automatically while the Journey waits on a Hidden automation, and cleared when it returns. Visible to HR and Line Managers only, never to the starter, who instead sees a calm waiting card with the Usual Range and the Journey's "while you wait" message. When the wait passes the Usual Range, the Line Manager gets a Task to check in, and the starter is told their manager knows and will be in touch.
+_Avoid_: Blocked status, stuck
+
+**Usual Range**:
+How long a Journey version normally takes, taken from the middle half of its past Journey Durations, such as "usually 3–5 weeks". Shown to the starter while they wait, and used to mark a wait as overdue.
+_Avoid_: SLA, estimate, ETA
+
+**Journey Duration**:
+Time from a starter's Journey first becoming In progress to first becoming Done. Reported per starter and rolled up per Journey version.
+_Avoid_: Time taken, lead time
+
+**Stage**:
+One of four time-based periods in the joining process. Every Journey must be tagged with exactly one. In order:
+- **Pre-contract**: offer accepted to contract signed. Starter sees "Your offer".
+- **Pre-employment**: contract signed to Day 1. Starter sees "Getting ready".
+- **Onboarding**: Day 1 to the end of week 1. Starter sees "Your first week".
+- **First 30 days**: week 2 to Day 30. Starter sees "Your first month".
+
+Stages are the lanes on the Pathway builder canvas and group Journeys in the starter's view. HR sees the formal names; the starter sees the friendly ones.
+_Avoid_: Phase, step, the six reference stages
+
+**AI Agent**:
+A separate, versioned library item that answers starters' questions at any time and hands over to a person when needed. Reached from a "Need help?" button on a Journey; it is not an Action. Mocked in the demo, not built on a real model (see Design.MD D11).
+_Avoid_: Bot, assistant, chatbot
+
+**Line Manager**:
+The Person a starter reports to, linked through org structure. Can add as many Journeys as they like to a starter's Applied Pathway, within their own area (their org unit in org structure), location and platform, but cannot change or remove anything in the Pathway HR assigned. Their additions are labelled "Added by" them, and they can remove their own additions that have not started. These are the only per-starter changes; HR never tailors a Pathway for one starter. Can override a Journey's status to Done with a recorded reason, except for Journeys with a pass/fail Outcome. Sees Blocked Flags and the starter's Choose results; confirms, extends or dismisses Hard Stops.
+_Avoid_: Manager, supervisor, contact
+
+**Buddy**:
+The Person assigned to help a starter settle in, linked through org structure. Sees only the starter's Stage and Milestones, never Blocked Flags, choices or check results. Can tick their own Tasks and send the starter a note.
+_Avoid_: Mentor, sponsor, contact
+
+**Delegate**:
+A Person who acts on a starter's behalf, such as an Executive Assistant for an executive, or someone supporting a starter with accessibility needs. Not limited to Executive Assistants. An HR Partner sets the Delegate on the starter's record when the starter asks. A Delegate sees exactly what the starter sees, under an "Acting for" banner, and can complete the starter's Actions except those marked Starter only. Everything they complete is recorded as done by them for the starter. One Delegate per starter in the demo.
+_Avoid_: Proxy, assistant, representative, carer
+
+**Starter only**:
+A setting on an Action that stops a Delegate completing it. On by default for Provide Actions and the Pulse check; a journey owner can turn it off for a specific Action. A Delegate sees these as "Waiting for [starter]".
+_Avoid_: Private, restricted, personal
