@@ -17,22 +17,42 @@ The brief is a problem space, not a spec. The reference journey and prompts give
 
 Why the site says this matters: vetting and screening mean weeks or months between offer and first day, and the first 30 days decide whether someone settles or drifts. Workday records the joining process but does not guide anyone through it.
 
-### Problem-space prompts (as captured)
+### Reference journey: six stages
 
-Eleven of the twelve prompts were captured. The twelfth and the names of the six reference journey stages still need to be pulled.
+A reference journey, not a spec. Chatbot support runs throughout.
 
-- A warm handover: what makes the handover to the app feel like a welcome, not another login?
-- Honest progress: what does honest progress look like when there is no news to share during vetting?
-- Where am I?: how does someone know where they are in the journey, and what is still between them and day one?
-- Earned, not withheld: which moments should unlock what, so content feels earned?
-- Not the same pack: how do job family, location and system access shape what someone sees?
-- Early choices: which choices (laptop, benefits, pay and rewards, learning) can be made before day one, and what happens after they are made?
-- Meet before you meet: how does a joiner get to know their manager and buddy before they have met, and what makes that feel human?
-- What's left?: how does a manager know what is left (checks, buddy, kit, access, badge, goals), and what happens when it slips?
-- Chain reactions: what other moments should one person's action set off for someone else?
-- Guide, don't nag: how does the app guide without becoming a to-do list?
-- 9pm on a Sunday: who, or what, answers a question at that time, and when does it need a person?
-- Did it work?: how would anyone know someone feels connected and confident by Day 30, and what happens if they don't?
+| # | When | Stage | What happens | Who |
+| --- | --- | --- | --- | --- |
+| 01 | Offer | Offer | Recruiter delivers the unconditional offer, gives feedback and sets expectations. Warm handover to the app. | Recruiter, Joiner |
+| 02 | Before day one | Unlock & choose | Content unlocks as milestones are hit, by job family, location and software. Pick kit, benefits, pay and rewards, learning. | Joiner |
+| 03 | Before day one | Meet your people | Introduced to their line manager and a buddy, with chat. Site, transport and community info for their location. | Joiner, Manager, Buddy |
+| 04 | Before day one | Manager ready | Checks done, buddy assigned, device, access and ID badge requested. Three-month goals set: welcome pack sent. | Line manager |
+| 05 | From day one | Day 1 to Week 1 | Guided prompts: book stakeholder intros, start mandatory training, find the comms channels. 1:1 with their manager at the end of week one. | Joiner, Manager, Buddy |
+| 06 | From day one | Day 30 | Feels well connected and confident in their role. | Joiner |
+
+### Problem-space prompts
+
+Twelve prompts across four groups. Context, not requirements.
+
+**Offer and handover**
+1. A warm handover: the recruiter has just delivered good news. What makes the handover to the app feel like a welcome, not another login?
+2. Honest progress: vetting takes as long as it takes. What does honest progress look like when there's no news to share?
+3. Where am I?: how does someone know where they are in the journey, and what's still between them and day one?
+
+**Before day one**
+4. Earned, not withheld: content can unlock as milestones are hit. Which moments should unlock what, so it feels earned rather than withheld?
+5. Not the same pack: an engineer in Leeds and a contact centre colleague in Cardiff shouldn't get the same pack. How do job family, location and system access shape what someone sees?
+6. Early choices: laptop, benefits, pay and rewards, learning. Which choices can someone make before day one, and what happens once they've made them?
+
+**Manager and buddy**
+7. Meet before you meet: how does a new joiner get to know their manager and buddy before they've met, and what makes that chat feel human?
+8. What's left?: checks, a buddy, kit, access, a badge, goals. How does a manager know what's left, and what happens when it slips?
+9. Chain reactions: setting goals sends the welcome pack. What other moments should one person's action set off for someone else?
+
+**The first 30 days**
+10. Guide, don't nag: intro calls, mandatory training, comms channels, a week-one 1:1. How does the app guide without becoming a to-do list?
+11. 9pm on a Sunday: a question at 9pm on a Sunday. Who, or what, answers it, and when does it need a person?
+12. Did it work?: by Day 30 someone should feel connected and confident. How would anyone know, and what happens if they don't?
 
 ## Judging
 
@@ -49,6 +69,16 @@ Scoring principles from the site:
 - Mentors score evidence of what you built and why.
 - Side quests give no automatic bonus. Each one can strengthen evidence in the category it feeds.
 - Choosing an unfamiliar stack or using AI earns no bonus.
+
+Kinds of evidence mentors look for, and the question they ask:
+
+| Category | Evidence | Mentor asks |
+| --- | --- | --- |
+| Best Demo | A working journey shown end to end; tests run; faults found and fixed; what's real and what's simulated made clear. | Show what a joiner can complete now. What is simulated or unfinished? |
+| Best Technical Approach | Options and trade-offs explained; data and secrets handled deliberately; tests and AI-generated code checked; integration choices understood. | Why this approach? What alternative did you reject, and how have you checked it? |
+| Best UX | Tested on a phone; role and location considered; confusing steps spotted; feedback, errors or accessibility improved. | Where could a joiner become confused? Show what you changed. |
+| Best Feature Fit | A specific pain point prioritised; scope choices justified; omissions explained; changes keep the core outcome for the joiner. | What matters most for the joiner? What did you leave out, and why? |
+| Most Innovative | An unexpected idea tested and its value demonstrated. | What is different about your approach, and how does it help? |
 
 ### Route 1: category awards
 
@@ -128,12 +158,26 @@ Support and assessment are kept separate. Asking the mentor for help is never a 
 
 ## Side quests
 
-Six optional angles on the problem space, each feeding a category. Examples captured so far: SQ-01 "The Manager's View", a companion for hiring managers with checks to complete and a buddy to assign. The full list of six still needs to be pulled.
+Six optional angles. Pick any, all or none. No automatic bonus; each strengthens evidence in the category it feeds. None feeds Best Demo or Most Innovative.
+
+| ID | Name | Summary | Feeds |
+| --- | --- | --- | --- |
+| SQ-01 | The Manager's View | A companion for hiring managers: checks to complete, a buddy to assign, kit, access and an ID badge to request, three-month goals to set. What does a manager need to see, and what's none of their business? What should a finished task set off? How does a great joiner experience survive a busy manager? | Best Feature Fit |
+| SQ-02 | Buddy Up | The buddy side: who gets matched with whom, what the buddy sees, when they step in, what stays private, how they hand over after Day 30. | Best UX |
+| SQ-03 | Always-On Answers | An assistant grounded in synthetic policies and joining info that answers honestly, knows what to refuse, stays grounded in what's true and knows when to hand over to a person. | Best Technical Approach |
+| SQ-04 | Unlock the Journey | Model the journey as events (offer accepted, checks cleared, kit chosen, goals set). What unlocks when, by job family, location and software? How do choices feed back? What belongs in their pocket, and what never leaves the building? | Best Technical Approach |
+| SQ-05 | Your First 30 Days | Guide through intro calls, mandatory training, comms channels and a week-one 1:1 without a to-do list, and know by Day 30 if it worked. What happens when someone is quietly struggling at Day 20? | Best Feature Fit |
+| SQ-06 | When Plans Change | Start dates slip, checks stall, a manager goes on leave. How does the journey reshape itself, who finds out first, what happens to unlocked content and choices, and who steps in? | Best UX |
+
+## Kit
+
+- A-01: starter repo, a private fork of the LaunchPad base repo.
+- A-02: synthetic data, published Fri 6 Nov. "Use it as the source of truth for the people, policies and events your app works with." The site gives no schema; the pack is hosted elsewhere.
+- A-03: Claude Platform workspace and API key per team, $240 credit, issued Mon 9 Nov.
+- A-04: Azure credentials on a card at the team table.
+- The product owner brief (Day 1 10:10, 15 minutes) is spoken only; the site has no written brief.
 
 ## Gaps still to capture
 
-- Twelfth problem-space prompt and the six reference journey stage names.
-- Full text of the six side quests.
-- The "kinds of evidence" mentors note against each category, from the judging page.
-- Kit and prep pages in full.
-- Day 1 and Day 2 detail on the schedule page, including the sessions in between.
+- Schema of the synthetic data pack (A-02), once we have it.
+- Anything said in the product owner brief that the site doesn't cover.
