@@ -62,3 +62,9 @@ Numbered once, in order, never renumbered or deleted. A reversed decision gets a
   - (a) The owner lists them, and they are added to the `CLAUDE.md` skills table. **Recommended.**
   - (b) Leave the table generic, and each session discovers them from the installed list.
 - **Resolved (9 Nov 2026):** Option (a). The owner approved recording the names as they appear in the installed skills list: `engineering-skills:*`, `ponytail:*`, `mattpocock-skills:*` and `taste-skill:design-taste-frontend`. They are now in the `CLAUDE.md` skills table.
+
+### 6. Push `adopt-phase-workflow` and open a PR
+
+- **Decided:** Push the `adopt-phase-workflow` branch and open a pull request against `main`. Merging it needs a separate owner say.
+- **Why:** Owner's instruction, 9 Nov 2026. The push rule (decision 3) is followed by hand until the hooks are wired.
+- **Evidence:** This entry; the pull request for the branch.
