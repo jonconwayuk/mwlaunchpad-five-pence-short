@@ -101,3 +101,4 @@ We don't need to build all the content, but the presentation must show these.
 - How do we mock the internal systems (Workday, Teams, IT provisioning) using public APIs or synthetic data only?
 - Which persona do we demo first, and which journeys carry the demo for each persona?
 - Scope split: which parts are real builds and which are mocked for the demo?
+- Data direction for the mobile app: does our environment push content and status out to the mobile app, or does the mobile app pull data from LBG systems into the local app? This drives where the data lives, how the app is hosted, and what we can mock with synthetic data under the public-APIs-only constraint.
