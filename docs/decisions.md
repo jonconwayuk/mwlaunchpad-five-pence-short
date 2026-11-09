@@ -68,3 +68,9 @@ Numbered once, in order, never renumbered or deleted. A reversed decision gets a
 - **Decided:** Push the `adopt-phase-workflow` branch and open a pull request against `main`. Merging it needs a separate owner say.
 - **Why:** Owner's instruction, 9 Nov 2026. The push rule (decision 3) is followed by hand until the hooks are wired.
 - **Evidence:** This entry; the pull request for the branch.
+
+### 7. Push `main` with commit 1dd1081
+
+- **Decided:** Push local `main`, which is one commit ahead of `origin/main` (1dd1081, the owner's CLAUDE.md update).
+- **Why:** Owner's instruction, 9 Nov 2026. The push rule (decision 3) is followed by hand until the hooks are wired.
+- **Evidence:** This entry; `origin/main` at 1dd1081.
