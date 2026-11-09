@@ -6,7 +6,7 @@ This is a team's project for the Launchpad hackathon. The event site, https://mw
 
 ## The goal: never lose sight of it
 
-We are building a **demonstrable product**. It centres on the **Pathway builder and Journey builder UI** in the Admin Portal, with **light front ends we can switch between** to show the result. The pathway-building logic and its UI are the USP, and they get the build time (`Design.MD` D1, D2a; ADR-0003).
+We are building a **demonstrable product**. It centres on the **Pathway builder and Journey builder UI** in the Admin Portal, with **light front ends we can switch between** to show the result. The pathway-building logic and its UI are the USP, and they have to be fully built to demo building journeys and grouping journeys to build a pathway. (`Design.MD` D1, D2a; ADR-0003).
 
 Before starting any task, check that it makes that demo better. If it doesn't, don't do it, or raise it with the team first. Polish on the builder beats breadth anywhere else.
 
