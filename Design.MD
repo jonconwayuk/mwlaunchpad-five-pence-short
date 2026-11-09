@@ -6,6 +6,12 @@ The agreed spec for the LaunchPad '26 build. Raw ideas live in `Ideas.MD`; terms
 
 Agreed by the team on 9 Nov 2026 (Day 1). Every design question is settled except the demo script, which is parked. Later changes to an agreed decision should update this file, the glossary and any ADR it names.
 
+**Version 1.0** (9 Nov 2026). This is the project's spec under the phase workflow (`docs/workflow/phase-workflow.md`). It changes only by explicit amendment: each amendment bumps the version, adds a line to the amendment log below, and gets an entry in `docs/decisions.md`.
+
+| Version | Date | Amendment | Decision |
+| --- | --- | --- | --- |
+| 1.0 | 9 Nov 2026 | Agreed by the team (Day 1) | 1 |
+
 ## Decisions
 
 ### D1. The demo centres on the Admin Portal (ADR-0003)
