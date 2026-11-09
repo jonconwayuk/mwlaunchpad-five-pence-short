@@ -289,9 +289,10 @@ Build freeze is 13:00 on Day 2 (10 Nov). Suggested split tonight: one person bui
 1. Pathway engine and Vitest tests: Conditions, Dependencies, Milestones, Timers, Journey Status and Outcomes, against the Demo clock.
 2. Seed data: three personas with Line Managers and Buddies, about 10 library Journeys, and the "Colleague core" Pathway.
 3. Pathway builder canvas: library panel, drag on, connect Dependencies with loops refused, side panel for Condition and Mandatory, Milestone grouping, Stage lanes, Publish.
-4. Apply a Pathway to a Person; Starter Preview on a phone with Stage groups, statuses and the waiting card.
-5. Demo controls: clock, Simulate result, Reset.
-6. Deploy once, to find phone problems early.
+4. Journey builder UI (D3 rule 4): a simple laptop form in the Admin Portal to create or edit a Journey (header, Stage, tags, Outcome, "while you wait" message) with a drag-to-reorder Action list, then publish it to the library. The seeded Journeys still ship as data, so the demo never depends on building one live.
+5. Apply a Pathway to a Person; Starter Preview on a phone with Stage groups, statuses and the waiting card.
+6. Demo controls: clock, Simulate result, Reset.
+7. Deploy once, to find phone problems early.
 
 **P1, Day 2 morning, before the 10:15 checkpoint**
 - Manager and Buddy view: To-do list, ticking Tasks, "Needs decision".
@@ -307,7 +308,6 @@ Build freeze is 13:00 on Day 2 (10 Nov). Suggested split tonight: one person bui
 - Manager "Add a Journey".
 
 **Out of scope, stated in the README and slides as deliberate omissions**
-- Journey builder UI: Journeys are seeded as data and the library is read-only.
 - Login and authentication: a persona switcher replaces login. Real sign-in (such as Entra ID) is production path.
 - Real LLM and multi-agent orchestration; two-way chat; Teams integration.
 - Real system-of-record integrations (adapters are mocked).
