@@ -2,7 +2,7 @@
 
 This file tracks acceptance against the spec (`Design.MD`) and carries the decision log, as the phase workflow requires (`docs/workflow/phase-workflow.md`).
 
-Open items waiting on the owner carry the pending marker. The grep command in the `CLAUDE.md` orientation table gives the authoritative list (this paragraph deliberately doesn't spell the token, so it never counts as an item). **Open count: 2.** This is the only place the count is kept. When an item resolves, rewrite its marker to the resolved form, "was" followed by the token.
+Open items waiting on the owner carry the pending marker. The grep command in the `CLAUDE.md` orientation table gives the authoritative list (this paragraph deliberately doesn't spell the token, so it never counts as an item). **Open count: 1.** This is the only place the count is kept. When an item resolves, rewrite its marker to the resolved form, "was" followed by the token.
 
 ## Acceptance against the spec
 
@@ -54,10 +54,11 @@ Numbered once, in order, never renumbered or deleted. A reversed decision gets a
 - **Why:** Owner's instruction, 9 Nov 2026. Running one task at a time means each one is checked against the goal in `CLAUDE.md` and goes through the phase-workflow, engineering and ponytail skills before the next starts.
 - **Evidence:** This entry; `CLAUDE.md` "How we work: the phase workflow".
 
-### 5. Always use the engineering and ponytail skills - `OWNER-PENDING`
+### 5. Always use the engineering and ponytail skills - was `OWNER-PENDING`
 
 - **Decided:** Every task uses the owner's installed engineering and ponytail skills alongside phase-workflow (`CLAUDE.md` "Always use the installed skills").
 - **Why:** Owner's instruction, 9 Nov 2026.
 - **Open:** These skills were not visible in the session that wrote this entry, so their exact names are not yet recorded in `CLAUDE.md`. **Question for the owner:** What are the exact skill names (as shown in the skills list, for example `plugin:skill`)?
   - (a) The owner lists them, and they are added to the `CLAUDE.md` skills table. **Recommended.**
   - (b) Leave the table generic, and each session discovers them from the installed list.
+- **Resolved (9 Nov 2026):** Option (a). The owner approved recording the names as they appear in the installed skills list: `engineering-skills:*`, `ponytail:*`, `mattpocock-skills:*` and `taste-skill:design-taste-frontend`. They are now in the `CLAUDE.md` skills table.

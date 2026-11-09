@@ -84,12 +84,14 @@ Every task uses these skills, loaded at the point in the sequence where they app
 | Skill set | When to use it |
 | --- | --- |
 | `anthropic-skills:phase-workflow` | Every session and every phase: planning, execution, review, gates, evidence. |
-| **Engineering skills** (installed by the owner) | Every code task: design, implementation, testing, review and debugging. Use them alongside the engineering standards below; where a skill and the standards disagree, record it in `docs/decisions.md` rather than picking one silently. |
-| **Ponytail skills** (installed by the owner) | Every task they cover. Check them before each task. |
+| **Engineering skills** (`engineering-skills:*`) | Every code task: design, implementation, testing, review and debugging. Use them alongside the engineering standards below; where a skill and the standards disagree, record it in `docs/decisions.md` rather than picking one silently. The ones this project uses most: `senior-frontend`, `senior-backend`, `senior-fullstack`, `senior-architect`, `senior-qa`, `tdd-guide`, `red-green-proof`, `code-reviewer`, `adversarial-reviewer`, `senior-devops` and `azure-cloud-architect`. |
+| **Ponytail skills** (`ponytail:*`) | Every task they cover. Check them before each task: `ponytail` (always on), `ponytail-review` for each task review, `ponytail-audit` and `ponytail-debt` at phase end. |
+| **Matt Pocock skills** (`mattpocock-skills:*`) | `tdd` for engine rules, `domain-modeling` for `GLOSSARY.md` and ADRs, `codebase-design` for module seams, `diagnosing-bugs`, `code-review`, `pr` and `writing-for-agents` (for edits to this file). |
+| **Taste skill** (`taste-skill:design-taste-frontend`) | Visual polish on the Admin Portal canvas and the mobile faces. |
 
-The exact names of the engineering and ponytail skills are still to be recorded here (decision 5, `OWNER-PENDING`). Until then, at the start of each session, list the installed skills and use every engineering and ponytail skill that matches the task. If none are visible in the session, stop and tell the owner rather than carrying on without them.
+At the start of each session, check these are still in the installed skills list. If one is missing, stop and tell the owner rather than carrying on without it.
 
-Also use any other installed skill that fits. For example: `frontend-design` for the Admin Portal canvas and the mobile faces, `pptx` for the presentation (including the slide on the advantages of a web app), and `docx`, `xlsx` or `pdf` when a deliverable takes that form.
+Also use any other installed skill that fits, for example `dataviz` for any chart on the observability page. If skills for the presentation (`pptx`) or documents (`docx`, `xlsx`, `pdf`) are installed, use them when a deliverable takes that form.
 
 ### Engineering standards
 
