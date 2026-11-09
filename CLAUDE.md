@@ -1,6 +1,6 @@
 # Launchpad team project
 
-This is a team's project for the Launchpad hackathon. All teams share one Azure and Microsoft 365 tenant and one subscription, so a mistake here can affect other teams. `M365_AZURE_INSTRUCTIONS.md` has the full rules, and `CLAUDE_CODE_INSTRUCTIONS.md` covers signing in.
+This is a team's project for the Launchpad hackathon. The event site, https://mwlaunchpad.com/, has the brief and event details; fetch it when you need hackathon context. All teams share one Azure and Microsoft 365 tenant and one subscription, so a mistake here can affect other teams. `M365_AZURE_INSTRUCTIONS.md` has the full rules, and `CLAUDE_CODE_INSTRUCTIONS.md` covers signing in.
 
 `NN` below is the team's two-digit number.
 

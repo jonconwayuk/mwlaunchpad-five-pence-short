@@ -6,6 +6,8 @@ Working log of the team's ideas for the LaunchPad '26 hack. Ideas here are raw i
 
 **Event:** LaunchPad '26, Modern Workplace Engineering hackathon at Lloyds Banking Group. Leeds, Wellington Place, 9–10 Nov 2026.
 
+**Event site:** [mwlaunchpad.com](https://mwlaunchpad.com/) is the official event site.
+
 **Challenge:** Design and build a mobile-first companion that takes a new joiner from unconditional offer to feeling connected and confident by Day 30. The brief's prompts are context, not requirements.
 
 **Problem as framed:** Vetting and screening leave weeks or months between offer and day one. Workday records the joining process but does not guide the joiner through it. New starters struggle to know what comes next, find what is relevant to their role and location, and meet their manager and buddy before they arrive. Support stops at day one.
