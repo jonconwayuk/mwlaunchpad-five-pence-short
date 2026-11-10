@@ -16,9 +16,10 @@ export function filterForViewer(
       ...state,
       items: noFlags.map((i) => { const { outcome, ...rest } = i; void outcome; return rest; }),
       needsDecisions: [],
+      notifications: state.notifications.filter((n) => n.to === 'buddy'),
       tasks: state.tasks.filter((t) => t.owner === 'buddy'),
     };
   }
-  const base = { ...state, items: noFlags, needsDecisions: [] };
+  const base = { ...state, items: noFlags, needsDecisions: [], notifications: state.notifications.filter((n) => n.to === 'starter') };
   return as === 'delegate' ? { ...base, actingFor: opts.actingFor } : base;
 }

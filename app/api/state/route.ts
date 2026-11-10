@@ -18,7 +18,7 @@ export const GET = apiHandler(async (req) => {
   const personId = q.personId ?? (await cookiePersonId());
   const row = getPerson(personId);
   if (!row || !getAppliedPathway(personId)) throw new ApiError('No Applied Pathway for that person', 404);
-  const engineState = filterForViewer(computeState(buildEngineInput(personId)), q.as, { actingFor: personId });
+  const engineState = filterForViewer(computeState(buildEngineInput(personId)), q.as, { actingFor: row.name });
   return {
     engineState,
     person: { id: row.id, name: row.name },

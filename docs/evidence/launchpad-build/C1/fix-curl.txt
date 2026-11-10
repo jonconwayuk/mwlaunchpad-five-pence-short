@@ -1,0 +1,16 @@
+# automation
+{"ok":false,"error":"Only Demo controls can complete a Hidden automation"}
+# delegate payroll
+{"ok":false,"error":"Only the starter can complete this Action"}
+# nobody
+{"ok":false,"error":"Unknown actorPersonId"}
+# bad as
+{"ok":false,"error":"Invalid request: as Invalid option: expected one of \"starter\"|\"delegate\"|\"line-manager\"|\"buddy\"|\"hr\""}
+# A payroll ok
+{"ok":true,"data":{"engineState":{"today":"2026-11-10","stage":"pre-employment","personStatus":"joiner","dayNumber":-55,"items":[{"itemId":"i-contracting","jour
+
+# skip done
+{"ok":false,"error":"That Journey is already skipped"}
+# delegate actingFor
+actingFor= Alex Morgan
+# provide value not stored: grep secret-details in db = 0
