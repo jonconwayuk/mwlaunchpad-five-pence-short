@@ -1,0 +1,12 @@
+initial filters: studio|bob|desktop
+initial rows: 1
+after infra: Infrastructure engineer ESuggested for Bob
+summary: 12 Journeys: 1 in Your offer, 8 in Getting ready, 1 in Your first week, 2 in Your first month
+no match: Nothing matches that name. Try fewer letters, or choose Clear filters.
+apply: clicked
+status: 
+after clear: 
+apply POST then /api/state: {"ok":true,"data":{"engineState":{"today":"2026-11-10","stage":"pre-contract","personStatus":"joiner","dayNumber":-27,"items":[{"itemId":"i-contractin
+grade E filter only: clicked
+after Clear filters, titles: Infrastructure engineer ESuggested for Bob || Branch colleague B || Software engineer D || Executive X
+grade E only, titles: Infrastructure engineer ESuggested for Bob

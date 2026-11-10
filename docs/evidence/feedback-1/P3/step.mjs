@@ -1,0 +1,22 @@
+import { appendFileSync } from 'node:fs';
+export default async (c) => {
+  const out = (l) => { appendFileSync(new URL('results.txt', import.meta.url), l + '\n'); console.log(l); };
+  await c.go('/portal/people/person-bob'); await c.wait(2500);
+  out('initial filters: ' + await c.js(`[...document.querySelectorAll('select')].slice(0,3).map(s=>s.value).join('|')`));
+  out('initial rows: ' + await c.js(`document.querySelectorAll('li button').length`));
+  await c.shot('1-initial');
+  await c.type('input[type=search]', 'infra'); await c.wait(500);
+  out('after infra: ' + await c.js(`[...document.querySelectorAll('ul li p:first-child')].map(e=>e.innerText).join(' || ')`));
+  out('summary: ' + await c.js(`document.querySelector('ul li p:nth-child(3)')?.innerText`));
+  await c.shot('2-typed-infra');
+  await c.type('input[type=search]', 'zzz'); await c.wait(300);
+  out('no match: ' + await c.js(`document.querySelector('[role=status]')?.innerText`));
+  await c.shot('3-nomatch');
+  await c.type('input[type=search]', 'infra'); await c.wait(300);
+  out('apply: ' + await c.click('Apply pathway')); await c.wait(1500);
+  out('status: ' + await c.js(`[...document.querySelectorAll('[role=status]')].map(e=>e.innerText).join(' | ')`));
+  await c.shot('4-applied');
+  await c.type('input[type=search]', ''); await c.click('Clear filters'); await c.wait(500);
+  out('after clear: ' + await c.js(`[...document.querySelectorAll('ul li p:first-child')].map(e=>e.innerText).join(' || ')`));
+  await c.shot('5-cleared');
+};
