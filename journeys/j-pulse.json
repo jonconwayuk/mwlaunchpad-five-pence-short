@@ -1,0 +1,47 @@
+{
+  "id": "j-pulse",
+  "semver": "1.0.0",
+  "title": "Pulse check",
+  "description": "A quick check on how it is going.",
+  "ownerTeam": "HR",
+  "stage": "first-30-days",
+  "tags": {},
+  "declaresOutcome": false,
+  "actions": [
+    {
+      "id": "j-pulse-a1",
+      "type": "read",
+      "label": "A quick check-in"
+    },
+    {
+      "id": "j-pulse-a2",
+      "type": "choose",
+      "label": "How connected do you feel? (1 to 5)",
+      "owner": "starter",
+      "options": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5"
+      ],
+      "flagAtOrBelow": 2,
+      "starterOnly": true
+    },
+    {
+      "id": "j-pulse-a3",
+      "type": "choose",
+      "label": "How confident do you feel? (1 to 5)",
+      "owner": "starter",
+      "options": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5"
+      ],
+      "flagAtOrBelow": 2,
+      "starterOnly": true
+    }
+  ]
+}

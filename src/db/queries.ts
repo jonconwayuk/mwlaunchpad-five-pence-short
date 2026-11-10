@@ -1,5 +1,6 @@
 import { and, desc, eq } from 'drizzle-orm';
 import { db } from './client';
+import { fileToJourney, loadJourneyFiles, writeJourneyFileRaw } from './files';
 import * as s from './schema';
 import type {
   ActionProgress, EngineInput, HardStopDecision, ISODate, ItemOverride, JourneyDef, PathwayItem, PathwaySnapshot,
@@ -42,7 +43,7 @@ export function getJourney(id: string, version?: number): JourneyDef | undefined
   return toJourney(r, db.select().from(s.actions).where(and(eq(s.actions.journeyId, id), eq(s.actions.journeyVersion, r.version))).all());
 }
 
-export function insertJourney(def: JourneyDef): void {
+export function insertJourney(def: JourneyDef & { semver?: string }): void {
   db.insert(s.journeys).values({ ...def, whileYouWait: def.whileYouWait ?? null }).run();
   def.actions.forEach((a, position) =>
     db.insert(s.actions).values({ journeyId: def.id, journeyVersion: def.version, position, def: a }).run());
@@ -56,6 +57,56 @@ export function publishJourney(def: Omit<JourneyDef, 'version'>): JourneyDef {
     return published;
   });
 }
+
+const journeySemvers = (id: string) =>
+  db.select({ version: s.journeys.version, semver: s.journeys.semver }).from(s.journeys).where(eq(s.journeys.id, id))
+    .orderBy(desc(s.journeys.version)).all();
+/** The semver of the newest version that has one. */
+export const getJourneySemver = (id: string): string | undefined =>
+  journeySemvers(id).find((r) => r.semver)?.semver ?? undefined;
+
+export type SemverBump = 'patch' | 'minor' | 'major';
+const bumpSemver = (v: string, bump: SemverBump) => {
+  const [ma = 1, mi = 0, pa = 0] = v.split('.').map(Number);
+  return bump === 'major' ? `${ma + 1}.0.0` : bump === 'minor' ? `${ma}.${mi + 1}.0` : `${ma}.${mi}.${pa + 1}`;
+};
+
+// Key order differs between files and builder publishes, so compare content with sorted keys.
+const canon = (v: unknown) => JSON.stringify(v, (_k, x: unknown) =>
+  x && typeof x === 'object' && !Array.isArray(x) ? Object.fromEntries(Object.entries(x).sort(([a], [b]) => a.localeCompare(b))) : x);
+const content = (j: JourneyDef) => canon({ ...j, id: undefined, version: undefined, semver: undefined });
+
+/** Re-reads journeys/: a new file becomes version 1, a changed semver or content becomes the next version. */
+export function syncJourneysFromFiles(): { added: string[]; updated: string[] } {
+  const files = loadJourneyFiles();
+  return db.transaction(() => {
+    const added: string[] = [];
+    const updated: string[] = [];
+    for (const f of files) {
+      const current = getJourney(f.id);
+      if (!current) {
+        insertJourney({ ...fileToJourney(f, 1), semver: f.semver });
+        added.push(f.id);
+      } else if (getJourneySemver(f.id) !== f.semver || content(current) !== content(fileToJourney(f, 0))) {
+        insertJourney({ ...fileToJourney(f, current.version + 1), semver: f.semver });
+        updated.push(f.id);
+      }
+    }
+    return { added, updated };
+  });
+}
+
+/** Writes a published Journey back to journeys/<id>.json and records its semver (default: a minor bump on the last one). */
+export function writeJourneyFile(def: JourneyDef & { semver?: string }, bump: SemverBump = 'minor'): string {
+  const rows = journeySemvers(def.id);
+  const own = rows.find((r) => r.version === def.version)?.semver;
+  const prev = rows.find((r) => r.version !== def.version && r.semver)?.semver;
+  const semver = def.semver ?? own ?? (prev ? bumpSemver(prev, bump) : '1.0.0');
+  db.update(s.journeys).set({ semver }).where(and(eq(s.journeys.id, def.id), eq(s.journeys.version, def.version))).run();
+  return writeJourneyFileRaw({ ...def, semver });
+}
+
+export { listConnectors } from './files';
 
 // ---- Pathways ------------------------------------------------------------------------------
 export function listPathways() {
@@ -97,6 +148,22 @@ export function publishPathway(id: string): number {
     db.insert(s.pathwayVersions).values({ pathwayId: id, version, snapshot: { ...draft, id: `${id}@${version}` } }).run();
     db.update(s.pathways).set({ liveVersion: version, draftVersion: version + 1 }).where(eq(s.pathways.id, id)).run();
     return version;
+  });
+}
+
+export const getPathwaySemver = (id: string): string | undefined =>
+  db.select({ semver: s.pathwayVersions.semver }).from(s.pathwayVersions).where(eq(s.pathwayVersions.pathwayId, id))
+    .orderBy(desc(s.pathwayVersions.version)).get()?.semver ?? undefined;
+
+/** publishPathway plus a semantic version on top of the integer one. The first publish is 1.0.0. */
+export function publishPathwaySemver(id: string, bump: SemverBump = 'minor'): { version: number; semver: string } {
+  return db.transaction(() => {
+    const prev = getPathwaySemver(id);
+    const version = publishPathway(id);
+    const semver = prev ? bumpSemver(prev, bump) : '1.0.0';
+    db.update(s.pathwayVersions).set({ semver })
+      .where(and(eq(s.pathwayVersions.pathwayId, id), eq(s.pathwayVersions.version, version))).run();
+    return { version, semver };
   });
 }
 
@@ -220,4 +287,38 @@ export function buildEngineInput(personId: string): EngineInput {
     history: db.select().from(s.durationHistory).all()
       .map((h) => ({ journeyId: h.journeyId, journeyVersion: h.journeyVersion, days: h.days })),
   };
+}
+
+// ---- People extras: Delegate, manual Reminders, handovers -------------------------------------
+export function setDelegate(personId: string, delegateId: string | null): void {
+  if (!getPerson(personId)) throw new Error(`Unknown person ${personId}`);
+  if (delegateId !== null && !getPerson(delegateId)) throw new Error(`Unknown person ${delegateId}`);
+  db.update(s.persons).set({ delegateId }).where(eq(s.persons.id, personId)).run();
+}
+export function addManualReminder(personId: string, message: string, at: ISODate): void {
+  db.insert(s.manualReminders).values({ personId, message, at }).run();
+}
+export const listManualReminders = (personId: string) =>
+  db.select().from(s.manualReminders).where(eq(s.manualReminders.personId, personId)).orderBy(s.manualReminders.id).all();
+export function addHandover(personId: string, question: string, at: ISODate): void {
+  db.insert(s.handovers).values({ personId, question, at }).run();
+}
+/** Handovers from every starter this Line Manager manages, oldest first. */
+export function listHandovers(lineManagerId: string) {
+  const mine = new Set(listPersons().filter((p) => p.lineManagerId === lineManagerId).map((p) => p.id));
+  return db.select().from(s.handovers).orderBy(s.handovers.id).all().filter((h) => mine.has(h.personId));
+}
+
+// ---- Insights: every history sample with its Pathway, Journey, Stage and who the starter was --------
+export function insightsData() {
+  const pathways = new Map(db.select().from(s.pathways).all().map((p) => [p.id, p.title]));
+  const journeys = new Map(db.select().from(s.journeys).all().map((j) => [`${j.id}@${j.version}`, j]));
+  return db.select().from(s.durationHistory).orderBy(s.durationHistory.id).all().map((h) => {
+    const j = journeys.get(`${h.journeyId}@${h.journeyVersion}`);
+    return {
+      pathwayId: h.pathwayId, pathwayTitle: pathways.get(h.pathwayId) ?? h.pathwayId, pathwayVersion: h.pathwayVersion,
+      journeyId: h.journeyId, journeyTitle: j?.title ?? h.journeyId, stage: (j?.stage ?? 'pre-employment') as JourneyDef['stage'],
+      businessArea: h.businessArea, role: h.role, grade: h.grade, days: h.days,
+    };
+  });
 }

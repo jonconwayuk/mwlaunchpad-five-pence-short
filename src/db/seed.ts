@@ -2,7 +2,7 @@
 // Deterministic: every date derives from DEMO_T and history comes from a seeded generator.
 import { sqlite, db } from './client';
 import * as s from './schema';
-import { applyPathway, addAdditionToApplied, insertJourney, publishPathway, recordActionProgress, recordOverride, savePathwayDraft } from './queries';
+import { applyPathway, addAdditionToApplied, insertJourney, publishPathwaySemver, recordActionProgress, recordOverride, savePathwayDraft } from './queries';
 import { buildTemplate, DEMO_T, JOURNEYS, PERSON_A_ADDITIONS, PERSONS, TEMPLATES } from './seedData';
 import { resetAdapters } from '../adapters/types';
 import { log } from '../lib/log';
@@ -31,6 +31,15 @@ function checksDays(r: ReturnType<typeof rng>): number[] {
   return [...rep(3, () => r(14, 20)), ...rep(4, () => 21), ...rep(6, () => r(22, 34)), ...rep(4, () => 35), ...rep(3, () => r(36, 48))];
 }
 
+// Business area is the past starter's job family (the Pathway's); role and grade vary per starter so Insights has spread.
+const ROLES: Record<string, string[]> = {
+  Branch: ['Customer service colleague', 'Line manager'],
+  'Software engineering': ['Software engineer', 'Line manager'],
+  Executive: ['Managing director', 'Executive assistant'],
+  'Modern Workplace': ['Infrastructure engineer', 'Line manager'],
+};
+const GRADES = ['B', 'C', 'D', 'E', 'F'];
+
 export function seed(): void {
   resetAdapters();
   sqlite.transaction(() => {
@@ -54,14 +63,21 @@ export function seed(): void {
       const draft = buildTemplate(tpl);
       db.insert(s.pathways).values({ id: tpl.id, title: tpl.title, tags: tpl.tags, liveVersion: null, draftVersion: 1 }).run();
       savePathwayDraft(tpl.id, draft);
-      const version = publishPathway(tpl.id);
+      const { version } = publishPathwaySemver(tpl.id);
       const r = rng(1000 + n);
+      const who = rng(5000 + n); // separate stream, so the original durations stay exactly as they were
       const checks = checksDays(r);
+      const businessArea = tpl.tags.jobFamily!;
       for (let starter = 0; starter < 20; starter++) {
+        const role = ROLES[businessArea]![who(0, 1)]!;
+        const grade = GRADES[who(0, GRADES.length - 1)]!;
         for (const j of new Set(draft.items.map((i) => i.journeyId))) {
           // Payroll waits on the starter's bank details, which often come late: its Usual Range spans Persona A's 18 days.
-          const days = j === 'j-checks' ? checks[starter]! : j === 'j-payroll' ? r(10, 30) : r(2, 14);
-          db.insert(s.durationHistory).values({ pathwayId: tpl.id, pathwayVersion: version, journeyId: j, journeyVersion: 1, days }).run();
+          // Privileged access is pinned to 14..33 days, so its Usual Range is 19 to 28 and Bob's 21 days sit inside it.
+          const days = j === 'j-checks' ? checks[starter]! : j === 'j-priv-access' ? 14 + starter : j === 'j-payroll' ? r(10, 30) : r(2, 14);
+          db.insert(s.durationHistory).values({
+            pathwayId: tpl.id, pathwayVersion: version, journeyId: j, journeyVersion: 1, days, businessArea, role, grade,
+          }).run();
         }
       }
     });
@@ -70,6 +86,7 @@ export function seed(): void {
     applyPathway('pw-branch', 'person-a', addDays(DEMO_T, -21));
     applyPathway('pw-engineer', 'person-b', DEMO_T);
     applyPathway('pw-executive', 'person-c', DEMO_T);
+    // Bob (person-bob) is a joiner with no Pathway: HR applies 'pw-infra-e' live in the demo.
     PERSON_A_ADDITIONS.items.forEach((i, n) =>
       addAdditionToApplied('person-a', i, n === 0 ? PERSON_A_ADDITIONS.timers : []));
 

@@ -1,0 +1,25 @@
+{
+  "id": "j-cash-handling",
+  "semver": "1.0.0",
+  "title": "Cash-handling training",
+  "description": "Learn to handle cash safely.",
+  "ownerTeam": "Retail",
+  "stage": "first-30-days",
+  "tags": {
+    "platform": "Retail"
+  },
+  "declaresOutcome": false,
+  "actions": [
+    {
+      "id": "j-cash-handling-a1",
+      "type": "read",
+      "label": "Cash-handling guide"
+    },
+    {
+      "id": "j-cash-handling-a2",
+      "type": "task",
+      "label": "Complete the e-learning",
+      "owner": "starter"
+    }
+  ]
+}

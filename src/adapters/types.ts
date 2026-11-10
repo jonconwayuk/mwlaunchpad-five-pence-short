@@ -26,3 +26,11 @@ export interface MerchAdapter {
   getResult(personId: string): Promise<AdapterResult>;
   simulate(personId: string, result: Exclude<AdapterResult, 'pending'>): void;
 }
+export interface ServiceNowAdapter {
+  getResult(personId: string): Promise<AdapterResult>;
+  simulate(personId: string, result: Exclude<AdapterResult, 'pending'>): void;
+}
+export interface OracleAdapter {
+  /** Synthetic cost centre for a job family; a mock lookup, nothing is charged. */
+  getCostCentre(jobFamily: string): Promise<string>;
+}

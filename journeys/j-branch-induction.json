@@ -1,0 +1,31 @@
+{
+  "id": "j-branch-induction",
+  "semver": "1.0.0",
+  "title": "Branch induction",
+  "description": "Your first week in the branch.",
+  "ownerTeam": "Retail",
+  "stage": "onboarding",
+  "tags": {
+    "platform": "Retail"
+  },
+  "declaresOutcome": false,
+  "actions": [
+    {
+      "id": "j-branch-induction-a1",
+      "type": "read",
+      "label": "Your first week"
+    },
+    {
+      "id": "j-branch-induction-a2",
+      "type": "task",
+      "label": "Shadow shift",
+      "owner": "starter"
+    },
+    {
+      "id": "j-branch-induction-a3",
+      "type": "task",
+      "label": "Week-one 1:1",
+      "owner": "line-manager"
+    }
+  ]
+}

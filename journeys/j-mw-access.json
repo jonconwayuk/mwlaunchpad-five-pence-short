@@ -1,0 +1,27 @@
+{
+  "id": "j-mw-access",
+  "semver": "1.0.0",
+  "title": "Modern Workplace team access package",
+  "description": "Team channels, shared mailboxes and the on-call rota for Modern Workplace.",
+  "ownerTeam": "Modern Workplace",
+  "stage": "pre-employment",
+  "tags": {
+    "jobFamily": "Modern Workplace"
+  },
+  "declaresOutcome": false,
+  "actions": [
+    {
+      "id": "j-mw-access-a1",
+      "type": "automation",
+      "label": "Team access package",
+      "connector": "servicenow",
+      "operation": "requestAccessPackage"
+    },
+    {
+      "id": "j-mw-access-a2",
+      "type": "notification",
+      "label": "Welcome to the Modern Workplace team",
+      "owner": "starter"
+    }
+  ]
+}

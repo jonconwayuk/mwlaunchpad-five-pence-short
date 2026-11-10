@@ -1,0 +1,31 @@
+{
+  "id": "j-device-branch",
+  "semver": "1.0.0",
+  "title": "Branch device",
+  "description": "Choose and receive your device.",
+  "ownerTeam": "IT",
+  "stage": "pre-employment",
+  "tags": {
+    "jobFamily": "Branch"
+  },
+  "declaresOutcome": false,
+  "actions": [
+    {
+      "id": "j-device-branch-a1",
+      "type": "choose",
+      "label": "Choose your device",
+      "owner": "starter",
+      "options": [
+        "Branch tablet",
+        "Branch laptop"
+      ]
+    },
+    {
+      "id": "j-device-branch-a2",
+      "type": "automation",
+      "label": "Order to your address from the system of record",
+      "connector": "workday",
+      "operation": "getDeliveryAddress"
+    }
+  ]
+}

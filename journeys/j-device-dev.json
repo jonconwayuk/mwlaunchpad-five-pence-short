@@ -1,0 +1,29 @@
+{
+  "id": "j-device-dev",
+  "semver": "1.0.0",
+  "title": "Developer device",
+  "description": "Choose and receive your high-spec device.",
+  "ownerTeam": "IT",
+  "stage": "pre-employment",
+  "tags": {
+    "jobFamily": "Software engineering"
+  },
+  "declaresOutcome": false,
+  "actions": [
+    {
+      "id": "j-device-dev-a1",
+      "type": "choose",
+      "label": "Choose your high-spec device",
+      "owner": "starter",
+      "options": [
+        "Laptop 16 inch",
+        "Laptop 14 inch"
+      ]
+    },
+    {
+      "id": "j-device-dev-a2",
+      "type": "automation",
+      "label": "Order your device"
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "id": "j-eng-community",
+  "semver": "1.0.0",
+  "title": "Engineering community intro",
+  "description": "Meet the engineering community.",
+  "ownerTeam": "Technology",
+  "stage": "onboarding",
+  "tags": {
+    "platform": "Technology"
+  },
+  "declaresOutcome": false,
+  "actions": [
+    {
+      "id": "j-eng-community-a1",
+      "type": "read",
+      "label": "About the guilds"
+    },
+    {
+      "id": "j-eng-community-a2",
+      "type": "task",
+      "label": "Join the guild channel",
+      "owner": "starter"
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "id": "oracle",
+  "name": "Oracle",
+  "description": "Mocked finance system: cost centres and purchase orders.",
+  "adapter": "src/adapters/mockOracle.ts",
+  "operations": [
+    {
+      "name": "assignCostCentre",
+      "description": "Find the team cost centre a joiner is charged to.",
+      "inputs": [
+        "personId",
+        "jobFamily"
+      ],
+      "outputs": [
+        "costCentre"
+      ]
+    },
+    {
+      "name": "raisePurchaseOrder",
+      "description": "Raise a purchase order for equipment.",
+      "inputs": [
+        "costCentre",
+        "item"
+      ],
+      "outputs": [
+        "purchaseOrderId",
+        "result"
+      ]
+    }
+  ]
+}

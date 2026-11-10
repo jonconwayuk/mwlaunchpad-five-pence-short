@@ -1,0 +1,34 @@
+{
+  "id": "j-lab-env",
+  "semver": "1.0.0",
+  "title": "Lab environment",
+  "description": "Your own lab to build and test in, paid for from your team cost centre.",
+  "ownerTeam": "Modern Workplace",
+  "stage": "onboarding",
+  "tags": {
+    "jobFamily": "Modern Workplace"
+  },
+  "declaresOutcome": false,
+  "actions": [
+    {
+      "id": "j-lab-env-a1",
+      "type": "automation",
+      "label": "Set up the lab cost centre",
+      "connector": "oracle",
+      "operation": "assignCostCentre"
+    },
+    {
+      "id": "j-lab-env-a2",
+      "type": "automation",
+      "label": "Build your lab environment",
+      "connector": "servicenow",
+      "operation": "provisionLabEnvironment"
+    },
+    {
+      "id": "j-lab-env-a3",
+      "type": "task",
+      "label": "Sign in to your lab",
+      "owner": "starter"
+    }
+  ]
+}

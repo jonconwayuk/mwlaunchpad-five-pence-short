@@ -1,0 +1,23 @@
+{
+  "id": "j-id",
+  "semver": "1.0.0",
+  "title": "ID creation (photo)",
+  "description": "Your photo for your building pass.",
+  "ownerTeam": "Security",
+  "stage": "pre-employment",
+  "tags": {},
+  "declaresOutcome": false,
+  "actions": [
+    {
+      "id": "j-id-a1",
+      "type": "provide",
+      "label": "Provide your photo",
+      "owner": "starter"
+    },
+    {
+      "id": "j-id-a2",
+      "type": "automation",
+      "label": "Badge request"
+    }
+  ]
+}

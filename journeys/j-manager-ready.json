@@ -1,0 +1,29 @@
+{
+  "id": "j-manager-ready",
+  "semver": "1.0.0",
+  "title": "Manager ready",
+  "description": "Your Line Manager gets ready for you.",
+  "ownerTeam": "HR",
+  "stage": "pre-employment",
+  "tags": {},
+  "declaresOutcome": false,
+  "actions": [
+    {
+      "id": "j-manager-ready-a1",
+      "type": "task",
+      "label": "Set three-month goals",
+      "owner": "line-manager"
+    },
+    {
+      "id": "j-manager-ready-a2",
+      "type": "automation",
+      "label": "Send welcome pack"
+    },
+    {
+      "id": "j-manager-ready-a3",
+      "type": "notification",
+      "label": "Your Line Manager is ready for you",
+      "owner": "starter"
+    }
+  ]
+}

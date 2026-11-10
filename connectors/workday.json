@@ -1,0 +1,31 @@
+{
+  "id": "workday",
+  "name": "Workday",
+  "description": "Mocked HR system of record: people, addresses and start dates.",
+  "adapter": "src/adapters/mockWorkday.ts",
+  "operations": [
+    {
+      "name": "getDeliveryAddress",
+      "description": "Fetch where to send a device or uniform. Read on demand, never stored.",
+      "inputs": [
+        "personId"
+      ],
+      "outputs": [
+        "address"
+      ]
+    },
+    {
+      "name": "getWorker",
+      "description": "Read a joiner record: job family, role, grade and start date.",
+      "inputs": [
+        "personId"
+      ],
+      "outputs": [
+        "jobFamily",
+        "role",
+        "grade",
+        "startDate"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "id": "j-priv-access",
+  "semver": "1.0.0",
+  "title": "Privileged access request",
+  "description": "Admin rights for the infrastructure you will look after, approved by Security.",
+  "ownerTeam": "Modern Workplace",
+  "stage": "pre-employment",
+  "tags": {
+    "jobFamily": "Modern Workplace"
+  },
+  "whileYouWait": "Your admin access is with the Security team for approval. It usually takes three to four weeks, so there is nothing you need to do right now.",
+  "declaresOutcome": false,
+  "actions": [
+    {
+      "id": "j-priv-access-a1",
+      "type": "automation",
+      "label": "Privileged access request",
+      "connector": "servicenow",
+      "operation": "createPrivilegedAccessRequest"
+    }
+  ]
+}

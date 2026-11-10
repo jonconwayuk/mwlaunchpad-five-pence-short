@@ -1,0 +1,28 @@
+{
+  "id": "j-events",
+  "semver": "1.0.0",
+  "title": "In-person events calendar",
+  "description": "Events near you.",
+  "ownerTeam": "HR",
+  "stage": "onboarding",
+  "tags": {},
+  "declaresOutcome": false,
+  "actions": [
+    {
+      "id": "j-events-a1",
+      "type": "read",
+      "label": "Events near you"
+    },
+    {
+      "id": "j-events-a2",
+      "type": "choose",
+      "label": "Choose an event to attend",
+      "owner": "starter",
+      "options": [
+        "Welcome coffee morning",
+        "Team lunch",
+        "Open evening"
+      ]
+    }
+  ]
+}

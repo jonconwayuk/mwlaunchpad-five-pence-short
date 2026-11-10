@@ -1,0 +1,19 @@
+{
+  "id": "j-payroll",
+  "semver": "1.0.0",
+  "title": "Payroll",
+  "description": "Give us the details we need to pay you.",
+  "ownerTeam": "HR",
+  "stage": "pre-employment",
+  "tags": {},
+  "declaresOutcome": false,
+  "actions": [
+    {
+      "id": "j-payroll-a1",
+      "type": "provide",
+      "label": "Provide your bank details",
+      "owner": "starter",
+      "starterOnly": true
+    }
+  ]
+}

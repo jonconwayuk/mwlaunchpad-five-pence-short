@@ -1,0 +1,28 @@
+{
+  "id": "j-payments-access",
+  "semver": "1.0.0",
+  "title": "Payments squad access package",
+  "description": "Access to the Payments squad systems.",
+  "ownerTeam": "Technology",
+  "stage": "pre-employment",
+  "tags": {
+    "platform": "Technology"
+  },
+  "declaresOutcome": false,
+  "actions": [
+    {
+      "id": "j-payments-access-a1",
+      "type": "automation",
+      "label": "Network account",
+      "connector": "servicenow",
+      "operation": "requestAccessPackage"
+    },
+    {
+      "id": "j-payments-access-a2",
+      "type": "automation",
+      "label": "Access package",
+      "connector": "servicenow",
+      "operation": "requestAccessPackage"
+    }
+  ]
+}

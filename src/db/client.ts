@@ -27,6 +27,8 @@ CREATE TABLE IF NOT EXISTS duration_history (id INTEGER PRIMARY KEY AUTOINCREMEN
   journey_id TEXT NOT NULL, journey_version INTEGER NOT NULL, days INTEGER NOT NULL);
 CREATE TABLE IF NOT EXISTS demo_clock (id INTEGER PRIMARY KEY, today TEXT NOT NULL);
 CREATE TABLE IF NOT EXISTS notes (id INTEGER PRIMARY KEY AUTOINCREMENT, person_id TEXT NOT NULL, author_id TEXT NOT NULL, body TEXT NOT NULL, at TEXT NOT NULL);
+CREATE TABLE IF NOT EXISTS manual_reminders (id INTEGER PRIMARY KEY AUTOINCREMENT, person_id TEXT NOT NULL, message TEXT NOT NULL, at TEXT NOT NULL);
+CREATE TABLE IF NOT EXISTS handovers (id INTEGER PRIMARY KEY AUTOINCREMENT, person_id TEXT NOT NULL, question TEXT NOT NULL, at TEXT NOT NULL);
 `;
 
 const open = () => {
@@ -34,6 +36,12 @@ const open = () => {
   const sqlite = new Database(path);
   sqlite.pragma('journal_mode = WAL');
   sqlite.exec(DDL);
+  // Optional columns added after the first build; older databases get them here.
+  for (const [table, column] of [['journeys', 'semver'], ['pathway_versions', 'semver'],
+    ['duration_history', 'business_area'], ['duration_history', 'role'], ['duration_history', 'grade']]) {
+    const cols = sqlite.prepare(`PRAGMA table_info(${table})`).all() as { name: string }[];
+    if (!cols.some((c) => c.name === column)) sqlite.exec(`ALTER TABLE ${table} ADD COLUMN ${column} TEXT`);
+  }
   return { sqlite, db: drizzle(sqlite, { schema }) };
 };
 

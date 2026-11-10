@@ -1,0 +1,23 @@
+{
+  "id": "j-start-delay",
+  "semver": "1.0.0",
+  "title": "Start delay engagement",
+  "description": "Staying in touch while you wait.",
+  "ownerTeam": "HR",
+  "stage": "pre-employment",
+  "tags": {},
+  "declaresOutcome": false,
+  "actions": [
+    {
+      "id": "j-start-delay-a1",
+      "type": "read",
+      "label": "What is happening while you wait"
+    },
+    {
+      "id": "j-start-delay-a2",
+      "type": "notification",
+      "label": "Say hello to your new starter",
+      "owner": "line-manager"
+    }
+  ]
+}

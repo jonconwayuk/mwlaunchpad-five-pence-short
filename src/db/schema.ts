@@ -28,6 +28,7 @@ export const journeys = sqliteTable('journeys', {
   tags: text('tags', { mode: 'json' }).$type<Tags>().notNull(),
   whileYouWait: text('while_you_wait'),
   declaresOutcome: integer('declares_outcome', { mode: 'boolean' }).notNull(),
+  semver: text('semver'),
 }, (t) => [primaryKey({ columns: [t.id, t.version] })]);
 
 export const actions = sqliteTable('actions', {
@@ -49,6 +50,7 @@ export const pathwayVersions = sqliteTable('pathway_versions', {
   pathwayId: text('pathway_id').notNull(),
   version: integer('version').notNull(),
   snapshot: text('snapshot', { mode: 'json' }).$type<PathwaySnapshot>().notNull(),
+  semver: text('semver'), // layered on the integer version that Applied Pathways pin
 }, (t) => [primaryKey({ columns: [t.pathwayId, t.version] })]);
 
 // The draft canvas: one row per element, replaced wholesale on save.
@@ -97,6 +99,9 @@ export const durationHistory = sqliteTable('duration_history', {
   journeyId: text('journey_id').notNull(),
   journeyVersion: integer('journey_version').notNull(),
   days: integer('days').notNull(),
+  businessArea: text('business_area'), // the past starter's job family
+  role: text('role'),
+  grade: text('grade'),
 });
 
 export const demoClock = sqliteTable('demo_clock', {
@@ -109,5 +114,19 @@ export const notes = sqliteTable('notes', {
   personId: text('person_id').notNull(),
   authorId: text('author_id').notNull(),
   body: text('body').notNull(),
+  at: text('at').notNull(),
+});
+
+export const manualReminders = sqliteTable('manual_reminders', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
+  personId: text('person_id').notNull(),
+  message: text('message').notNull(),
+  at: text('at').notNull(),
+});
+
+export const handovers = sqliteTable('handovers', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
+  personId: text('person_id').notNull(),
+  question: text('question').notNull(),
   at: text('at').notNull(),
 });

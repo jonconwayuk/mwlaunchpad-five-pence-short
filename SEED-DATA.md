@@ -10,11 +10,13 @@ The synthetic data the demo runs on and the Pathway engine tests use (Design.MD 
 
 Used for Journey tags, Pathway tags and Person attributes. For browsing and filtering only; nothing is matched automatically.
 
+Grades are A to G (feedback 1, item 6). The old names were regraded: Colleague to B (C for software engineers and the Executive assistant), Manager to D, Senior manager to E, Executive to G. Line managers are D, except Hannah Price (F) and Ruth King (G).
+
 | List | Values |
 | --- | --- |
-| Job family | Branch, Software engineering, Executive, HR, IT |
-| Role | Customer service colleague, Software engineer, Managing director, Executive assistant, Line manager |
-| Grade | Colleague, Manager, Senior manager, Executive |
+| Job family | Branch, Software engineering, Executive, Modern Workplace, HR, IT |
+| Role | Customer service colleague, Software engineer, Infrastructure engineer, Managing director, Executive assistant, Line manager |
+| Grade | A, B, C, D, E, F, G |
 | Platform | Retail, Technology, Group Functions |
 | Location | Cardiff, Leeds, London, Edinburgh |
 
@@ -24,10 +26,11 @@ Dates are relative to the Demo clock's starting "today" (T), so Reset demo alway
 
 | Persona | Job family / Role / Grade / Platform / Location | Offer accepted | Start date (Day 1) | Line Manager | Buddy | Delegate |
 | --- | --- | --- | --- | --- | --- | --- |
-| **A: Alex Morgan** | Branch / Customer service colleague / Colleague / Retail / Cardiff | T − 21 days | T + 56 days (long vetting wait) | Priya Shah | Tom Evans | — |
-| **B: Sam Okafor** | Software engineering / Software engineer / Colleague / Technology / Leeds | T − 35 days | T + 5 days | Chris Lee | Jo Patel | — |
-| **C: Dana Whitfield** | Executive / Managing director / Executive / Group Functions / London | T − 14 days | T + 21 days | Ruth King | Mark Allen | Lena Brooks (Executive assistant) |
-| HR Partner | HR / — / Manager / Group Functions / Leeds | | | | | |
+| **A: Alex Morgan** | Branch / Customer service colleague / B / Retail / Cardiff | T − 21 days | T + 56 days (long vetting wait) | Priya Shah | Tom Evans | — |
+| **B: Sam Okafor** | Software engineering / Software engineer / C / Technology / Leeds | T − 35 days | T + 5 days | Chris Lee | Jo Patel | — |
+| **C: Dana Whitfield** | Executive / Managing director / G / Group Functions / London | T − 14 days | T + 21 days | Ruth King | Mark Allen | Lena Brooks (Executive assistant) |
+| **Bob Warwick** (`person-bob`) | Modern Workplace / Infrastructure engineer / E / Technology / Edinburgh | T − 7 days | T + 28 days | Hannah Price (F) | Leo Grant (D) | — |
+| HR Partner | HR / — / D / Group Functions / Leeds | | | | | |
 
 The HR Partner persona is also the Journey owner and Pathway owner in the demo.
 
@@ -55,6 +58,11 @@ The HR Partner persona is also the Journey owner and Pathway owner in the demo.
 | 16 | Welcome from sponsoring exec | Executive office | Onboarding | Notification to Starter → Task, HR (book sponsor meeting) | — |
 | 17 | Start delay engagement | HR | Pre-employment | Read (what's happening while you wait) → Notification to Line Manager (say hello) | — |
 | 18 | In-person events calendar | HR | Onboarding | Read (events near you, from the Person's location) → Choose (event to attend) | — |
+| 19 | Privileged access request | Modern Workplace | Pre-employment | Hidden automation (ServiceNow `createPrivilegedAccessRequest`). "While you wait" message. | — |
+| 20 | Lab environment | Modern Workplace | Onboarding | Hidden automation (Oracle `assignCostCentre`) → Hidden automation (ServiceNow `provisionLabEnvironment`) → Task, Starter (sign in) | — |
+| 21 | Modern Workplace team access package | Modern Workplace | Pre-employment | Hidden automation (ServiceNow `requestAccessPackage`) → Notification to Starter | — |
+
+Every Journey is a file in `journeys/` (one per Journey, with a `semver`); the seed reads that folder in file-name order. Connector manifests for Workday, ServiceNow and Oracle are in `connectors/`, backed by the mocked adapters in `src/adapters/`.
 
 ## 4. Pathway templates
 
@@ -82,9 +90,12 @@ Template-specific items:
 
 | Pathway | Tags | Device Journey | Extra Pathway Items |
 | --- | --- | --- | --- |
-| **Branch colleague** | Branch / Retail / Colleague | Branch device | Uniform (optional, after Contracting); Branch induction (mandatory, Timer Day 1); Cash-handling training (mandatory, Timer Day 8) |
-| **Software engineer** | Software engineering / Technology / Colleague | Developer device | Engineering community intro (optional, Timer Day 1) |
-| **Executive** | Executive / Group Functions / Executive | Executive device | Welcome from sponsoring exec (mandatory, after "Cleared to start") |
+| **Branch colleague** | Branch / Retail / B | Branch device | Uniform (optional, after Contracting); Branch induction (mandatory, Timer Day 1); Cash-handling training (mandatory, Timer Day 8) |
+| **Software engineer** | Software engineering / Technology / C | Developer device | Engineering community intro (optional, Timer Day 1) |
+| **Executive** | Executive / Group Functions / G | Executive device | Welcome from sponsoring exec (mandatory, after "Cleared to start") |
+| **Infrastructure engineer E** (`pw-infra-e`) | Modern Workplace / Infrastructure engineer / Technology / E | Developer device | Privileged access request (mandatory, no Dependency, so it waits on ServiceNow from the day it is applied); Lab environment (mandatory, after Privileged access request and Timer Day 1). Hard Stop deadline also stops Lab environment |
+
+Bob after HR applies `pw-infra-e` at T and the Demo clock moves 21 days: Privileged access request waiting 21 days, Usual Range 19 to 28, not overdue; "Cleared to start" Container incomplete; Pulse check (Day 14) held by its Timer; the On failed Hard Stop on Pre-employment checks is armed; Modern Workplace team access package is in the library for Hannah to add. Checked by `src/db/files.test.ts`.
 
 ## 5. Applied Pathways and Additions at reset
 
@@ -93,10 +104,11 @@ Template-specific items:
 | A | Branch colleague | By HR: Start delay engagement (Timer: 30 days after Offer accepted, optional); In-person events calendar (On Day 1, optional) |
 | B | Software engineer | None at reset. **Live in the demo**: Line Manager adds Payments squad access package (After "Cleared to start", mandatory) |
 | C | Executive | None |
+| Bob | **None at reset.** Live in the demo: HR applies Infrastructure engineer E; after "Plus 3 weeks" Hannah adds Modern Workplace team access package | — |
 
 ## 6. Seeded history
 
-So the Usual Range and observability have data: about 20 past synthetic starters per Pathway, with Journey Durations for each Journey version. Pre-employment checks usually take 21–35 days. A few have Skipped optional Journeys and Pulse scores across two Pathway versions ("Branch colleague v3" and "v4").
+So the Usual Range and observability have data: 20 past synthetic starters per Pathway (four Pathways), with Journey Durations for each Journey version. Pre-employment checks usually take 21–35 days; Privileged access request 19–28 days. Each sample carries a business area (the Pathway's job family: Branch, Software engineering, Executive, Modern Workplace), a role from that family and a grade from B to F, drawn from a separate seeded generator so the original durations did not move. A few have Skipped optional Journeys and Pulse scores across two Pathway versions ("Branch colleague v3" and "v4").
 
 ## Open points
 

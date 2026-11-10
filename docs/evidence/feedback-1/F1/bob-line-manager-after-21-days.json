@@ -1,0 +1,207 @@
+{
+ "otherKeys": [
+  "engineState",
+  "person",
+  "simulatedDate",
+  "personas"
+ ],
+ "today": "2026-12-01",
+ "personStatus": "joiner",
+ "items": [
+  {
+   "itemId": "i-contracting",
+   "status": "action-required",
+   "available": true,
+   "blockedFlag": false,
+   "waitingDays": 21,
+   "usualRange": [
+    5,
+    10
+   ],
+   "overdue": true,
+   "unmet": []
+  },
+  {
+   "itemId": "i-payroll",
+   "status": "not-started",
+   "available": false,
+   "blockedFlag": false,
+   "usualRange": [
+    14,
+    26
+   ],
+   "overdue": false,
+   "unmet": [
+    "i-contracting"
+   ]
+  },
+  {
+   "itemId": "i-checks",
+   "status": "not-started",
+   "available": false,
+   "blockedFlag": false,
+   "usualRange": [
+    21,
+    35
+   ],
+   "overdue": false,
+   "unmet": [
+    "i-contracting"
+   ]
+  },
+  {
+   "itemId": "i-id",
+   "status": "not-started",
+   "available": false,
+   "blockedFlag": false,
+   "usualRange": [
+    5,
+    12
+   ],
+   "overdue": false,
+   "unmet": [
+    "i-checks"
+   ]
+  },
+  {
+   "itemId": "i-device",
+   "status": "not-started",
+   "available": false,
+   "blockedFlag": false,
+   "usualRange": [
+    5,
+    12
+   ],
+   "overdue": false,
+   "unmet": [
+    "i-contracting"
+   ]
+  },
+  {
+   "itemId": "i-manager-ready",
+   "status": "not-started",
+   "available": false,
+   "blockedFlag": false,
+   "usualRange": [
+    4,
+    10
+   ],
+   "overdue": false,
+   "unmet": [
+    "i-contracting"
+   ]
+  },
+  {
+   "itemId": "i-buddy",
+   "status": "not-started",
+   "available": false,
+   "blockedFlag": false,
+   "usualRange": [
+    5,
+    11
+   ],
+   "overdue": false,
+   "unmet": [
+    "c-cleared"
+   ]
+  },
+  {
+   "itemId": "i-pulse-14",
+   "status": "not-started",
+   "available": false,
+   "blockedFlag": false,
+   "usualRange": [
+    4,
+    11
+   ],
+   "overdue": false,
+   "unmet": [
+    "t-pulse-14"
+   ]
+  },
+  {
+   "itemId": "i-pulse-30",
+   "status": "not-started",
+   "available": false,
+   "blockedFlag": false,
+   "usualRange": [
+    4,
+    11
+   ],
+   "overdue": false,
+   "unmet": [
+    "t-pulse-30"
+   ]
+  },
+  {
+   "itemId": "i-priv-access",
+   "status": "in-progress",
+   "available": true,
+   "blockedFlag": true,
+   "waitingDays": 21,
+   "usualRange": [
+    19,
+    28
+   ],
+   "overdue": false,
+   "unmet": []
+  },
+  {
+   "itemId": "i-lab",
+   "status": "not-started",
+   "available": false,
+   "blockedFlag": false,
+   "usualRange": [
+    5,
+    10
+   ],
+   "overdue": false,
+   "unmet": [
+    "i-priv-access",
+    "t-day-1"
+   ]
+  }
+ ],
+ "containers": [
+  {
+   "containerId": "c-cleared",
+   "label": "Cleared to start",
+   "complete": false,
+   "doneCount": 0,
+   "mandatoryCount": 3,
+   "remainingItemIds": [
+    "i-payroll",
+    "i-checks",
+    "i-id"
+   ]
+  }
+ ],
+ "timers": [
+  {
+   "timerId": "t-payroll-reminder",
+   "firesOn": "2026-12-01",
+   "fired": true
+  },
+  {
+   "timerId": "t-deadline",
+   "firesOn": "2026-12-03",
+   "fired": false
+  },
+  {
+   "timerId": "t-pulse-14",
+   "firesOn": "2026-12-21",
+   "fired": false
+  },
+  {
+   "timerId": "t-pulse-30",
+   "firesOn": "2027-01-06",
+   "fired": false
+  },
+  {
+   "timerId": "t-day-1",
+   "firesOn": "2026-12-08",
+   "fired": false
+  }
+ ],
+ "needsDecisions": []
+}

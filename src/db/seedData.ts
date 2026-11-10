@@ -1,18 +1,13 @@
 // Synthetic data from SEED-DATA.md. Every name, place and date here is invented.
-import type {
-  ActionDef, ActorRole, ContainerDef, DependencyRef, HardStopDef, JourneyDef, PathwayItem, PathwaySnapshot,
+import { fileToJourney, loadJourneyFiles, TAG_LISTS } from './files';
+import type { ContainerDef, DependencyRef, HardStopDef, JourneyDef, PathwayItem, PathwaySnapshot,
   StageId, Tags, TimerDef,
 } from '../engine/types';
 
 export const DEMO_T = '2026-11-10';
 
-export const TAG_LISTS = {
-  jobFamily: ['Branch', 'Software engineering', 'Executive', 'HR', 'IT'],
-  role: ['Customer service colleague', 'Software engineer', 'Managing director', 'Executive assistant', 'Line manager'],
-  grade: ['Colleague', 'Manager', 'Senior manager', 'Executive'],
-  platform: ['Retail', 'Technology', 'Group Functions'],
-  location: ['Cardiff', 'Leeds', 'London', 'Edinburgh'],
-};
+// Grades A to G (feedback item 6). Old names map: Colleague B (C for engineers), Manager D, Senior manager E, Executive G.
+export { TAG_LISTS };
 
 export interface SeedPerson {
   id: string; name: string; role: 'starter' | 'line-manager' | 'buddy' | 'delegate' | 'hr'; tags: Tags;
@@ -24,75 +19,28 @@ const t = (jobFamily: string, role: string, grade: string, platform: string, loc
 const staff = (id: string, name: string, role: SeedPerson['role'], tags: Tags): SeedPerson => ({ id, name, role, tags });
 
 export const PERSONS: SeedPerson[] = [
-  { id: 'person-a', name: 'Alex Morgan', role: 'starter', tags: t('Branch', 'Customer service colleague', 'Colleague', 'Retail', 'Cardiff'),
+  { id: 'person-a', name: 'Alex Morgan', role: 'starter', tags: t('Branch', 'Customer service colleague', 'B', 'Retail', 'Cardiff'),
     offerDays: -21, startDays: 56, lineManagerId: 'lm-priya', buddyId: 'buddy-tom' },
-  { id: 'person-b', name: 'Sam Okafor', role: 'starter', tags: t('Software engineering', 'Software engineer', 'Colleague', 'Technology', 'Leeds'),
+  { id: 'person-b', name: 'Sam Okafor', role: 'starter', tags: t('Software engineering', 'Software engineer', 'C', 'Technology', 'Leeds'),
     offerDays: -35, startDays: 5, lineManagerId: 'lm-chris', buddyId: 'buddy-jo' },
-  { id: 'person-c', name: 'Dana Whitfield', role: 'starter', tags: t('Executive', 'Managing director', 'Executive', 'Group Functions', 'London'),
+  { id: 'person-c', name: 'Dana Whitfield', role: 'starter', tags: t('Executive', 'Managing director', 'G', 'Group Functions', 'London'),
     offerDays: -14, startDays: 21, lineManagerId: 'lm-ruth', buddyId: 'buddy-mark', delegateId: 'delegate-lena' },
-  staff('lm-priya', 'Priya Shah', 'line-manager', t('Branch', 'Line manager', 'Manager', 'Retail', 'Cardiff')),
-  staff('buddy-tom', 'Tom Evans', 'buddy', t('Branch', 'Customer service colleague', 'Colleague', 'Retail', 'Cardiff')),
-  staff('lm-chris', 'Chris Lee', 'line-manager', t('Software engineering', 'Line manager', 'Manager', 'Technology', 'Leeds')),
-  staff('buddy-jo', 'Jo Patel', 'buddy', t('Software engineering', 'Software engineer', 'Colleague', 'Technology', 'Leeds')),
-  staff('lm-ruth', 'Ruth King', 'line-manager', t('Executive', 'Managing director', 'Executive', 'Group Functions', 'London')),
-  staff('buddy-mark', 'Mark Allen', 'buddy', t('Executive', 'Managing director', 'Executive', 'Group Functions', 'London')),
-  staff('delegate-lena', 'Lena Brooks', 'delegate', t('Executive', 'Executive assistant', 'Colleague', 'Group Functions', 'London')),
-  staff('hr-partner', 'HR Partner', 'hr', { ...t('HR', '', 'Manager', 'Group Functions', 'Leeds'), role: undefined }),
+  staff('lm-priya', 'Priya Shah', 'line-manager', t('Branch', 'Line manager', 'D', 'Retail', 'Cardiff')),
+  staff('buddy-tom', 'Tom Evans', 'buddy', t('Branch', 'Customer service colleague', 'B', 'Retail', 'Cardiff')),
+  staff('lm-chris', 'Chris Lee', 'line-manager', t('Software engineering', 'Line manager', 'D', 'Technology', 'Leeds')),
+  staff('buddy-jo', 'Jo Patel', 'buddy', t('Software engineering', 'Software engineer', 'C', 'Technology', 'Leeds')),
+  staff('lm-ruth', 'Ruth King', 'line-manager', t('Executive', 'Managing director', 'G', 'Group Functions', 'London')),
+  staff('buddy-mark', 'Mark Allen', 'buddy', t('Executive', 'Managing director', 'G', 'Group Functions', 'London')),
+  staff('delegate-lena', 'Lena Brooks', 'delegate', t('Executive', 'Executive assistant', 'C', 'Group Functions', 'London')),
+  { id: 'person-bob', name: 'Bob Warwick', role: 'starter', tags: t('Modern Workplace', 'Infrastructure engineer', 'E', 'Technology', 'Edinburgh'),
+    offerDays: -7, startDays: 28, lineManagerId: 'lm-hannah', buddyId: 'buddy-leo' },
+  staff('lm-hannah', 'Hannah Price', 'line-manager', t('Modern Workplace', 'Line manager', 'F', 'Technology', 'Edinburgh')),
+  staff('buddy-leo', 'Leo Grant', 'buddy', t('Modern Workplace', 'Infrastructure engineer', 'D', 'Technology', 'Edinburgh')),
+  staff('hr-partner', 'HR Partner', 'hr', { ...t('HR', '', 'D', 'Group Functions', 'Leeds'), role: undefined }),
 ];
 
-type A = Omit<ActionDef, 'id'>;
-const read = (label: string): A => ({ type: 'read', label });
-const provide = (label: string, starterOnly = false): A => ({ type: 'provide', label, owner: 'starter', ...(starterOnly && { starterOnly }) });
-const auto = (label: string, setsOutcome = false): A => ({ type: 'automation', label, ...(setsOutcome && { setsOutcome }) });
-const notify = (label: string, owner: ActorRole): A => ({ type: 'notification', label, owner });
-const task = (label: string, owner: ActorRole): A => ({ type: 'task', label, owner });
-const choose = (label: string, options: string[], flagAtOrBelow?: number, starterOnly = false): A =>
-  ({ type: 'choose', label, owner: 'starter', options, ...(flagAtOrBelow !== undefined && { flagAtOrBelow }), ...(starterOnly && { starterOnly }) });
-const scale = ['1', '2', '3', '4', '5'];
-
-const WAIT = 'Your checks are with our vetting partner. Most take three to five weeks, so there is nothing you need to do right now.';
-
-type JourneySeed = [id: string, title: string, ownerTeam: string, stage: StageId, tags: Tags, description: string, actions: A[], extra?: Partial<JourneyDef>];
-const JOURNEY_SEEDS: JourneySeed[] = [
-  ['j-contracting', 'Contracting', 'HR', 'pre-contract', {}, 'Read and sign your contract.', [read('Read your offer'), provide('Sign your contract')]],
-  ['j-payroll', 'Payroll', 'HR', 'pre-employment', {}, 'Give us the details we need to pay you.', [provide('Provide your bank details', true)]],
-  ['j-checks', 'Pre-employment checks', 'HR', 'pre-employment', {}, 'Right to work, proof of address and vetting.',
-    [provide('Provide your right to work and proof of address', true), auto('Vetting check', true)], { whileYouWait: WAIT, declaresOutcome: true }],
-  ['j-id', 'ID creation (photo)', 'Security', 'pre-employment', {}, 'Your photo for your building pass.', [provide('Provide your photo'), auto('Badge request')]],
-  ['j-manager-ready', 'Manager ready', 'HR', 'pre-employment', {}, 'Your Line Manager gets ready for you.',
-    [task('Set three-month goals', 'line-manager'), auto('Send welcome pack'), notify('Your Line Manager is ready for you', 'starter')]],
-  ['j-buddy', 'Meet your buddy', 'HR', 'pre-employment', {}, 'Say hello to your buddy.',
-    [notify('You have a new starter to welcome', 'buddy'), task('Send a hello note', 'buddy')]],
-  ['j-pulse', 'Pulse check', 'HR', 'first-30-days', {}, 'A quick check on how it is going.',
-    [read('A quick check-in'), choose('How connected do you feel? (1 to 5)', scale, 2, true), choose('How confident do you feel? (1 to 5)', scale, 2, true)]],
-  ['j-device-branch', 'Branch device', 'IT', 'pre-employment', { jobFamily: 'Branch' }, 'Choose and receive your device.',
-    [choose('Choose your device', ['Branch tablet', 'Branch laptop']), auto('Order to your address from the system of record')]],
-  ['j-device-dev', 'Developer device', 'IT', 'pre-employment', { jobFamily: 'Software engineering' }, 'Choose and receive your high-spec device.',
-    [choose('Choose your high-spec device', ['Laptop 16 inch', 'Laptop 14 inch']), auto('Order your device')]],
-  ['j-device-exec', 'Executive device', 'IT', 'pre-employment', { jobFamily: 'Executive' }, 'Choose and receive your device.',
-    [choose('Choose your device', ['Ultralight laptop', 'Tablet and keyboard']), auto('Order your device')]],
-  ['j-uniform', 'Uniform (Merch distribution)', 'Retail', 'pre-employment', { platform: 'Retail' }, 'Choose your uniform size.',
-    [choose('Choose your size', ['S', 'M', 'L', 'XL']), auto('Order to your address from the system of record')]],
-  ['j-branch-induction', 'Branch induction', 'Retail', 'onboarding', { platform: 'Retail' }, 'Your first week in the branch.',
-    [read('Your first week'), task('Shadow shift', 'starter'), task('Week-one 1:1', 'line-manager')]],
-  ['j-cash-handling', 'Cash-handling training', 'Retail', 'first-30-days', { platform: 'Retail' }, 'Learn to handle cash safely.',
-    [read('Cash-handling guide'), task('Complete the e-learning', 'starter')]],
-  ['j-eng-community', 'Engineering community intro', 'Technology', 'onboarding', { platform: 'Technology' }, 'Meet the engineering community.',
-    [read('About the guilds'), task('Join the guild channel', 'starter')]],
-  ['j-payments-access', 'Payments squad access package', 'Technology', 'pre-employment', { platform: 'Technology' }, 'Access to the Payments squad systems.',
-    [auto('Network account'), auto('Access package')]],
-  ['j-exec-welcome', 'Welcome from sponsoring exec', 'Executive office', 'onboarding', { jobFamily: 'Executive' }, 'A welcome from your sponsoring executive.',
-    [notify('A welcome from your sponsoring executive', 'starter'), task('Book the sponsor meeting', 'hr')]],
-  ['j-start-delay', 'Start delay engagement', 'HR', 'pre-employment', {}, 'Staying in touch while you wait.',
-    [read('What is happening while you wait'), notify('Say hello to your new starter', 'line-manager')]],
-  ['j-events', 'In-person events calendar', 'HR', 'onboarding', {}, 'Events near you.',
-    [read('Events near you'), choose('Choose an event to attend', ['Welcome coffee morning', 'Team lunch', 'Open evening'])]],
-];
-
-export const JOURNEYS: JourneyDef[] = JOURNEY_SEEDS.map(([id, title, ownerTeam, stage, tags, description, acts, extra]) => ({
-  id, version: 1, title, description, ownerTeam, stage, tags, declaresOutcome: false, ...extra,
-  actions: acts.map((a, i) => ({ id: `${id}-a${i + 1}`, ...a })),
-}));
+// Every library Journey lives in its own file under journeys/ (config as code); all are version 1 at reset.
+export const JOURNEYS: JourneyDef[] = loadJourneyFiles().map((f) => ({ ...fileToJourney(f, 1), semver: f.semver }));
 const stageOf = (journeyId: string): StageId => JOURNEYS.find((j) => j.id === journeyId)!.stage;
 
 // ---- Pathway templates -------------------------------------------------------------------
@@ -120,7 +68,7 @@ export function buildItems(seeds: ItemSeed[]): PathwayItem[] {
 
 interface Template { id: string; title: string; tags: Tags; device: [string, string]; extraItems: ItemSeed[]; extraTimers: TimerDef[]; stops: string[] }
 const TEMPLATES: Template[] = [
-  { id: 'pw-branch', title: 'Branch colleague', tags: { jobFamily: 'Branch', platform: 'Retail', grade: 'Colleague' },
+  { id: 'pw-branch', title: 'Branch colleague', tags: { jobFamily: 'Branch', platform: 'Retail', grade: 'B' },
     device: ['i-device', 'j-device-branch'],
     extraItems: [
       ['i-uniform', 'j-uniform', false, [dep.item('i-contracting')]],
@@ -128,14 +76,23 @@ const TEMPLATES: Template[] = [
       ['i-cash', 'j-cash-handling', true, [dep.timer('t-day-8')]],
     ],
     extraTimers: [startTimer('t-day-1', 'Day 1', 0), startTimer('t-day-8', 'Day 8', 7)], stops: [] },
-  { id: 'pw-engineer', title: 'Software engineer', tags: { jobFamily: 'Software engineering', platform: 'Technology', grade: 'Colleague' },
+  { id: 'pw-engineer', title: 'Software engineer', tags: { jobFamily: 'Software engineering', platform: 'Technology', grade: 'C' },
     device: ['i-device', 'j-device-dev'],
     extraItems: [['i-community', 'j-eng-community', false, [dep.timer('t-day-1')]]],
     extraTimers: [startTimer('t-day-1', 'Day 1', 0)], stops: [] },
-  { id: 'pw-executive', title: 'Executive', tags: { jobFamily: 'Executive', platform: 'Group Functions', grade: 'Executive' },
+  { id: 'pw-executive', title: 'Executive', tags: { jobFamily: 'Executive', platform: 'Group Functions', grade: 'G' },
     device: ['i-device', 'j-device-exec'],
     extraItems: [['i-exec-welcome', 'j-exec-welcome', true, [dep.container('c-cleared')]]],
     extraTimers: [], stops: ['i-exec-welcome'] },
+  // Bob's Pathway: the Privileged access request waits on ServiceNow from the day it is applied, and the Lab environment follows it.
+  { id: 'pw-infra-e', title: 'Infrastructure engineer E',
+    tags: { jobFamily: 'Modern Workplace', role: 'Infrastructure engineer', platform: 'Technology', grade: 'E' },
+    device: ['i-device', 'j-device-dev'],
+    extraItems: [
+      ['i-priv-access', 'j-priv-access', true, []],
+      ['i-lab', 'j-lab-env', true, [dep.item('i-priv-access'), dep.timer('t-day-1')]],
+    ],
+    extraTimers: [startTimer('t-day-1', 'Day 1', 0)], stops: ['i-lab'] },
 ];
 
 export function buildTemplate(tpl: Template): Omit<PathwaySnapshot, 'id' | 'version'> {

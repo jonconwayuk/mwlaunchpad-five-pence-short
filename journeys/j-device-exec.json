@@ -1,0 +1,29 @@
+{
+  "id": "j-device-exec",
+  "semver": "1.0.0",
+  "title": "Executive device",
+  "description": "Choose and receive your device.",
+  "ownerTeam": "IT",
+  "stage": "pre-employment",
+  "tags": {
+    "jobFamily": "Executive"
+  },
+  "declaresOutcome": false,
+  "actions": [
+    {
+      "id": "j-device-exec-a1",
+      "type": "choose",
+      "label": "Choose your device",
+      "owner": "starter",
+      "options": [
+        "Ultralight laptop",
+        "Tablet and keyboard"
+      ]
+    },
+    {
+      "id": "j-device-exec-a2",
+      "type": "automation",
+      "label": "Order your device"
+    }
+  ]
+}

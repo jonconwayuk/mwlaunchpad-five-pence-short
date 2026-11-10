@@ -1,0 +1,24 @@
+{
+  "id": "j-buddy",
+  "semver": "1.0.0",
+  "title": "Meet your buddy",
+  "description": "Say hello to your buddy.",
+  "ownerTeam": "HR",
+  "stage": "pre-employment",
+  "tags": {},
+  "declaresOutcome": false,
+  "actions": [
+    {
+      "id": "j-buddy-a1",
+      "type": "notification",
+      "label": "You have a new starter to welcome",
+      "owner": "buddy"
+    },
+    {
+      "id": "j-buddy-a2",
+      "type": "task",
+      "label": "Send a hello note",
+      "owner": "buddy"
+    }
+  ]
+}

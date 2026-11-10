@@ -1,0 +1,33 @@
+{
+  "id": "j-uniform",
+  "semver": "1.0.0",
+  "title": "Uniform (Merch distribution)",
+  "description": "Choose your uniform size.",
+  "ownerTeam": "Retail",
+  "stage": "pre-employment",
+  "tags": {
+    "platform": "Retail"
+  },
+  "declaresOutcome": false,
+  "actions": [
+    {
+      "id": "j-uniform-a1",
+      "type": "choose",
+      "label": "Choose your size",
+      "owner": "starter",
+      "options": [
+        "S",
+        "M",
+        "L",
+        "XL"
+      ]
+    },
+    {
+      "id": "j-uniform-a2",
+      "type": "automation",
+      "label": "Order to your address from the system of record",
+      "connector": "workday",
+      "operation": "getDeliveryAddress"
+    }
+  ]
+}

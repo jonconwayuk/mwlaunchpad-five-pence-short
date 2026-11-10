@@ -1,0 +1,26 @@
+{
+  "id": "j-exec-welcome",
+  "semver": "1.0.0",
+  "title": "Welcome from sponsoring exec",
+  "description": "A welcome from your sponsoring executive.",
+  "ownerTeam": "Executive office",
+  "stage": "onboarding",
+  "tags": {
+    "jobFamily": "Executive"
+  },
+  "declaresOutcome": false,
+  "actions": [
+    {
+      "id": "j-exec-welcome-a1",
+      "type": "notification",
+      "label": "A welcome from your sponsoring executive",
+      "owner": "starter"
+    },
+    {
+      "id": "j-exec-welcome-a2",
+      "type": "task",
+      "label": "Book the sponsor meeting",
+      "owner": "hr"
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "id": "j-checks",
+  "semver": "1.0.0",
+  "title": "Pre-employment checks",
+  "description": "Right to work, proof of address and vetting.",
+  "ownerTeam": "HR",
+  "stage": "pre-employment",
+  "tags": {},
+  "whileYouWait": "Your checks are with our vetting partner. Most take three to five weeks, so there is nothing you need to do right now.",
+  "declaresOutcome": true,
+  "actions": [
+    {
+      "id": "j-checks-a1",
+      "type": "provide",
+      "label": "Provide your right to work and proof of address",
+      "owner": "starter",
+      "starterOnly": true
+    },
+    {
+      "id": "j-checks-a2",
+      "type": "automation",
+      "label": "Vetting check",
+      "setsOutcome": true
+    }
+  ]
+}

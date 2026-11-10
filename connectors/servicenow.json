@@ -1,0 +1,44 @@
+{
+  "id": "servicenow",
+  "name": "ServiceNow",
+  "description": "Mocked IT service management: access requests and provisioning tickets.",
+  "adapter": "src/adapters/mockServiceNow.ts",
+  "operations": [
+    {
+      "name": "createPrivilegedAccessRequest",
+      "description": "Raise an admin rights request for Security to approve.",
+      "inputs": [
+        "personId",
+        "systems"
+      ],
+      "outputs": [
+        "ticketId",
+        "result"
+      ]
+    },
+    {
+      "name": "requestAccessPackage",
+      "description": "Request a team access package: channels, mailboxes and groups.",
+      "inputs": [
+        "personId",
+        "packageName"
+      ],
+      "outputs": [
+        "ticketId",
+        "result"
+      ]
+    },
+    {
+      "name": "provisionLabEnvironment",
+      "description": "Build a personal lab environment.",
+      "inputs": [
+        "personId",
+        "costCentre"
+      ],
+      "outputs": [
+        "ticketId",
+        "result"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "id": "j-contracting",
+  "semver": "1.0.0",
+  "title": "Contracting",
+  "description": "Read and sign your contract.",
+  "ownerTeam": "HR",
+  "stage": "pre-contract",
+  "tags": {},
+  "declaresOutcome": false,
+  "actions": [
+    {
+      "id": "j-contracting-a1",
+      "type": "read",
+      "label": "Read your offer"
+    },
+    {
+      "id": "j-contracting-a2",
+      "type": "provide",
+      "label": "Sign your contract",
+      "owner": "starter"
+    }
+  ]
+}
