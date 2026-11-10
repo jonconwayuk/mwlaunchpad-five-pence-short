@@ -1,0 +1,16 @@
+## valid-4-actions-new
+{"ok":true,"data":{"id":"c4f-test","title":"T","description":"d","ownerTeam":"HR","stage":"onboarding","tags":{"role":"Software engineer"},... [200]
+## read-with-options
+{"ok":false,"error":"actions.0: Unrecognized key: \"options\""} [400]
+## choose-no-options
+{"ok":false,"error":"actions.0.options: Invalid input: expected array, received undefined"} [400]
+## duplicate-ids
+{"ok":false,"error":"actions: Action ids must be unique"} [400]
+## long-title
+{"ok":false,"error":"title: Too big: expected string to have <=200 characters"} [400]
+## bad-tag
+{"ok":false,"error":"tags.role: Invalid option: expected one of \"Customer service colleague\"|\"Software engineer\"|\"Managing director\"|\"Executive assistant\"|\"Line manager\""} [400]
+## isnew-duplicate
+{"ok":false,"error":"A journey with that title already exists"} [409]
+## republish-v2
+{"ok":true,"data":{"id":"c4f-test","title":"T","description":"d","ownerTeam":"HR","stage":"onboarding","tags":{"role":"Software engineer"},... [200]

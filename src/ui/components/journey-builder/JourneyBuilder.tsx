@@ -37,7 +37,7 @@ export function JourneyBuilder({ initial }: { initial?: JourneyDef }) {
   };
   const publish = async () => {
     setBusy(true); setError('');
-    const body = { ...d, id: isNew ? slug(d.title) : d.id };
+    const body = { ...d, id: isNew ? slug(d.title) : d.id, isNew };
     const res = await fetch('/api/journeys', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) });
     const json = (await res.json()) as { ok: boolean; error?: string };
     setBusy(false);
