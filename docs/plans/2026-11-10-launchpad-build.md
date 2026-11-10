@@ -17,5 +17,6 @@ The gate is `npm run check` (`tsc --noEmit && eslint . && vitest run`) at every 
 | 09:17, wave B gate | `npm run check`, `npm run build` | Green. **Pinned: 55 Vitest tests.** See `docs/evidence/launchpad-build/wave-gates/wave-B.txt` |
 | 09:34, wave C gate | `npm run check`, `npm run build` | Green, 60 tests. `wave-gates/wave-C.txt` |
 | 09:53, wave D gate | `npm run check`, `npm run build` | Green, 81 tests. `wave-gates/wave-D.txt` |
+| 10:12, final gate | `npm run check`, `npm run build` | Green, 82 tests. `wave-gates/wave-E.txt` |
 
 The pinned Vitest count is set at the wave B gate, from B1's test total, and recorded in the evidence for each wave after that.

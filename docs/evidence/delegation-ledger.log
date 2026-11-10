@@ -38,3 +38,6 @@
 09:45 | D2 | fix implementer | opus | Scoped fix: PUT validates journeyVersion, Timer anchors, Container consistency, loop message; canvas stage polish and 1280 width
 09:48 | E1 | security reviewer | opus | security-review skill over 1c782c8..HEAD: validation, injection, state corruption, secrets, config, deps
 09:50 | E1 | fix implementer (security) | sonnet | Clock upper bound, starter Task filter, evidence path scrub, security headers, id length limits
+09:53 | INT2 | final compatibility reviewer | opus | Walk all nine section 9 items through the UI on a private c76b8c4 instance; re-check fixes; update demo script
+09:53 | E1 | auditor | opus | ponytail-audit and ponytail-debt over app/ and src/ at HEAD, report only
+10:03 | FINAL | fix implementer | opus | Final fix loop: canvas Day labels, Hard Stop edge label, reset reload, Publish message, date picker, re-apply decisions, JSON guards, duplicate labels

@@ -21,7 +21,7 @@ One row per `BUILD-PLAN.md` task (waves A to E), updated as each phase lands. Th
 | C4 Journey builder and the libraries | Accepted, one gap passed to D2 | `docs/evidence/launchpad-build/C4/`, decision 22 |
 | D1 Chains and the Hard Stop end to end | Accepted (390px headless, not on a device) | `docs/evidence/launchpad-build/D1/`, decisions 26, 27, 30 |
 | D2 Canvas persistence | Accepted | `docs/evidence/launchpad-build/D2/` |
-| E1 Freeze preparation | In progress (README and sweeps) | |
+| E1 Freeze preparation | Accepted (real-phone walk still to do by hand) | `docs/evidence/launchpad-build/E1/`, `integration/walk-2.md`, `final-fix/`, decisions 24, 28 |
 | Live updates over server-sent events | Deviation | B1 (polling every 3 s), decision 9 |
 | Deploy once | Deviation | B13 (local network only), decision 9 |
 | Observability page | Deviation | B3 (stretch only), decision 9 |
