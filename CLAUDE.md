@@ -122,7 +122,8 @@ The stack is TypeScript on Node.js (`Design.MD` D14), so [Node.js Best Practices
 
 Things that have bitten a phase here, each with the failure it prevents. This list stays empty until something bites; adding an entry is part of the phase that hit it.
 
-- None yet.
+- **Parallel dev servers rewrite `tsconfig.json`.** Each `next dev` run with its own `NEXT_DIST_DIR` adds that directory to `include` and reflows the file. Run `git checkout tsconfig.json` before every commit, and run gates in a clean worktree of HEAD (`git worktree add /tmp/gate HEAD`, with `node_modules` symlinked in). Otherwise the noise lands in someone's commit.
+- **Agents testing against one shared `launchpad.db` corrupt each other's runs.** Give each agent its own `DATABASE_URL=file:/tmp/<task>.db`, and give the team's demo instance its own database in its own worktree.
 
 ## Azure and Microsoft 365
 
