@@ -1,7 +1,7 @@
 'use client';
 import type { PathwayMeta } from './pathwayFilter';
 
-// NEEDS: unify with app/portal/people/ApplyPathway.tsx once that search is committed; both should render this and call filterPathways from pathwayFilter.ts.
+// NEEDS: unify with app/portal/people/ApplyPathway.tsx once that search is committed; both should render this and call filterPathways from pathwayFilter.ts. The People side also has a pathwaySearch.ts helper to merge with pathwayFilter.ts.
 /** Search box plus the list of matching Pathways. Presentational: the page owns the text and the picked Pathway. */
 export function PathwaySearch({ search, onSearch, results, pickedId, onPick, emptyText }: {
   search: string; onSearch: (v: string) => void; results: PathwayMeta[]; pickedId: string; onPick: (id: string) => void; emptyText: string;

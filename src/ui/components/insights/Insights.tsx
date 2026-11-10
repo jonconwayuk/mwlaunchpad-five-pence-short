@@ -155,7 +155,7 @@ export function Insights() {
         <p className="mt-1 text-[var(--muted)]">How long onboarding usually takes, across {data.starterCount} past starters in {stageText}.</p>
       </header>
 
-      <p className="-mt-3 text-charcoal">Showing: {picked ? `${picked.title}, ` : ''}{describeFilters(filters)}</p>
+      <p className="-mt-3 text-charcoal">Showing: {picked ? `${picked.title}, ` : ''}{describeFilters(filters)}{search ? `, name contains "${search}"` : ''}, {stage ? `${stageLabel(stage)} Stage` : 'all Stages'}</p>
       <PathwaySearch search={search} onSearch={(v) => set({ q: v })} results={results} pickedId={pathway}
         onPick={(id) => set({ pathway: id, journey: '' })} emptyText={emptyText} />
 
@@ -178,7 +178,7 @@ export function Insights() {
 
       <Card title="How long each Pathway takes"
         lead={`From a starter's first Journey to their last, adding up each Stage (${stageText}). The dot is the middle starter; the shaded band is the usual range, the middle half of starters.`}>
-        {data.pathways.length ? <RangeChart lines={data.pathways} highlight={pathway} /> : <p className="text-[var(--muted)]">{nothing ? emptyText : 'No past starters yet for these Pathways in this Stage. Choose another Stage or loosen the filters.'}</p>}
+        {data.pathways.length ? <RangeChart lines={data.pathways} highlight={picked?.id} /> : <p className="text-[var(--muted)]">{nothing ? emptyText : 'No past starters yet for these Pathways in this Stage. Choose another Stage or loosen the filters.'}</p>}
       </Card>
 
       <Card title="Which Pathways take longer, and where"

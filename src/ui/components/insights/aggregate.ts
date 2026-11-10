@@ -60,6 +60,7 @@ export function insights(everything: InsightRow[], q: Query, metas: PathwayMeta[
   const keep = new Set(matches.map((m) => m.id));
   const filtered = metas.length > 0 && !!(q.jobFamily || q.grade || q.location);
   const all = filtered ? everything.filter((r) => keep.has(r.pathwayId)) : everything;
+  if (filtered && q.pathway && !keep.has(q.pathway)) q = { ...q, pathway: undefined }; // a Pathway the filters exclude is ignored
   const rows = withStarters(all).filter((r) => !q.stage || r.stage === q.stage);
   // Journeys in a Stage run side by side (longest counts); Stages run one after another (they add up).
   const starters = [...groupBy(rows, (r) => r.starter).values()].map((rs) => ({

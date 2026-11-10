@@ -88,3 +88,18 @@ describe('insights search and filters', () => {
     expect(describeFilters({ jobFamily: 'Technology', grade: 'E' })).toBe('Technology, grade E, all locations');
   });
 });
+
+describe('insights filters, more cases', () => {
+  it('grade filter with a Stage, when both are set, keeps only that Stage of the grade C Pathway', () => {
+    const r = insights(ROWS, { by: 'grade', grade: 'C', stage: 'onboarding' }, META);
+    expect(r.pathways.map((p) => p.id)).toEqual(['pw-a']);
+    expect(r.journeys.map((j) => j.id)).toEqual(['j2']);
+  });
+
+  it('job family and location, when nothing matches, return no matches and no figures; an excluded Pathway is ignored', () => {
+    const r = insights(ROWS, { by: 'grade', jobFamily: 'Branch', location: 'Leeds', pathway: 'pw-b' }, META);
+    expect(r.matches).toEqual([]);
+    expect(r.pathways).toEqual([]);
+    expect(insights(ROWS, { by: 'grade', jobFamily: 'Branch', pathway: 'pw-b' }, META).pathways.map((p) => p.id)).toEqual(['pw-a']);
+  });
+});
