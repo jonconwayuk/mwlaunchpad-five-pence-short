@@ -5,6 +5,7 @@ import type { NeedsDecision } from '@/src/engine/types';
 import { FOCUS } from '@/src/ui/components/starter/JourneyRow';
 import { shortDate } from '@/src/ui/components/starter/format';
 import { AddJourney } from './AddJourney';
+import { JourneyDetails } from './JourneyDetails';
 import { SendReminder } from './SendReminder';
 import { progressSummary } from './summary';
 import { send, useTeam, type TeamData, type TeamRole, type TeamStarter } from './useTeam';
@@ -160,6 +161,8 @@ function StarterCard({ s, data, reload }: { s: TeamStarter; data: TeamData; relo
           ))}
         </ul>
       )}
+
+      {isLm && <JourneyDetails items={es.items} />}
 
       {isLm && blocked.map((i) => (
         <p key={i.itemId} className="mt-3 border-l-[3px] border-dashed border-everyday pl-3">
