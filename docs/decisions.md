@@ -6,21 +6,25 @@ Open items waiting on the owner carry the pending marker. The grep command in th
 
 ## Acceptance against the spec
 
-One row per `BUILD-PLAN.md` P0 and P1 item, updated as each phase lands. The items are built to the spec in `Design.MD`. Status is one of: Not started, In progress, Accepted (with evidence path), or Deviation (with decision number).
+One row per `BUILD-PLAN.md` task (waves A to E), updated as each phase lands. The items are built to the spec in `Design.MD`. Status is one of: Not started, In progress, Accepted (with evidence path), or Deviation (with decision number).
 
 | Build plan item | Status | Evidence or decision |
 | --- | --- | --- |
-| P0.1 Pathway engine and Vitest tests (Dependencies, Containers, Timers, Additions, Journey Status and Outcomes) | Not started | |
-| P0.2 Seed data (`SEED-DATA.md`) | Not started | |
-| P0.3 Pathway builder canvas | Not started | |
-| P0.4 Journey builder UI | Not started | |
-| P0.5 Pathway library with tag filters; apply a Pathway; Starter Preview | Not started | |
-| P0.6 Demo controls | Not started | |
-| P0.7 Deploy once | Not started | |
-| P1 Manager and Buddy view | Not started | |
-| P1 Hard Stop end to end; Timer and Hard Stop blocks | Not started | |
-| P1 Live updates over server-sent events | Not started | |
-| P1 Chains 1 to 3 | Not started | |
+| A1 Scaffold, tokens, engine contract, fixtures | In progress | |
+| B1 Pathway engine and Vitest tests | Not started | |
+| B2 Database, seed data and mocked adapters | Not started | |
+| B3 Starter Preview | Not started | |
+| B4 Pathway builder canvas | Not started | |
+| C1 Real state API with role filtering | Not started | |
+| C2 People, apply a Pathway, Demo controls | Not started | |
+| C3 Manager and Buddy view, Additions, Needs decision | Not started | |
+| C4 Journey builder and the libraries | Not started | |
+| D1 Chains and the Hard Stop end to end | Not started | |
+| D2 Canvas persistence | Not started | |
+| E1 Freeze preparation | Not started | |
+| Live updates over server-sent events | Deviation | B1 (polling every 3 s), decision 9 |
+| Deploy once | Deviation | B13 (local network only), decision 9 |
+| Observability page | Deviation | B3 (stretch only), decision 9 |
 
 ## Decision log
 
@@ -81,3 +85,33 @@ Numbered once, in order, never renumbered or deleted. A reversed decision gets a
 - **Why:** The third pass landed on `main` without an amendment entry, and the onboarding written against version 1.0 contradicted the new glossary. Bringing the branch up to date was the owner's instruction, 10 Nov 2026.
 - **Evidence:** Merge commit a67c4c7; `grep -n "Milestone\|Condition" CLAUDE.md` returns only the line telling agents not to use them.
 - **Note:** `BUILD-PLAN.md` is still a draft and its open proposals are not agreed. When the team agrees them, update the acceptance table in the same change.
+
+### 9. BUILD-PLAN.md is agreed and executable
+
+- **Decided:** `BUILD-PLAN.md` as of commit 1c782c8 is agreed and executable, and its decisions B1 to B17 stand. It is the plan for the current phase (`docs/plans/2026-11-10-launchpad-build.md`).
+- **Why:** Owner's instruction, given in the build prompt on 10 Nov 2026.
+- **Evidence:** This entry; `BUILD-PLAN.md` "Status".
+
+### 10. Tasks inside a wave run in parallel (supersedes decision 4 for this phase)
+
+- **Decided:** For the Launchpad build phase, the tasks inside a wave run in parallel, one fresh implementer each. Exclusive file ownership (`BUILD-PLAN.md` section 6) is what makes this safe. Waves still run in order. Decision 4 still applies to later phases unless the owner says otherwise.
+- **Why:** Owner's instruction, 10 Nov 2026. The critical path only fits before the freeze if the tasks in a wave run at once.
+- **Evidence:** This entry; `BUILD-PLAN.md` sections 1 and 6.
+
+### 11. Work on main, with a push authorised at each green wave gate
+
+- **Decided:** Work happens on `main` (B14). The owner pre-authorises `git push origin main` at the end of every wave whose gate is green. Each push cites this entry. No other push or merge is authorised.
+- **Why:** Owner's instruction, 10 Nov 2026. This satisfies the manual push rule in decision 3 for this phase.
+- **Evidence:** This entry; the push log in each wave's evidence.
+
+### 12. The gate is npm run check, plus npm run build at each wave gate
+
+- **Decided:** The task gate is `npm run check` (`tsc --noEmit && eslint . && vitest run`). Each wave gate also runs `npm run build`. This replaces the `npm test` and `npm run lint` wording in `CLAUDE.md`.
+- **Why:** Owner's instruction, 10 Nov 2026. It matches `BUILD-PLAN.md` section 2.
+- **Evidence:** This entry; `docs/plans/2026-11-10-launchpad-build.md`.
+
+### 13. Two listed skills are not installed
+
+- **Decided:** We carry on without `anthropic-skills:phase-workflow` and `frontend-design`, neither of which is in this session's installed skills list. The workflow is followed from its repo copy, `docs/workflow/phase-workflow.md`. Frontend tasks use `taste-skill:design-taste-frontend` and `engineering-skills:senior-frontend` instead. All the other listed sets are installed: `engineering-skills:*`, `ponytail:*`, `mattpocock-skills:*`, `taste-skill:design-taste-frontend` and the built-in `security-review`.
+- **Why:** The owner told us to record a missing skill and carry on, not stop.
+- **Evidence:** The installed skills list in the build session, 10 Nov 2026 09:02.

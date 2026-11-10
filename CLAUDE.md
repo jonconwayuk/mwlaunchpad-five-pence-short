@@ -12,7 +12,7 @@ This file is the onboarding for the next agent. It is not a changelog. Keep it c
 | --- | --- |
 | Where have we been? | `git log`, plus `docs/feedback-history.md` (created when the first feedback sheet is executed) |
 | What is outstanding? | `docs/decisions.md` (acceptance table and decision log), plus `grep -n "OWNER-PENDING" docs/decisions.md` |
-| What is next? | Current plan: none yet. The first phase writes `docs/plans/YYYY-MM-DD-<name>.md` and names it here. |
+| What is next? | Current plan: `docs/plans/2026-11-10-launchpad-build.md`, which points at `BUILD-PLAN.md` waves A to E (decision 9). |
 
 ## The goal: never lose sight of it
 
@@ -36,7 +36,7 @@ One Next.js web app with three faces (`Design.MD` D1, D14):
 
 ### Build priorities
 
-Work in the order set in `BUILD-PLAN.md`. Don't pick up a lower tier while a higher one is unfinished. BUILD-PLAN.md is still a team draft, and its "Open proposals" section is not agreed, so don't act on those proposals until the team agrees them and updates the plan.
+Work in the order set in `BUILD-PLAN.md`, which is agreed and executable (decision 9). Its closed decisions B1 to B17 override the tiers below where they differ: for example polling instead of server-sent events (B1), local network instead of a deploy (B13), and Add a Journey in wave C (B2).
 
 1. **P0 (no demo without these):** Pathway engine with Vitest tests; seed data (`SEED-DATA.md`); Pathway builder canvas; Journey builder form; Pathway library with tag filters, applying a Pathway and the Starter Preview; Demo controls; one early deploy.
 2. **P1:** Manager and Buddy view, Hard Stop end to end, Timer and Hard Stop blocks on the canvas, live updates over server-sent events, chain reactions 1 to 3.
@@ -48,7 +48,7 @@ The deliberate omissions in `Design.MD` D15 are out of scope. Don't build login,
 
 - `Design.MD`: the agreed spec, version 1.1. Follow it; don't redesign it. It changes only by explicit amendment: bump its version, add a line to its amendment log, record a decision in `docs/decisions.md`, and update `GLOSSARY.md` and any ADR it names in the same change. Where the spec and the code disagree, record it as a finding; never quietly change either to match.
 - `GLOSSARY.md`: use its terms exactly in code, UI copy and docs (Journey, Action, Pathway, Pathway Item, Dependency, Container, Timer, Addition and so on). Don't use the words it lists under "Avoid": for example, it's Container, not Milestone. Nothing matches Journeys or Pathways to a Person automatically (ADR-0004), so there are no Conditions; tags are only for browsing and filtering.
-- `BUILD-PLAN.md`: phasing and build tasks (draft, for team review).
+- `BUILD-PLAN.md`: the agreed waves, briefs, file ownership and closed decisions B1 to B17 (decision 9).
 - `SEED-DATA.md`: the synthetic data the demo and the engine tests use (draft, for team review). Reset demo reseeds exactly this.
 - `docs/adr/`: decisions with lasting trade-offs. Add a new ADR for any new one.
 - `Ideas.MD` is an early raw log, superseded by Design.MD, and `launchpadnotes.MD` holds brief and judging notes. Neither is a spec.
@@ -73,11 +73,11 @@ The workflow governs plans, branches, subagent models, per-task review, gates, e
 
 **Store everything in the repo.** Every artefact a phase produces goes in this repo: plans, evidence, ledger, decisions, feedback, generated content and seed data, mock-ups, and the presentation. Nothing is kept in scratch folders or anywhere outside it. Because the repo is public, the Secrets rules below apply to all of it, evidence captures and logs included.
 
-**Gates for this project:** `npm test` (Vitest, at the pinned count in the current plan), `npm run lint` and `npm run build` with zero warnings. The first phase sets these scripts up and pins the baseline.
+**Gates for this project:** `npm run check` (`tsc --noEmit && eslint . && vitest run`) for every task, plus `npm run build` at each wave gate, with zero warnings (decision 12). The baseline and the pinned test count are in the current plan.
 
-**Merges and pushes need the owner's say**, recorded as a decision in `docs/decisions.md` first. The enforcement hooks are not wired yet (decision 3, `OWNER-PENDING`), so until they are, follow the push rule by hand and append every subagent spawn to the delegation ledger yourself.
+**Merges and pushes need the owner's say**, recorded as a decision in `docs/decisions.md` first. For the Launchpad build phase, `git push origin main` is pre-authorised at each green wave gate (decision 11). The enforcement hooks are not wired yet (decision 3), so follow the push rule by hand and append every subagent spawn to the delegation ledger yourself.
 
-**Plan and run work sequentially.** Every plan lists its tasks in one ordered sequence, and tasks run one at a time: plan, implement, review, gate, then the next task. Don't run tasks in parallel waves or parallel worktrees, even where the workflow would allow it (decision 4). Before each task starts, check it against the goal above and the build priorities, and load the skills it needs. This replaces the workflow's "run what can run" and wave schedule; everything else in the workflow still applies, including a fresh implementer and an independent reviewer for every task.
+**Waves in order, tasks in a wave in parallel.** For the Launchpad build phase, the tasks inside a wave run at the same time, one fresh implementer each, made safe by the file ownership table in `BUILD-PLAN.md` section 6 (decision 10, which supersedes decision 4 for this phase). Waves still run in order. Before each task starts, check it against the goal above and the build priorities, and load the skills it needs. Every task still gets a fresh implementer and an independent reviewer.
 
 ### Always use the installed skills
 
