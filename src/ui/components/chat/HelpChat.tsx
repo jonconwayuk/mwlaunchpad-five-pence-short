@@ -152,7 +152,7 @@ function Bubble({ m }: { m: Message }) {
             </span>
             <div className="min-w-0 rounded-[4px] border-l-[3px] border-l-heritage px-3 py-2" style={{ background: 'var(--paper-2)' }}>
               <p className="text-[13px] text-[var(--muted)]">{m.lineManagerName}</p>
-              <p>Thanks, I have your question: &ldquo;{m.question}&rdquo;. I&rsquo;ll reply in Microsoft Teams.</p>
+              <p>Thanks, I have your question: &ldquo;{m.question}&rdquo;. I&rsquo;ll reply to you here via Microsoft Teams.</p>
             </div>
           </div>
         </div>
