@@ -1,5 +1,6 @@
 {
   "id": "it-setup-helper",
+  "version": "1.0.0",
   "name": "IT setup helper",
   "description": "Tracks your device and system access, and explains what happens on your first login. Checks your requests in ServiceNow.",
   "ownerTeam": "IT",

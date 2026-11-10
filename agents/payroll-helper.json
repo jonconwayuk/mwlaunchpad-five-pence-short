@@ -1,5 +1,6 @@
 {
   "id": "payroll-helper",
+  "version": "1.0.0",
   "name": "Payroll helper",
   "description": "Answers questions about pay day, payslips and the bank details we need to pay you.",
   "ownerTeam": "HR",

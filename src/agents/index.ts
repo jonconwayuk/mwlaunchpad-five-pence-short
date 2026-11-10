@@ -10,6 +10,7 @@ const Intent = z.strictObject({
 });
 export const AgentSchema = z.strictObject({
   id: z.string().regex(/^[a-z0-9]+(-[a-z0-9]+)*$/, 'id must be a lowercase slug'),
+  version: z.string().regex(/^\d+\.\d+\.\d+$/, 'version must be semver, e.g. 1.0.0'),
   name: z.string().trim().min(1),
   description: z.string().trim().min(1),
   ownerTeam: z.string().trim().min(1),
@@ -25,10 +26,10 @@ export function loadAgents(dir = path.join(process.cwd(), 'agents')): AgentDef[]
   const files = readdirSync(dir).filter((f) => f.endsWith('.json'));
   const agents = files.map((f) => {
     let raw: unknown;
-    try { raw = JSON.parse(readFileSync(path.join(dir, f), 'utf8')); } catch { throw new Error(`agents/${f}: not valid JSON`); }
+    try { raw = JSON.parse(readFileSync(path.join(dir, f), 'utf8')); } catch { throw new Error(`${dir}/${f}: not valid JSON`); }
     const parsed = AgentSchema.safeParse(raw);
     if (!parsed.success) {
-      throw new Error(`agents/${f}: ${parsed.error.issues.map((i) => `${i.path.join('.')} ${i.message}`).join('; ')}`);
+      throw new Error(`${dir}/${f}: ${parsed.error.issues.map((i) => `${i.path.join('.')} ${i.message}`).join('; ')}`);
     }
     return parsed.data;
   });
@@ -41,19 +42,25 @@ export function loadAgents(dir = path.join(process.cwd(), 'agents')): AgentDef[]
 }
 
 const STOP = new Set(('a an the i me my we you your is are am do does did can could will would should what when where '
-  + 'who why how which to of in on for at it be has have been this that there and or with any get').split(' '));
+  + 'who why how which to of in on for at it be has have been this that there and or with any get '
+  + 'need help want work i\'d please us our so if').split(' '));
 const words = (s: string) => s.toLowerCase().split(/[^a-z0-9]+/).filter((w) => w && !STOP.has(w));
 
-// shortcut: word-overlap matching against the examples; swap for a real intent model if one is ever allowed.
+// shortcut: share-of-words matching against the examples; swap for a real intent model if one is ever allowed.
+// Score = share of an example's meaningful words found in the question; 0.5 or below means "no agent knows".
 export function routeQuestion(question: string, agents: AgentDef[]): { agent: AgentDef; intent: AgentIntent } | undefined {
   const asked = new Set(words(question));
   let best: { agent: AgentDef; intent: AgentIntent } | undefined;
   let bestScore = 0;
+  let bestLen = 0;
   for (const agent of agents) {
     for (const intent of agent.intents) {
       for (const example of intent.examples) {
-        const score = new Set(words(example).filter((w) => asked.has(w))).size;
-        if (score > bestScore) { best = { agent, intent }; bestScore = score; }
+        const ew = new Set(words(example));
+        if (!ew.size) continue;
+        const score = [...ew].filter((w) => asked.has(w)).length / ew.size;
+        if (score <= 0.5) continue;
+        if (score > bestScore || (score === bestScore && ew.size > bestLen)) { best = { agent, intent }; bestScore = score; bestLen = ew.size; }
       }
     }
   }

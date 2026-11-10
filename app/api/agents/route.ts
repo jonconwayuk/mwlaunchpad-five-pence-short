@@ -1,4 +1,4 @@
-import { agentCatalogue } from '@/src/agents/catalogue';
+import { agentCatalogue } from './catalogue';
 import { apiHandler } from '@/src/lib/apiHandler';
 
 export const dynamic = 'force-dynamic';

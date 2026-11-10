@@ -1,5 +1,6 @@
 {
   "id": "vetting-progress-helper",
+  "version": "1.0.0",
   "name": "Vetting progress helper",
   "description": "Explains where your pre-employment checks are and how long they usually take.",
   "ownerTeam": "HR",

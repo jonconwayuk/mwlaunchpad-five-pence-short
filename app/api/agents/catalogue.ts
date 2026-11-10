@@ -1,5 +1,5 @@
 import { listJourneys } from '@/src/db/queries';
-import { loadAgents } from './index';
+import { loadAgents } from '@/src/agents';
 
 // The Agent library as shown: each agent with the titles of the Journeys it supports. Unknown Journey ids are dropped.
 export function agentCatalogue() {

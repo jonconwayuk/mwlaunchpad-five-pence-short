@@ -1,4 +1,4 @@
-import { mkdtempSync, readdirSync, writeFileSync } from 'node:fs';
+import { mkdtempSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { describe, expect, it } from 'vitest';
@@ -16,7 +16,7 @@ describe('loadAgents', () => {
   it('throws an error naming the file, when a file is invalid', () => {
     const dir = mkdtempSync(path.join(tmpdir(), 'agents-'));
     writeFileSync(path.join(dir, 'broken.json'), JSON.stringify({ id: 'broken', name: 'Broken' }));
-    expect(() => loadAgents(dir)).toThrow(/agents\/broken\.json/);
+    expect(() => loadAgents(dir)).toThrow(/broken\.json/);
   });
 });
 
@@ -37,5 +37,28 @@ describe('routeQuestion', () => {
 
   it('returns undefined, when no agent knows the question', () => {
     expect(routeQuestion('what is the weather on mars', agents)).toBeUndefined();
+  });
+
+  it('returns undefined, when only a vague overlap exists, and routes sensibly otherwise', () => {
+    expect(routeQuestion('I need help', agents)).toBeUndefined();
+    expect(routeQuestion('can I work from home', agents)).toBeUndefined();
+    expect(routeQuestion('what time do I start', agents)).toBeUndefined();
+  });
+
+  it('routes to the Merch helper, when asked about merch', () => {
+    expect(routeQuestion('Where is my merch?', agents)?.agent.id).toBe('merch-helper');
+    expect(routeQuestion('Have you received your merch?', agents)?.agent.id).toBe('merch-helper');
+  });
+});
+
+describe('agent files', () => {
+  it('only name Journeys that exist, when read against the seeded Journey files', () => {
+    const jdir = path.join(__dirname, '../../journeys');
+    const ids = new Set(readdirSync(jdir).filter((f) => f.endsWith('.json')).map((f) => JSON.parse(readFileSync(path.join(jdir, f), 'utf8')).id));
+    for (const a of agents) for (const id of a.journeyIds) expect(ids.has(id), `${a.id}: ${id}`).toBe(true);
+  });
+
+  it('carry a semver version, when loaded', () => {
+    for (const a of agents) expect(a.version, a.id).toMatch(/^\d+\.\d+\.\d+$/);
   });
 });

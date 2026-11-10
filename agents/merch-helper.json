@@ -1,5 +1,6 @@
 {
   "id": "merch-helper",
+  "version": "1.0.0",
   "name": "Merch helper",
   "description": "Helps with your uniform order: sizes, delivery and swaps.",
   "ownerTeam": "Retail",
@@ -8,7 +9,7 @@
   "intents": [
     {
       "id": "uniform-delivery",
-      "examples": ["When will my uniform arrive?", "Where is my uniform order?"],
+      "examples": ["When will my uniform arrive?", "Where is my uniform order?", "Where is my merch?", "Have you received your merch?"],
       "answer": "Uniform orders go out within five working days of choosing your size. It is delivered to your branch, ready for your first day."
     },
     {

@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { agentCatalogue } from '@/src/agents/catalogue';
+import { agentCatalogue } from '@/app/api/agents/catalogue';
 
 export const dynamic = 'force-dynamic';
 
@@ -22,7 +22,7 @@ export default function Page() {
           <li key={a.id} className="flex flex-col gap-3 rounded-[4px] border border-[var(--hairline)] bg-paper p-5">
             <div>
               <h2 className="text-[18px] font-semibold text-racing">{a.name}</h2>
-              <p className="text-[13px] text-[var(--muted)]">Owned by {a.ownerTeam}</p>
+              <p className="text-[13px] text-[var(--muted)]">Owned by {a.ownerTeam} &middot; v{a.version}</p>
             </div>
             <p>{a.description}</p>
 

@@ -1,5 +1,6 @@
 {
   "id": "benefits-helper",
+  "version": "1.0.0",
   "name": "Benefits helper",
   "description": "Explains your benefits, including the company car scheme, and when you can join each one.",
   "ownerTeam": "Reward",
