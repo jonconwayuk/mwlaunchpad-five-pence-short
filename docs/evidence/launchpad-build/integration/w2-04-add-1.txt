@@ -1,0 +1,68 @@
+width 390 scrollWidth 390
+Simulated date 10 Nov 2026
+Viewing as
+Priya Shah, Line Manager
+Tom Evans, Buddy
+Chris Lee, Line Manager
+Jo Patel, Buddy
+Ruth King, Line Manager
+Mark Allen, Buddy
+Your starters
+
+10 Nov
+
+Needs decision
+
+Sam Okafor: Pre-employment checks not done in time
+
+Pre-employment checks is not done by 5 days before Start date
+
+Reason
+Confirm
+Extend 7 days
+Dismiss
+To-do
+
+Nothing to do right now.
+
+Sam Okafor
+
+Your offer
+
+0 of 1 Containers complete. Next: Cleared to start
+
+Filter by tag
+All journeys
+Branch
+Executive
+Retail
+Software engineering
+Technology
+Journey
+Choose a journey
+Branch device (Getting ready)
+Executive device (Getting ready)
+Uniform (Merch distribution) (Getting ready)
+Branch induction (Your first week)
+Cash-handling training (Your first month)
+Payments squad access package (Getting ready)
+Welcome from sponsoring exec (Your first week)
+Start delay engagement (Getting ready)
+In-person events calendar (Your first week)
+Unlock
+Now
+After Cleared to start
+After Contracting
+After Payroll
+After Pre-employment checks
+After ID creation (photo)
+After Developer device
+After Manager ready
+After Meet your buddy
+After Pulse check
+After Pulse check
+After Engineering community intro
+Mandatory
+Confirm
+Note to Sam Okafor
+Send note

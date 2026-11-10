@@ -1,0 +1,76 @@
+width 1280 scrollWidth 1280
+Simulated date 10 Nov 2026
+
+Admin Portal
+
+Journeys
+Pathways
+People
+Demo controls
+Plus 1 day
+Plus 1 week
+Set date
+Alex Morgan
+Sam Okafor
+Dana Whitfield
+Offer accepted
+Plus 3 weeks
+Day 1
+Day 14
+Day 30
+No Hidden automation is waiting.
+Reset demo
+Alex Morgan
+
+starter, offer accepted 20 Oct, starts 5 Jan, Getting ready
+
+Applied Pathway: Branch colleague v1
+Your offer
+Contracting
+Done
+Getting ready
+Payroll
+Action required
+Pre-employment checks
+Done
+ID creation (photo)
+Action required
+Branch device
+Done
+Manager ready
+Done
+Meet your buddy
+Not started
+Uniform (Merch distribution)
+Not for me
+Start delay engagement (added by HR Partner)
+Not started
+Your first week
+Branch induction
+Not started
+In-person events calendar (added by HR Partner)
+Not started
+Your first month
+Pulse check
+Not started
+Pulse check
+Not started
+Cash-handling training
+Not started
+HR To-do list
+
+Nothing for HR to do.
+
+Apply a pathway
+Filter the Pathway library by this person
+Job family: Branch
+Role: Customer service colleague
+Grade: Colleague
+Platform: Retail
+Location: Cardiff
+Branch colleague Branch, Retail, Colleague
+Apply pathway
+Software engineer Software engineering, Technology, Colleague
+Apply pathway
+Executive Executive, Group Functions, Executive
+Apply pathway

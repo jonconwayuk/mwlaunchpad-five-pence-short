@@ -1,0 +1,43 @@
+width 390 scrollWidth 390
+Simulated date 28 Nov 2026
+Viewing as
+Priya Shah, Line Manager
+Tom Evans, Buddy
+Chris Lee, Line Manager
+Jo Patel, Buddy
+Ruth King, Line Manager
+Mark Allen, Buddy
+Your starters
+
+28 Nov
+
+Needs decision
+
+Sam Okafor: Pre-employment checks not done in time
+
+Pre-employment checks is not done by 5 days before Start date
+
+Reason
+Confirm
+Extend 7 days
+Dismiss
+To-do
+Check in with Sam: Contracting is taking longer than usual
+Sam Okafor
+Sam scored 2 for "How connected do you feel? (1 to 5)". Have a chat.
+Sam Okafor
+Sam scored 2 for "How confident do you feel? (1 to 5)". Have a chat.
+Sam Okafor
+Check in with Sam: Engineering community intro is taking longer than usual
+Sam Okafor
+Sam Okafor
+
+Your offer
+
+0 of 1 Containers complete. Next: Cleared to start
+
+How connected do you feel? (1 to 5): 2
+How confident do you feel? (1 to 5): 2
+Add a journey
+Note to Sam Okafor
+Send note

@@ -1,0 +1,40 @@
+width 390 scrollWidth 390
+Simulated date 10 Nov 2026
+Viewing as
+Priya Shah, Line Manager
+Tom Evans, Buddy
+Chris Lee, Line Manager
+Jo Patel, Buddy
+Ruth King, Line Manager
+Mark Allen, Buddy
+Your starters
+
+10 Nov
+
+Needs decision
+
+Alex Morgan: Pre-employment checks failed
+
+Pre-employment checks failed
+
+Reason
+Confirm
+Dismiss
+To-do
+
+Nothing to do right now.
+
+Alex Morgan
+
+Getting ready
+
+0 of 1 Containers complete. Next: Cleared to start
+
+Choose your device: Branch tablet
+Start delay engagement
+Added by HR Partner
+In-person events calendar
+Added by HR Partner
+Add a journey
+Note to Alex Morgan
+Send note

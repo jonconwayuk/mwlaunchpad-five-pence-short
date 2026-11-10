@@ -1,0 +1,144 @@
+width 1280 scrollWidth 1280
+Simulated date 10 Nov 2026
+
+Admin Portal
+
+Journeys
+Pathways
+People
+Demo controls
+Plus 1 day
+Plus 1 week
+Set date
+Alex Morgan
+Sam Okafor
+Dana Whitfield
+Offer accepted
+Plus 3 weeks
+Day 1
+Day 14
+Day 30
+Alex Morgan: Pre-employment checks
+Simulate passed
+Simulate failed
+Simulate returned
+Reset demo
+Pathway: Software engineer
+Live version 1
+Draft saved
+Tags (3)
+Save draft
+Publish
+Library
+All tags
+Branch
+Executive
+Retail
+Software engineering
+Technology
+
+Drag a journey onto its lane. Then drag from the dot on its right edge to the journey that waits for it.
+
+Contracting
+Add
+Pre-contract
+Payroll
+Add
+Pre-employment
+Pre-employment checks
+Add
+Pre-employment
+ID creation (photo)
+Add
+Pre-employment
+Manager ready
+Add
+Pre-employment
+Meet your buddy
+Add
+Pre-employment
+Pulse check
+Add
+First 30 days
+Branch device
+Add
+Pre-employment
+Branch
+Developer device
+Add
+Pre-employment
+Software engineering
+Executive device
+Add
+Pre-employment
+Executive
+Uniform (Merch distribution)
+Add
+Pre-employment
+Retail
+Branch induction
+Add
+Onboarding
+Retail
+Cash-handling training
+Add
+First 30 days
+Retail
+Engineering community intro
+Add
+Onboarding
+Technology
+Payments squad access package
+Add
+Pre-employment
+Technology
+Welcome from sponsoring exec
+Add
+Onboarding
+Executive
+Start delay engagement
+Add
+Pre-employment
+In-person events calendar
+Add
+Onboarding
+If Failed
+Pre-contract
+Pre-employment
+Onboarding
+First 30 days
+Cleared to start
+Contracting
+Pre-contract
+Payroll
+Pre-employment
+Pre-employment checks
+Pre-employment
+ID creation (photo)
+Pre-employment
+Developer device
+Pre-employment
+Manager ready
+Pre-employment
+Meet your buddy
+Pre-employment
+Pulse check
+Day 13
+Pulse check
+Day 29
+Engineering community intro
+Onboarding
+Start delay engagement
+Pre-employment
+7 days before start date
+5 days before start date
+13 days after start date
+29 days after start date
+On start date
+Hard Stop
+Pre-employment checks failed
+Stops the whole pathway
+Hard Stop
+Pre-employment checks not done in time
+Stops the work it is connected to
+React Flow

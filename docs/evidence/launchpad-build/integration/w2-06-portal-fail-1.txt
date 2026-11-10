@@ -1,0 +1,59 @@
+width 1280 scrollWidth 1280
+Simulated date 10 Nov 2026
+
+Admin Portal
+
+Journeys
+Pathways
+People
+Demo controls
+Plus 1 day
+Plus 1 week
+Set date
+Alex Morgan
+Sam Okafor
+Dana Whitfield
+Offer accepted
+Plus 3 weeks
+Day 1
+Day 14
+Day 30
+No Hidden automation is waiting.
+Reset demo
+Pathway library
+Search
+Job family
+All
+Branch
+Software engineering
+Executive
+HR
+IT
+Role
+All
+Customer service colleague
+Software engineer
+Managing director
+Executive assistant
+Line manager
+Grade
+All
+Colleague
+Manager
+Senior manager
+Executive
+Platform
+All
+Retail
+Technology
+Group Functions
+Location
+All
+Cardiff
+Leeds
+London
+Edinburgh
+Title	Live version	Applied	Tags
+Branch colleague	v1	Applied 1 time	Branch, Colleague, Retail
+Software engineer	v1	Applied 1 time	Software engineering, Colleague, Technology
+Executive	v1	Applied 1 time	Executive, Executive, Group Functions
