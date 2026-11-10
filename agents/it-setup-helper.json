@@ -9,7 +9,7 @@
   "intents": [
     {
       "id": "device-arrival",
-      "examples": ["When will my laptop arrive?", "Where is my device?", "Has my laptop been sent?"],
+      "examples": ["When will my laptop arrive?", "Where is my device?", "Has my laptop been sent?", "my laptop", "laptop", "where is my laptop"],
       "answer": "Your device request is open in ServiceNow. Devices are usually delivered three to five working days before your start date, and you will get a tracking link by email."
     },
     {

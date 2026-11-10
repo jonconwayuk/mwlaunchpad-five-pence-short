@@ -27,7 +27,7 @@ export function JourneyBuilder({ initial, code: onDisk, branch }: { initial?: Jo
   const [addType, setAddType] = useState<ActionType>('task');
   const [asking, setAsking] = useState(false);
   const [notice, setNotice] = useState('');
-  const [sync, setSync] = useState<{ summary: string; syncedOn: string } | null>(null);
+  const [sync, setSync] = useState<{ summary: string; syncedOn: string; skipped?: string[] } | null>(null);
   const [code, setCode] = useState(onDisk);
   const [connectors, setConnectors] = useState<Connector[]>([]);
   useEffect(() => {
@@ -52,7 +52,7 @@ export function JourneyBuilder({ initial, code: onDisk, branch }: { initial?: Jo
   };
   const syncNow = async () => {
     setBusy(true); setError('');
-    const json = (await (await fetch('/api/journeys/sync', { method: 'POST' })).json()) as { ok: boolean; error?: string; data?: { summary: string; syncedOn: string } };
+    const json = (await (await fetch('/api/journeys/sync', { method: 'POST' })).json()) as { ok: boolean; error?: string; data?: { summary: string; syncedOn: string; skipped?: string[] } };
     setBusy(false);
     if (!json.ok || !json.data) return setError(json.error ?? 'Could not sync');
     setSync(json.data);

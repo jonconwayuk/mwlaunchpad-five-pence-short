@@ -7,7 +7,7 @@ export const dynamic = 'force-dynamic';
 
 // Re-reads journeys/ in this repository; a bad file throws and nothing is changed (one transaction in the loader).
 export const POST = apiHandler(() => {
-  let result: { added: string[]; updated: string[] };
+  let result: { added: string[]; updated: string[]; skipped?: string[] };
   try {
     result = syncJourneysFromFiles();
   } catch (e) {

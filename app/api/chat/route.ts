@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { loadAgents, routeQuestion } from '@/src/agents';
 import { ApiError, apiHandler } from '@/src/lib/apiHandler';
+import { getPerson } from '@/src/db/queries';
 import { log } from '@/src/lib/log';
 
 export const dynamic = 'force-dynamic';
@@ -12,7 +13,8 @@ const Body = z.object({
 
 /** Scripted help chat (D11): route the question to one named Agent from agents/. No LLM. */
 export const POST = apiHandler(async (req) => {
-  const { question } = Body.parse(await req.json().catch(() => { throw new ApiError('Body must be valid JSON'); }));
+  const { personId, question } = Body.parse(await req.json().catch(() => { throw new ApiError('Body must be valid JSON'); }));
+  if (!getPerson(personId)) throw new ApiError('Unknown person', 404);
   let match: ReturnType<typeof routeQuestion>;
   try {
     match = routeQuestion(question, loadAgents());

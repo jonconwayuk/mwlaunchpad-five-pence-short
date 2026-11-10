@@ -34,6 +34,9 @@ describe('syncSummary', () => {
   it('counts added and updated, when anything changed', () => {
     expect(syncSummary({ added: ['j-a', 'j-b'], updated: ['j-c'] })).toBe('2 added, 1 updated');
   });
+  it('names skipped files, when a file needs a semver bump', () => {
+    expect(syncSummary({ added: [], updated: [], skipped: ['j-a'] })).toBe('1 skipped (bump the semver to import a change)');
+  });
   it('says up to date, when nothing changed', () => {
     expect(syncSummary({ added: [], updated: [] })).toBe('Already up to date');
   });

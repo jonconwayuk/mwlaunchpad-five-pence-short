@@ -45,7 +45,9 @@ export function HelpChat({ personId, initial = [] }: { personId: string; initial
     const question = lastQuestion ?? 'I would like to talk to someone.';
     setBusy(true);
     const r = await post<{ lineManagerName: string }>('/api/handover', { personId, question });
-    add({ kind: 'handover', lineManagerName: r?.lineManagerName ?? 'Your Line Manager', question });
+    add(r?.lineManagerName
+      ? { kind: 'handover', lineManagerName: r.lineManagerName, question }
+      : { kind: 'agent', agentName: 'Help', text: "Couldn't reach your Line Manager just now. Please try again." });
     setBusy(false);
   };
 

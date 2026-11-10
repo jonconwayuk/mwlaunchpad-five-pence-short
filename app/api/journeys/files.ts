@@ -19,9 +19,15 @@ export function readJourneyFile(id: string): { file: string; text: string } | un
   return existsSync(path) ? { file: `journeys/${id}.json`, text: readFileSync(path, 'utf8') } : undefined;
 }
 
-/** "2 added, 1 updated", or "Already up to date". */
-export const syncSummary = ({ added, updated }: { added: string[]; updated: string[] }): string =>
-  added.length + updated.length === 0 ? 'Already up to date' : `${added.length} added, ${updated.length} updated`;
+/** "2 added, 1 updated, 1 skipped", or "Already up to date". */
+export const syncSummary = ({ added, updated, skipped = [] }: { added: string[]; updated: string[]; skipped?: string[] }): string => {
+  const parts = [
+    added.length && `${added.length} added`,
+    updated.length && `${updated.length} updated`,
+    skipped.length && `${skipped.length} skipped (bump the semver to import a change)`,
+  ].filter(Boolean);
+  return parts.length ? parts.join(', ') : 'Already up to date';
+};
 
 /** The current branch from .git/HEAD; "main" when there is no checkout (a deployed build). */
 export function currentBranch(): string {

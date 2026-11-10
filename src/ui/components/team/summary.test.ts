@@ -22,6 +22,10 @@ describe('progressSummary', () => {
     expect(progressSummary('Bob Warwick', es, true).line)
       .toBe('Bob is in Pre-employment. 3 of 5 things done. Waiting on privileged access, usually 19 to 28 days.');
   });
+  it('says the plan stopped, when an item is cancelled by a confirmed Hard Stop', () => {
+    expect(progressSummary('Bob Warwick', state([item('Contract', { status: 'done' }), item('IT setup', { status: 'cancelled' })]), true))
+      .toEqual({ line: 'Bob is in Pre-employment. Plan stopped.' });
+  });
   it('gives no next thing, when the only open item is a wait or locked', () => {
     expect(progressSummary('Bob Warwick', es, true).next).toBeUndefined();
   });

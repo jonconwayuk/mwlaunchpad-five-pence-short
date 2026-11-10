@@ -225,6 +225,7 @@ function DecisionCard({ starter, nd, reload }: { starter: TeamStarter; nd: Needs
           className={`min-h-[44px] rounded bg-paper px-3 text-ink ${FOCUS}`} />
       </label>
       {error && <p role="alert" className="mt-2 text-[15px] text-vibrant">{error}</p>}
+      {!reason.trim() && <p className="mt-2 text-[15px] opacity-80">Add a reason to choose</p>}
       <div className="mt-3 flex flex-wrap gap-2">
         <button type="button" disabled={!reason.trim()} className={`${BTN} bg-vibrant text-ink disabled:opacity-50`} onClick={() => void decide('confirm')}>Confirm</button>
         {nd.extendAllowed && <button type="button" disabled={!reason.trim()} className={`${BTN} border border-paper disabled:opacity-50`} onClick={() => void decide('extend')}>Extend 7 days</button>}

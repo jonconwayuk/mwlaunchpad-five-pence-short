@@ -13,6 +13,7 @@ const counted = (i: ItemState) => i.status !== 'skipped' && i.status !== 'cancel
 export function progressSummary(name: string, es: EngineState, full: boolean): { line: string; next?: string } {
   const stage = `${first(name)} is in ${stageLabel(es.stage)}.`;
   if (!full) return { line: stage };
+  if (es.items.some((i) => i.status === 'cancelled')) return { line: `${stage} Plan stopped.` };
   const items = es.items.filter(counted);
   const done = items.filter((i) => i.status === 'done').length;
   const wait = items.find((i) => i.blockedFlag);
