@@ -1,0 +1,106 @@
+width 1280 scrollWidth 1280
+Simulated date 10 Nov 2026
+View
+Onboarding Studio
+Joiner
+Manager
+Buddy
+Person
+Bob Warwick
+Alex Morgan
+Sam Okafor
+Dana Whitfield
+Layout
+Phone
+Desktop
+
+Onboarding Studio
+
+Journeys
+Pathways
+People
+Insights
+Agent library
+Demo controls
+Plus 1 day
+Plus 1 week
+Set date
+Alex Morgan
+Sam Okafor
+Dana Whitfield
+Bob Warwick
+Offer accepted
+Plus 3 weeks
+Day 1
+Day 14
+Day 30
+Alex Morgan: Pre-employment checks
+Bob Warwick: Privileged access request
+Simulate passed
+Simulate failed
+Simulate returned
+Reset demo
+Bob Warwick
+
+Infrastructure engineer, grade E, offer accepted 3 Nov, starts 8 Dec, Your offer
+
+Change the Pathway
+Pathway
+Infrastructure engineer E (suggested)
+Branch colleague
+Software engineer
+Executive
+Apply pathway
+
+Suggested because it matches Bob's job family, role and grade.
+
+Infrastructure engineer E applied.
+
+Applied Pathway: Infrastructure engineer E v1
+Your offer
+Contracting
+Action required
+Getting ready
+Payroll
+Not started
+Pre-employment checks
+Not started
+ID creation (photo)
+Not started
+Developer device
+Not started
+Manager ready
+Not started
+Meet your buddy
+Not started
+Privileged access request
+In progress, waiting on a Hidden automation
+Your first week
+Lab environment
+Not started
+Your first month
+Pulse check
+Not started
+Pulse check
+Not started
+Delegate
+
+Lena Brooks can act for this person.
+
+Change delegate
+Remove
+
+Delegate saved.
+
+Send a Reminder now
+Have a look at the company car scheme
+Have you received your merch?
+Or write your own (up to 200 characters)
+Send a Reminder now
+
+Reminder sent. It shows on their phone within a few seconds.
+
+Sent 10 Nov: Have you received your merch?
+HR To-do list
+
+Nothing for HR to do.

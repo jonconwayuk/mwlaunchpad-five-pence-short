@@ -1,0 +1,13 @@
+GET /api/state?personId=person-bob&as=starter notifications:
+[{'to': 'starter', 'message': 'Have you received your merch?', 'sentOn': '2026-11-10'}]
+GET /api/state?personId=person-bob&as=delegate notifications:
+[{'to': 'starter', 'message': 'Have you received your merch?', 'sentOn': '2026-11-10'}] Bob Warwick
+GET /api/reminders?personId=person-bob:
+{"ok":true,"data":{"reminders":[{"id":1,"personId":"person-bob","message":"Have you received your merch?","at":"2026-11-10"}]}}
+Section 9 item 2: apply suggested Pathway to A and B via /api/apply
+{"ok":true,"data":{"appliedPathwayId":"applied-person-a"}}
+{"ok":true,"data":{"appliedPathwayId":"applied-person-b"}}
+person-a state identical after re-apply
+person-b state identical after re-apply
+person-c state identical after re-apply
+Preselected on /portal/people/person-a: Branch colleague (suggested); person-b: Software engineer (suggested)

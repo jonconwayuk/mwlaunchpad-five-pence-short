@@ -1,0 +1,55 @@
+width 1280 scrollWidth 1280
+Simulated date 10 Nov 2026
+View
+Onboarding Studio
+Joiner
+Manager
+Buddy
+Person
+Bob Warwick
+Alex Morgan
+Sam Okafor
+Dana Whitfield
+Layout
+Phone
+Desktop
+
+Onboarding Studio
+
+Journeys
+Pathways
+People
+Insights
+Agent library
+Demo controls
+Plus 1 day
+Plus 1 week
+Set date
+Alex Morgan
+Sam Okafor
+Dana Whitfield
+Bob Warwick
+Offer accepted
+Plus 3 weeks
+Day 1
+Day 14
+Day 30
+Alex Morgan: Pre-employment checks
+Simulate passed
+Simulate failed
+Simulate returned
+Reset demo
+People
+Find a person
+Alex Morgan
+Customer service colleague, grade B
+Stage: Getting ready. Pathway: Branch colleague.
+Sam Okafor
+Software engineer, grade C
+Stage: Your offer. Pathway: Software engineer.
+Dana Whitfield
+Managing director, grade G
+Stage: Your offer. Pathway: Executive.
+Bob Warwick
+Infrastructure engineer, grade E
+Not started yet. No Pathway yet.

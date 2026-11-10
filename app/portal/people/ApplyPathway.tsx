@@ -1,49 +1,31 @@
 'use client';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import type { Tags } from '@/src/engine';
+import { post } from './post';
 
-const KEYS: { key: keyof Tags; label: string }[] = [
-  { key: 'jobFamily', label: 'Job family' }, { key: 'role', label: 'Role' }, { key: 'grade', label: 'Grade' },
-  { key: 'platform', label: 'Platform' }, { key: 'location', label: 'Location' },
-];
-
-export function ApplyPathway({ personId, personTags, pathways }: {
-  personId: string; personTags: Tags; pathways: { id: string; title: string; tags: Tags }[];
+export function ApplyPathway({ personId, firstName, suggestedId, pathways }: {
+  personId: string; firstName: string; suggestedId?: string; pathways: { id: string; title: string }[];
 }) {
   const router = useRouter();
-  const [on, setOn] = useState<Set<keyof Tags>>(new Set());
+  const [pathwayId, setPathwayId] = useState(suggestedId ?? pathways[0]?.id ?? '');
   const [msg, setMsg] = useState('');
-  // Tags only filter the library; nothing matches automatically (ADR-0004). A Pathway with no value for a tag passes.
-  const shown = pathways.filter((p) => [...on].every((k) => !p.tags[k] || p.tags[k] === personTags[k]));
 
-  async function apply(pathwayId: string) {
-    const res = await fetch('/api/apply', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ pathwayId, personId }) });
-    const j = (await res.json().catch(() => ({ ok: false, error: 'The server did not answer. Try again.' }))) as { ok: boolean; error?: string };
-    setMsg(j.ok ? 'Pathway applied.' : (j.error ?? 'Something went wrong'));
-    if (j.ok) router.refresh();
+  async function apply() {
+    const err = await post('/api/apply', { pathwayId, personId });
+    setMsg(err || `${pathways.find((p) => p.id === pathwayId)?.title ?? 'Pathway'} applied.`);
+    if (!err) router.refresh();
   }
   return (
-    <div>
-      <fieldset className="mb-2 flex flex-wrap gap-4 text-[13px]">
-        <legend className="mb-1 text-muted">Filter the Pathway library by this person</legend>
-        {KEYS.filter((k) => personTags[k.key]).map((k) => (
-          <label key={k.key} className="flex items-center gap-1">
-            <input type="checkbox" checked={on.has(k.key)} onChange={() => setOn((s) => { const n = new Set(s); if (!n.delete(k.key)) n.add(k.key); return n; })} />
-            {k.label}: {personTags[k.key]}
-          </label>
-        ))}
-      </fieldset>
-      <ul>
-        {shown.map((p) => (
-          <li key={p.id} className="flex items-center justify-between border-b border-hairline py-1">
-            <span>{p.title} <span className="text-[13px] text-muted">{[...new Set(Object.values(p.tags))].join(', ')}</span></span>
-            <button className="rounded-[4px] bg-racing px-3 py-1 text-[13px] text-paper" onClick={() => apply(p.id)}>Apply pathway</button>
-          </li>
-        ))}
-        {shown.length === 0 && <li className="py-1 text-muted">No Pathway matches these filters.</li>}
-      </ul>
-      {msg && <p role="status" className="mt-2 text-[13px]">{msg}</p>}
+    <div className="flex flex-wrap items-end gap-3">
+      <label className="flex flex-col text-[13px] text-muted">
+        Pathway
+        <select value={pathwayId} onChange={(e) => setPathwayId(e.target.value)} className="mt-1 min-w-[280px] rounded-[4px] border border-hairline px-2 py-2 text-[15px] text-ink">
+          {pathways.map((p) => <option key={p.id} value={p.id}>{p.title}{p.id === suggestedId ? ' (suggested)' : ''}</option>)}
+        </select>
+      </label>
+      <button className="rounded-[4px] bg-heritage px-4 py-2 text-paper hover:bg-racing active:translate-y-[1px]" onClick={apply} disabled={!pathwayId}>Apply pathway</button>
+      {suggestedId === pathwayId && <p className="w-full text-[13px] text-muted">Suggested because it matches {firstName}&apos;s job family, role and grade.</p>}
+      {msg && <p role="status" className="w-full text-[13px]">{msg}</p>}
     </div>
   );
 }
