@@ -9,7 +9,7 @@ For whoever runs the demo on stage. One laptop, **one browser window**. The blac
 3. Set Person to **Bob Warwick** and Layout to **Phone**, so the joiner, manager and buddy views show in a phone frame.
 4. Click **Reset demo** (left panel, at the bottom of Demo controls) just before you go on.
 
-**Demo controls have their own person list**, and it starts on Alex Morgan, not on the Person in the top strip. Choose **Bob Warwick** there before pressing any Demo control. The button labels then read "Bob" ("Complete Bob's inputs").
+**Demo controls start on the Person in the top strip.** With Bob Warwick chosen there, the button labels read "Bob" ("Complete Bob's inputs"). Glance at the Demo controls person list before you click.
 
 **If anything goes wrong:** click **Reset demo**, set View to Onboarding Studio and carry on from the step you were on. Reset doesn't remove a Journey file you added, so a Journey added in step 1 stays (see step 9).
 
@@ -60,12 +60,11 @@ For whoever runs the demo on stage. One laptop, **one browser window**. The blac
 ## Avoid on stage
 
 - **The Needs decision's Confirm.** Sam Okafor (Chris Lee's starter) has one seeded at reset. Leave it alone. In step 5 use **Dismiss** with a reason, not Confirm, unless you mean to stop Bob's Pathway.
-- **Pressing a Demo control for the wrong person.** Demo controls start on Alex Morgan. Check the person list says Bob Warwick, and that the button reads "Complete Bob's inputs", before you click. "ServiceNow: request complete" is greyed out for anyone with nothing waiting on ServiceNow.
+- **ServiceNow: request complete** is greyed out for anyone with nothing waiting on ServiceNow.
 - **Doing Bob's paperwork after Complete Bob's inputs.** There's nothing left to fill in, so go straight to Simulate failed.
 - **Reset demo doesn't change the Person.** Set Person back to Bob Warwick after a Reset if you switched to someone else.
 - **Resetting before deleting the step 1 file.** If you forget, "Service desk tools access" stays in the library at 1.1.0. It's harmless, but run `rm journeys/j-h-demo.json` afterwards.
 - **Saying "drag" is tested with a mouse.** Our automated runs used synthetic drag events. Try the real drag on the demo laptop first (flaky until someone has).
 - **Plus 3 weeks** is three weeks from Bob's offer (3 Nov), so it lands on 24 Nov, and the card says Day 14 of the wait. Say "two weeks into a three-to-four week wait", not "three weeks".
 - **Leaving Bob's view open and waiting for ServiceNow.** Switching to Joiner after the click shows the message at once. Left open, it can take up to about 3 seconds.
-- **Hannah's reply in the chat says "I will reply here".** The handover went to Teams. Talk over it, or say "in Teams" (a fix is listed).
 - Don't call anything live AI, a real Teams chat or a real ServiceNow call. The help chat is scripted. The Microsoft Teams handover and the ServiceNow request are simulated: nothing is sent to Teams or ServiceNow, and the screens say "Simulated".

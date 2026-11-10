@@ -1,10 +1,17 @@
 'use client';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { ControlsData } from './data';
 import { completeInputs, resultMessage, serviceNowCall } from './inputs';
 
 const btn = 'rounded-[4px] border border-hairline bg-paper px-2 py-1 text-[13px] text-ink hover:bg-calm disabled:text-muted disabled:hover:bg-paper';
+
+/** The top-strip Person (persona cookie: bob, A, B, C is person-bob, person-a ...), if they are in the list. */
+export function defaultPersonId(starters: { id: string }[], cookie: string): string {
+  const m = /(?:^|; )persona=([^;]*)/.exec(cookie);
+  const id = m ? `person-${decodeURIComponent(m[1]!).toLowerCase()}` : '';
+  return starters.some((s) => s.id === id) ? id : (starters[0]?.id ?? '');
+}
 
 export function DemoControls({ data, today }: { data: ControlsData; today: string }) {
   const router = useRouter();
@@ -12,6 +19,8 @@ export function DemoControls({ data, today }: { data: ControlsData; today: strin
   const [personId, setPersonId] = useState(data.starters[0]?.id ?? '');
   const [date, setDate] = useState(today);
   const [wKey, setWKey] = useState('');
+  // After mount, so the server and first client render agree.
+  useEffect(() => setPersonId(defaultPersonId(data.starters, document.cookie)), [data.starters]);
   const starter = data.starters.find((s) => s.id === personId);
   // Keyed, not indexed: the list shifts after a refresh. A vanished key falls back to the first, shown in the select.
   const keyOf = (x: { personId: string; itemId: string }) => `${x.personId}:${x.itemId}`;

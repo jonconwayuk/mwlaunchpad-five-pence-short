@@ -9,7 +9,7 @@ const BUTTON = `min-h-11 rounded-[4px] px-4 font-medium ${FOCUS}`;
 export type Message =
   | { kind: 'you'; text: string }
   | { kind: 'agent'; agentName: string; text: string; handover?: boolean }
-  | { kind: 'none' }
+  | { kind: 'none'; agentName?: string }
   | { kind: 'handover'; lineManagerName: string; question: string; agentName?: string; summary?: string };
 
 /** What to hand over: the last question that was not itself a request for a person, and the agent that offered the handover. */
@@ -48,7 +48,7 @@ export function HelpChat({ personId, initial = [] }: { personId: string; initial
     setText('');
     add({ kind: 'you', text: question });
     const r = await post<{ agentName?: string; answer?: string; handover?: boolean; none?: boolean }>('/api/chat', { personId, question });
-    add(r?.agentName && r.answer ? { kind: 'agent', agentName: r.agentName, text: r.answer, handover: r.handover } : { kind: 'none' });
+    add(r?.agentName && r.answer ? { kind: 'agent', agentName: r.agentName, text: r.answer, handover: r.handover } : { kind: 'none', agentName: r?.agentName });
     setBusy(false);
   };
 
@@ -133,7 +133,12 @@ function Bubble({ m }: { m: Message }) {
         </div>
       );
     case 'none':
-      return <p className="max-w-[92%] rounded-[12px] bg-calm/50 px-4 py-2">{NOT_SURE}</p>;
+      return (
+        <div className="max-w-[92%]">
+          <p className="rounded-[12px] bg-calm/50 px-4 py-2">{NOT_SURE}</p>
+          {m.agentName && <p className="mt-1 text-[13px] text-[var(--muted)]">Answered by {m.agentName}</p>}
+        </div>
+      );
     case 'handover':
       return (
         <div className="rounded-[12px] border border-[var(--hairline)] bg-paper p-4">
@@ -147,7 +152,7 @@ function Bubble({ m }: { m: Message }) {
             </span>
             <div className="min-w-0 rounded-[4px] border-l-[3px] border-l-heritage px-3 py-2" style={{ background: 'var(--paper-2)' }}>
               <p className="text-[13px] text-[var(--muted)]">{m.lineManagerName}</p>
-              <p>Thanks, I have your question: &ldquo;{m.question}&rdquo;. I will reply here.</p>
+              <p>Thanks, I have your question: &ldquo;{m.question}&rdquo;. I&rsquo;ll reply in Microsoft Teams.</p>
             </div>
           </div>
         </div>
