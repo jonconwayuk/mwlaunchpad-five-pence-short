@@ -1,0 +1,17 @@
+## B apply pw-branch then pw-engineer: titles
+{"ok":true,"data":{"appliedPathwayId":"applied-person-b"}}
+["i-checks:not-started","i-id:not-started","i-device:not-started","i-induction:not-started"]
+{"ok":true,"data":{"appliedPathwayId":"applied-person-b"}}
+["i-checks:not-started","i-id:not-started","i-device:not-started","i-community:not-started"]
+## simulate failed on returned-only? (checks sets outcome so ok) -- first wrong item
+{"ok":false,"error":"That Journey is not waiting on a Hidden automation."}
+## A before: i-id
+["i-checks:in-progress","i-id:not-started","i-device:done","i-induction:not-started"]
+{"ok":true,"data":{"engineState":{"today":"2026-11-10","stage":"pre-employment","personStatus":"joiner","dayNumber":-55,
+## A after simulate passed
+["i-checks:done","i-id:action-required","i-device:done","i-induction:not-started"]
+## clock plus 1 week
+{"ok":true,"data":{"simulatedDate":"2026-11-17"}}
+## reset
+{"ok":true,"data":{"reset":true}}
+state identical after reset

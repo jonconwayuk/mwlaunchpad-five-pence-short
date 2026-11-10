@@ -1,2 +1,9 @@
-// implemented in wave C2
-export const POST = () => new Response('not implemented', { status: 501 });
+import { apiHandler } from '@/src/lib/apiHandler';
+import { seed } from '@/src/db/seed';
+
+export const dynamic = 'force-dynamic';
+
+export const POST = apiHandler(async () => {
+  seed();
+  return { reset: true };
+});

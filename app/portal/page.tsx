@@ -1,4 +1,5 @@
-// implemented in wave C2
+import { redirect } from 'next/navigation';
+
 export default function Page() {
-  return <main className="p-4">Admin Portal</main>;
+  redirect('/portal/pathways');
 }

@@ -1,12 +1,12 @@
-// The Demo clock. Never reads the real date (decision B9, DEMO_T).
-// NEEDS: wave C2 persists this via src/db/queries.ts getDemoClock/setDemoClock
+// The Demo clock, persisted in the database (decision B9). Never reads the real date.
+import { getDemoClock, setDemoClock } from '@/src/db/queries';
 import type { ISODate } from '@/src/engine/types';
 
-const DEMO_T: ISODate = '2026-11-10';
-// Held on globalThis so Next dev hot reload does not reset it.
-const g = globalThis as typeof globalThis & { __demoToday?: ISODate };
+export const getToday = (): ISODate => getDemoClock();
+export const setToday = (d: ISODate): void => setDemoClock(d);
 
-export const getToday = (): ISODate => g.__demoToday ?? DEMO_T;
-export const setToday = (d: ISODate): void => {
-  g.__demoToday = d;
-};
+export function addDays(d: ISODate, n: number): ISODate {
+  const t = new Date(`${d}T00:00:00Z`);
+  t.setUTCDate(t.getUTCDate() + n);
+  return t.toISOString().slice(0, 10);
+}

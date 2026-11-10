@@ -1,0 +1,12 @@
+## baseline A
+["Contracting:done","Payroll:action-required","Pre-employment checks:in-progress","ID creation (photo):not-started","Branch device:done","Manager ready:done","Meet your buddy:not-started","Pulse check:not-started","Pulse check:not-started","Uniform (Merch distribution):skipped","Branch induction:not-started","Cash-handling training:not-started","Start delay engagement:not-started","In-person events calendar:not-started"]
+## baseline B
+["Contracting:action-required","Payroll:not-started","Pre-employment checks:not-started","ID creation (photo):not-started","Developer device:not-started","Manager ready:not-started","Meet your buddy:not-started","Pulse check:not-started","Pulse check:not-started","Engineering community intro:not-started"]
+## apply pw-engineer to person-b
+{"ok":true,"data":{"appliedPathwayId":"applied-person-b"}}
+["Contracting:action-required","Payroll:not-started","Pre-employment checks:not-started","ID creation (photo):not-started","Developer device:not-started","Manager ready:not-started","Meet your buddy:not-started","Pulse check:not-started","Pulse check:not-started","Engineering community intro:not-started"]
+## backward clock
+{"ok":false,"error":"The Demo clock only moves forward. Use Reset demo to start again."}
+## simulate A waiting automations
+[["i-checks","j-checks-a2",true,"in-progress"]]
+[["i-id","ID creation (photo)","not-started"]]
