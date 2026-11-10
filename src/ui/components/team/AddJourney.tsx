@@ -25,7 +25,7 @@ export function AddJourney({ starter, viewerId, library, onDone }: {
     setBusy(true);
     const err = await send('/api/additions', {
       personId: starter.person.id, journeyId, byPersonId: viewerId, mandatory,
-      unlock: after ? { kind: 'after', itemId: after } : { kind: 'now' },
+      unlock: after.startsWith('c:') ? { kind: 'after-container', containerId: after.slice(2) } : after ? { kind: 'after', itemId: after } : { kind: 'now' },
     });
     setBusy(false);
     if (err) setError(err); else onDone();
@@ -48,6 +48,7 @@ export function AddJourney({ starter, viewerId, library, onDone }: {
       <label className="flex flex-col gap-1 text-[15px]">Unlock
         <select className={FIELD} value={after} onChange={(e) => setAfter(e.target.value)}>
           <option value="">Now</option>
+          {starter.engineState.containers.map((c) => <option key={c.containerId} value={`c:${c.containerId}`}>After {c.label}</option>)}
           {starter.engineState.items.map((i) => <option key={i.itemId} value={i.itemId}>After {i.title}</option>)}
         </select>
       </label>

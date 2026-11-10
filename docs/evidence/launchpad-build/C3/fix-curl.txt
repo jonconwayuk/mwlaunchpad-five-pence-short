@@ -1,0 +1,15 @@
+# self-dependent Addition
+{"ok":false,"error":"That would make a loop: In-person events calendar"} [400]
+# person-b state after
+[200]
+# malformed JSON
+{"ok":false,"error":"Body must be JSON"} [400]
+# unknown person decision
+{"ok":false,"error":"Unknown person"} [404]
+# Addition after Container c-cleared, mandatory
+True None
+[('not-started', [{'kind': 'container', 'containerId': 'c-cleared'}], True)]
+# DELETE not-started Addition (ok), re-add, then start? (skip) ; DELETE non-addition
+{"ok":false,"error":"That journey has already started, so it cannot be removed"} [409]
+# buddy has automation / waitingDays
+0

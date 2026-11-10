@@ -14,7 +14,12 @@ export function filterForViewer(
   if (as === 'buddy') {
     return {
       ...state,
-      items: noFlags.map((i) => { const { outcome, ...rest } = i; void outcome; return rest; }),
+      // A Buddy never sees check details: Outcomes, waiting times, or an automation as the current Action.
+      items: noFlags.map((i) => {
+        const { outcome, waitingDays, usualRange, ...rest } = i;
+        void outcome; void waitingDays; void usualRange;
+        return { ...rest, overdue: false, ...(i.currentAction?.type === 'automation' && { currentAction: undefined }) };
+      }),
       needsDecisions: [],
       notifications: state.notifications.filter((n) => n.to === 'buddy'),
       tasks: state.tasks.filter((t) => t.owner === 'buddy'),

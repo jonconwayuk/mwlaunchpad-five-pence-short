@@ -33,6 +33,7 @@ export function TeamView({ viewerId, as }: { viewerId: string; as: TeamRole }) {
 function Team({ data, reload }: { data: TeamData; reload: () => void }) {
   const { viewer, starters, tasks } = data;
   const isLm = viewer.role === 'line-manager';
+  const [taskError, setTaskError] = useState<string | null>(null);
   return (
     <>
       <h1 className="mt-6 font-serif text-[27px] leading-tight text-racing">Your starters</h1>
@@ -44,13 +45,19 @@ function Team({ data, reload }: { data: TeamData; reload: () => void }) {
 
       <section className="mt-8">
         <h2 className="text-[21px] font-semibold text-racing">To-do</h2>
+        {taskError && <p role="alert" className="mt-2 text-[15px]">{taskError}</p>}
         {tasks.length === 0 ? <p className="mt-2 text-[var(--muted)]">Nothing to do right now.</p> : (
           <ul className="mt-2 flex flex-col gap-2">
             {tasks.map((t) => (
               <li key={`${t.personId}-${t.itemId}-${t.actionId}`}>
                 <label className="flex min-h-[44px] items-center gap-3 border-l-[3px] border-vibrant bg-paper pl-3">
                   <input type="checkbox" className={`h-5 w-5 accent-[var(--heritage)] ${FOCUS}`}
-                    onChange={() => void send('/api/actions', { itemId: t.itemId, actionId: t.actionId, actorPersonId: viewer.id, personId: t.personId }).then(reload)} />
+                    onChange={(e) => {
+                      const box = e.currentTarget;
+                      void send('/api/actions', { itemId: t.itemId, actionId: t.actionId, actorPersonId: viewer.id, personId: t.personId }).then((err) => {
+                        if (err) { box.checked = false; setTaskError('That did not save, so it is still on your list. Try again.'); } else { setTaskError(null); reload(); }
+                      });
+                    }} />
                   <span>{t.label}<span className="block text-[15px] text-[var(--muted)]">{t.starterName}</span></span>
                 </label>
               </li>
@@ -92,7 +99,7 @@ function StarterCard({ s, data, reload }: { s: TeamStarter; data: TeamData; relo
 
       {isLm && blocked.map((i) => (
         <p key={i.itemId} className="mt-3 border-l-[3px] border-dashed border-everyday pl-3">
-          {i.title} is blocked
+          Blocked Flag: {i.title}
           <span className="block text-[15px] text-[var(--muted)]">
             Waiting on {i.currentAction?.label ?? 'a system'}{i.waitingDays !== undefined ? ` for ${i.waitingDays} days` : ''}
           </span>

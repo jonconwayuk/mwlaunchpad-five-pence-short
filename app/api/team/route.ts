@@ -6,6 +6,7 @@ import {
 import { apiHandler, ApiError } from '@/src/lib/apiHandler';
 import { filterForViewer } from '@/src/lib/roleFilter';
 import { assertLineManager, chooseResults } from './load';
+import { readJson } from './json';
 
 export const dynamic = 'force-dynamic';
 
@@ -48,7 +49,7 @@ const Body = z.discriminatedUnion('kind', [
 
 /** A note to the starter, or a Line Manager override to Done. */
 export const POST = apiHandler(async (req: Request) => {
-  const b = Body.safeParse(await req.json());
+  const b = Body.safeParse(await readJson(req));
   if (!b.success) throw new ApiError(b.error.issues[0]?.message ?? 'Invalid body');
   const at = getDemoClock();
   if (b.data.kind === 'note') {

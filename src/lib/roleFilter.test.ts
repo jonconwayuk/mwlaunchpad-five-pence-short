@@ -25,6 +25,13 @@ describe('filterForViewer', () => {
     expect(s.needsDecisions).toEqual([]);
     expect(s.tasks.map((t) => t.owner)).toEqual(['buddy']);
   });
+  it('strips check details from every item when the viewer is the buddy', () => {
+    const base = raw.items[0];
+    const checked = { ...raw, items: [{ ...base, waitingDays: 3, usualRange: [1, 2] as [number, number], overdue: true, currentAction: { actionId: 'x', label: 'Check', type: 'automation' as const } }] };
+    const json = JSON.stringify(filterForViewer(checked as unknown as EngineState, 'buddy'));
+    expect(json).not.toContain('"overdue":true');
+    for (const k of ['"waitingDays"', '"usualRange"', '"type":"automation"']) expect(json).not.toContain(k);
+  });
   it('strips Blocked Flags and Needs decisions for the starter and adds actingFor for the delegate', () => {
     const s = filterForViewer(raw, 'starter');
     expect(s.items.some((i) => i.blockedFlag)).toBe(false);
