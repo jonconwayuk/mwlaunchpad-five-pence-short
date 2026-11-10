@@ -6,7 +6,8 @@
   "ownerTeam": "Modern Workplace",
   "stage": "onboarding",
   "tags": {
-    "jobFamily": "Modern Workplace"
+    "jobFamily": "Modern Workplace",
+    "grade": "E"
   },
   "declaresOutcome": false,
   "actions": [

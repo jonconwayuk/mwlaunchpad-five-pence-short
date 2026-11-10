@@ -207,11 +207,11 @@ await setVal('select[aria-label="Stage"]', ''); await setVal('select[aria-label=
 const nAll = await count();
 await setVal('select[aria-label="Grade"]', 'E'); await wait(300);
 const nGradeE = await count();
-await setVal('select[aria-label="Grade"]', ''); await setVal('select[aria-label="Location"]', 'Cardiff'); await wait(300);
-const nCardiff = await count();
+await setVal('select[aria-label="Grade"]', ''); await setVal('select[aria-label="Location"]', 'Leeds'); await wait(300);
+const nLeeds = await count();
 await setVal('select[aria-label="Location"]', ''); await wait(300);
-check('Grade E and Location Cardiff each narrow the library', nGradeE > 0 && nGradeE < nAll && nCardiff > 0 && nCardiff < nAll, `all ${nAll}, grade E ${nGradeE}, Cardiff ${nCardiff}`);
-await setVal('select[aria-label="Stage"]', 'onboarding'); await setVal('select[aria-label="Grade"]', 'E'); await setVal('select[aria-label="Job family"]', 'Executive'); await wait(300);
+check('Grade E and Location Leeds each narrow the library (untagged Journeys always show)', nGradeE > 0 && nGradeE < nAll && nLeeds > 0 && nLeeds < nAll, `all ${nAll}, grade E ${nGradeE}, Leeds ${nLeeds}`);
+await setVal('select[aria-label="Stage"]', 'onboarding'); await setVal('select[aria-label="Grade"]', 'E'); await setVal('select[aria-label="Job family"]', 'Modern Workplace'); await wait(300);
 const listed = await js(`[...document.querySelectorAll('li[draggable]')].map((li) => li.children[1].textContent)`);
 const names = await js(`[...document.querySelectorAll('li[draggable] span')].map((x) => x.textContent)`);
 await setVal('select[aria-label="Job family"]', ''); await wait(300);

@@ -6,7 +6,8 @@
   "ownerTeam": "Executive office",
   "stage": "onboarding",
   "tags": {
-    "jobFamily": "Executive"
+    "jobFamily": "Executive",
+    "grade": "G"
   },
   "declaresOutcome": false,
   "actions": [

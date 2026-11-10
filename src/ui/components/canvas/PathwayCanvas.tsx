@@ -203,7 +203,7 @@ function HardStopPanel({ snapshot, hardStop, onSave, onRemove }: {
         <input defaultValue={hardStop.label} onBlur={(e) => { if (e.target.value.trim()) save({ label: e.target.value.trim() }); }} className={field} />
       </label>
       {hardStop.trigger.kind === 'on-failed' && (
-        <label className="grid gap-0.5 text-[13px] text-[var(--muted)]">On Failed of (a Journey whose Hidden automation sets the Outcome)
+        <label className="grid gap-0.5 text-[13px] text-[var(--muted)]">Stop when this check fails
           <select value={hardStop.trigger.itemId} onChange={(e) => save({ trigger: { kind: 'on-failed', itemId: e.target.value } })} className={field}>
             {snapshot.items.map((i) => <option key={i.id} value={i.id}>{titleOfItem(snapshot.items, i.id)}</option>)}
           </select>

@@ -5,7 +5,7 @@ PASS card cannot leave its Stage lane: dragged 400px right, card x=274 (Pre-empl
 PASS loop refused with named message: "Payroll already waits for Contracting, so Contracting cannot wait for Payroll.Got it"
 PASS Dependency connects: edges 12 -> 13
 PASS Mandatory toggles and shows a padlock: padlock on Pulse check false -> true
-PASS side panel leaves the Hard Stop visible: Hard Stop right edge 648.4739990234375, panel left 1016
+PASS side panel leaves the Hard Stop visible: Hard Stop right edge 655.5989990234375, panel left 1016
 PASS removing a Dependency drops the edge: edges 13 -> 12
 PASS Container, Timer and Hard Stop render: ["Cleared to start","7 days before start date","5 days before start date","13 days after start date","29 days after start date","On start date","7 days after start date","Hard StopPre-employment checks failedStops the whole pathway","Hard StopPre-employment checks not done in timeStops the work it is connected to"]
 PASS autosave after a change: "Draft saved"
@@ -23,7 +23,8 @@ PASS pw-engineer: no Timer or Hard Stop overlaps a Journey card: []
 PASS pw-engineer: no sideways scroll at 1280: scrollWidth 1280
 PASS pw-executive: no Timer or Hard Stop overlaps a Journey card: []
 PASS pw-executive: no sideways scroll at 1280: scrollWidth 1280
-PASS library filters by Stage, grade E and job family: 4 shown, Stages ["Onboarding"], names ["Branch induction","Retail","Engineering community intro","Technology","In-person events calendar","Welcome from sponsoring exec","Executive"]
+PASS Grade E and Location Leeds each narrow the library (untagged Journeys always show): all 15, grade E 14, Leeds 14
+PASS library filters by Stage, grade E and job family: 3 shown, Stages ["Onboarding"], names ["Engineering community intro","Technology","In-person events calendar","Lab environment","Modern Workplace","E"]
 PASS a filtered Journey drags onto pw-infra-e: new card i-j-branch-induction-1
 PASS a Dependency draws on pw-infra-e: i-contracting -> i-j-branch-induction-1: edges 11 -> 12
 PASS the reverse Dependency is refused as a loop: "Branch induction already waits for Contracting, so Contracting cannot wait for Branch induction.Got it"

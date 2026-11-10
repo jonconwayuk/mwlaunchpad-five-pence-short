@@ -6,7 +6,9 @@
   "ownerTeam": "Retail",
   "stage": "onboarding",
   "tags": {
-    "platform": "Retail"
+    "platform": "Retail",
+    "jobFamily": "Branch",
+    "location": "Cardiff"
   },
   "declaresOutcome": false,
   "actions": [

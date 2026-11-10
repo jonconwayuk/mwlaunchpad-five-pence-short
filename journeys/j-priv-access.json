@@ -6,7 +6,8 @@
   "ownerTeam": "Modern Workplace",
   "stage": "pre-employment",
   "tags": {
-    "jobFamily": "Modern Workplace"
+    "jobFamily": "Modern Workplace",
+    "grade": "E"
   },
   "whileYouWait": "Your admin access is with the Security team for approval. It usually takes three to four weeks, so there is nothing you need to do right now.",
   "declaresOutcome": false,

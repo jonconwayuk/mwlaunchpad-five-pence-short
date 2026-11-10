@@ -6,7 +6,8 @@
   "ownerTeam": "Retail",
   "stage": "pre-employment",
   "tags": {
-    "platform": "Retail"
+    "platform": "Retail",
+    "location": "Cardiff"
   },
   "declaresOutcome": false,
   "actions": [
