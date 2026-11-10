@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { addAdditionToApplied, getAppliedPathway, getJourney, removeAdditionFromApplied } from '@/src/db/queries';
+import { addAdditionToApplied, getAppliedPathway, getDemoClock, getJourney, removeAdditionFromApplied } from '@/src/db/queries';
 import { apiHandler, ApiError } from '@/src/lib/apiHandler';
 import { filterForViewer } from '@/src/lib/roleFilter';
 import type { PathwayItem } from '@/src/engine';
@@ -35,7 +35,7 @@ export const POST = apiHandler(async (req: Request) => {
     id: `add-${journeyId}`, journeyId, journeyVersion: j.version, mandatory,
     dependsOn: unlock.kind === 'now' ? [] : unlock.kind === 'after' ? [{ kind: 'item', itemId: unlock.itemId }] : [{ kind: 'container', containerId: unlock.containerId }],
     lane: j.stage, x: 0, y: 0,
-    addedBy: { personId: byPersonId, name: staff.name },
+    addedBy: { personId: byPersonId, name: staff.name, addedOn: getDemoClock() },
   };
   const snap = getAppliedPathway(personId)?.snapshot;
   const titleOf = (id: string) => stateFor(personId).items.find((i) => i.itemId === id)?.title ?? j.title;
@@ -50,6 +50,8 @@ export const DELETE = apiHandler(async (req: Request) => {
   if (!b.success) throw new ApiError(b.error.issues[0]?.message ?? 'Invalid body');
   const { personId, itemId, byPersonId } = b.data;
   const { staff } = assertLineManager(personId, byPersonId, true);
+  const onPathway = getAppliedPathway(personId)?.snapshot.items.find((i) => i.id === itemId);
+  if (onPathway && !onPathway.addedBy) throw new ApiError('This Journey is part of the Pathway template and cannot be removed', 403);
   if (stateFor(personId).items.find((i) => i.itemId === itemId)?.status !== 'not-started') {
     throw new ApiError('That journey has already started, so it cannot be removed', 409);
   }

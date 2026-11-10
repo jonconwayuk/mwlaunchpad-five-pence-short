@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { computeState } from '@/src/engine';
-import { buildEngineInput, getAppliedPathway, getDemoClock, getPerson, listManualReminders } from '@/src/db/queries';
+import { buildEngineInput, getAppliedBasis, getAppliedPathway, getDemoClock, getPerson, listManualReminders } from '@/src/db/queries';
 import { withManualReminders } from '@/app/api/reminders/merge';
 import { ApiError, apiHandler } from '@/src/lib/apiHandler';
 import { PERSONAS, getPersona } from '@/src/lib/persona';
@@ -24,6 +24,7 @@ export const GET = apiHandler(async (req) => {
     engineState,
     person: { id: row.id, name: row.name },
     simulatedDate: getDemoClock(),
+    basedOn: getAppliedBasis(personId)?.text,
     personas: PERSONAS.map((p) => ({ id: p.personId, name: p.name })),
   };
 });

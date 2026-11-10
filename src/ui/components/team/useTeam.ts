@@ -6,6 +6,7 @@ export type TeamRole = 'line-manager' | 'buddy';
 export interface TeamStarter {
   person: { id: string; name: string; startDate: string | null };
   engineState: EngineState;
+  basedOn?: string;
   chooseResults?: { itemId: string; title: string; label: string; value: string | number }[];
 }
 export interface TeamData {

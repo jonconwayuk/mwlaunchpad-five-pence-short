@@ -136,6 +136,7 @@ export function listPathways() {
   const applied = db.select().from(s.appliedPathways).all();
   return db.select().from(s.pathways).all().map((p) => ({
     ...p, appliedCount: applied.filter((a) => a.snapshot.pathwayId === p.id).length,
+    modifiedCount: applied.filter((a) => a.snapshot.pathwayId === p.id && a.snapshot.items.some((i) => i.addedBy)).length,
   }));
 }
 
@@ -238,6 +239,21 @@ export function applyPathway(pathwayId: string, personId: string, today: ISODate
 export const getAppliedPathway = (personId: string) =>
   db.select().from(s.appliedPathways).where(eq(s.appliedPathways.personId, personId)).get();
 
+/** What an Applied Pathway was based on, from the snapshot taken at apply time (ADR-0002), never the live version. */
+export function getAppliedBasis(personId: string) {
+  const a = getAppliedPathway(personId);
+  if (!a) return undefined;
+  const { title, pathwayId, version } = a.snapshot;
+  const semver = getPathwayVersionSemver(pathwayId, version) ?? String(version);
+  const added = a.snapshot.items.filter((i) => i.addedBy);
+  const n = added.length;
+  return {
+    title, semver, added: n,
+    text: `Based on ${title} ${semver}${n ? `, modified: ${n} ${n === 1 ? 'Journey' : 'Journeys'} added` : ''}`,
+    changes: added.map((i) => ({ itemId: i.id, journeyId: i.journeyId, by: i.addedBy!.name, on: i.addedBy!.addedOn })),
+  };
+}
+
 export function addAdditionToApplied(personId: string, item: PathwayItem, timers: TimerDef[] = []): void {
   db.transaction(() => {
     const a = getAppliedPathway(personId);
@@ -263,7 +279,8 @@ export function removeAdditionFromApplied(personId: string, itemId: string, byPe
     const a = getAppliedPathway(personId);
     const item = a?.snapshot.items.find((i) => i.id === itemId);
     if (!a || !item) throw new Error(`Pathway Item ${itemId} is not on the Applied Pathway for ${personId}`);
-    if (item.addedBy?.personId !== byPersonId) throw new Error(`Only the person who added ${itemId} can remove it`);
+    if (!item.addedBy) throw new Error('This Journey is part of the Pathway template and cannot be removed');
+    if (item.addedBy.personId !== byPersonId) throw new Error(`Only the person who added ${itemId} can remove it`);
     const started = db.select().from(s.actionProgress)
       .where(and(eq(s.actionProgress.personId, personId), eq(s.actionProgress.itemId, itemId))).get();
     if (started) throw new Error(`${itemId} has already started and can no longer be removed`);

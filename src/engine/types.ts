@@ -58,7 +58,7 @@ export interface PathwayItem {
   id: string; journeyId: string; journeyVersion: number;
   mandatory: boolean; dependsOn: DependencyRef[]; containerId?: string;
   lane: StageId; x: number; y: number;          // canvas position
-  addedBy?: { personId: string; name: string }; // set only on an Addition
+  addedBy?: { personId: string; name: string; addedOn?: ISODate }; // set only on an Addition
 }
 
 export interface PathwaySnapshot {

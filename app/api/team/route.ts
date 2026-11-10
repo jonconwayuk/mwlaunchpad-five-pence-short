@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { computeState } from '@/src/engine';
 import {
-  addNote, buildEngineInput, getAppliedPathway, getDemoClock, getJourney, getPerson, listJourneys, listPersons, recordOverride,
+  addNote, buildEngineInput, getAppliedBasis, getAppliedPathway, getDemoClock, getJourney, getPerson, listJourneys, listPersons, recordOverride,
 } from '@/src/db/queries';
 import { apiHandler, ApiError } from '@/src/lib/apiHandler';
 import { filterForViewer } from '@/src/lib/roleFilter';
@@ -28,6 +28,7 @@ export const GET = apiHandler(async (req: Request) => {
     return {
       person: { id: p.id, name: p.name, startDate: p.startDate },
       engineState,
+      basedOn: getAppliedBasis(p.id)?.text,
       ...(as === 'line-manager' && { chooseResults: chooseResults(input) }),
     };
   });

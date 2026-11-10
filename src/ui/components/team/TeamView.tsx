@@ -139,6 +139,7 @@ function StarterCard({ s, data, reload }: { s: TeamStarter; data: TeamData; relo
   return (
     <section className="mt-8 border-t border-[var(--hairline)] pt-6 @4xl:border-t-0">
       <h2 className="text-[21px] font-semibold text-racing @4xl:font-serif @4xl:text-[27px]">{s.person.name}</h2>
+      {s.basedOn && <p className="text-[15px] text-[var(--muted)]">{s.basedOn}</p>}
       <p className="mt-1">{summary.line}</p>
       {summary.next && <p className="mt-1">Next: <strong>{summary.next}</strong></p>}
 
