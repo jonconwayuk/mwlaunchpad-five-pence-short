@@ -30,3 +30,6 @@ appsettings.Development.json
 node_modules/
 *.tsbuildinfo
 next-env.d.ts
+*.db-shm
+*.db-wal
+*.db-journal
