@@ -46,3 +46,10 @@
 10:24 | W2 | F2 | implementer | opus | Onboarding Studio rename, single-window view/person/layout switcher, Studio nav placeholders
 10:24 | W2 | DOC | implementer | sonnet | Design.MD 1.2 amendment, GLOSSARY, CLAUDE.md, ADR-0007
 10:24 | W1 | W1-A | implementer | opus | NeedsDecision.triggerItemId, roleFilter matches on it (decision 30), audit residue check
+10:23 | W2 | G5 | implementer | opus | Agent library: agents/ as code, src/agents loader + router, /api/agents, /portal/agents catalogue (started early: no wave F file overlap)
+10:24 | W2 | DOC | reviewer | opus | Check Design.MD 1.2 amendment against decisions 31-37, glossary consistency, ADR-0007, CLAUDE.md onboarding quality
+10:25 | W1 | W1-A | reviewer | opus | Re-verify triggerItemId change, red-green on roleFilter, no contract drift
+10:26 | W2 | F2 | reviewer | opus | Re-verify rename, switcher view/person/layout in one tab, Studio nav, section 9 unaffected
+10:26 | W2 | DOC | fix implementer | sonnet | Six review fixes: chat wording, glossary, semver words, ADR-0007 prose, ADR-0003 note, CLAUDE.md line
+10:27 | W2 | G5 | reviewer | opus | Re-verify agents-as-code loader/router, /api/agents, friendly catalogue page
+10:29 | W2 | G5 | fix implementer | sonnet | Router scoring threshold, merch examples, journeyIds test, layering, agent version, error path

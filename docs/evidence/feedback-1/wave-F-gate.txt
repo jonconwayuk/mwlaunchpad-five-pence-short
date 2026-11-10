@@ -1,0 +1,15 @@
+e21e951 Move Journeys and connectors into files, add grades A to G and seed Bob Warwick
+ Test Files  10 passed (10)
+      Tests  111 passed (111)
+   Start at  10:30:15
+   Duration  526ms (tests 68%, transform 19%, import 12%, worker 2%)
+
+---BUILD
+ ✓ Compiled successfully in 2.3s
+
+Section 9 by API on the gated build (port 3089, own db), 10:31:
+S9.5 A waiting 18 [21, 35] not overdue; all faces 200 (/me /team /portal/pathways /portal/people /portal/pathways/pw-branch /portal/agents /portal/insights /portal/journeys)
+S9.2 re-apply keeps A's wait (18); S9.4 Addition labelled "Added by Chris Lee"; S9.6 HR Needs decision hs-failed and starter items/containers unchanged
+Bob: pw-infra-e applies (11 items); after Reset Bob has no Pathway (404 from /api/state, expected until G6's empty state)
+S9.8 Reset: person-a state byte-identical to the fresh seed
+S9.1 canvas and S9.7 Day 14 Pulse check: covered by the drive and engine tests, not re-run here.

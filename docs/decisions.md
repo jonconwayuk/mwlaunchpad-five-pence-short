@@ -336,3 +336,15 @@ Numbered once, in order, never renumbered or deleted. A reversed decision gets a
 - **Decided:** The owner's brief ends mid-sentence at "Rewrite the", after the wave H list. We read it as "Rewrite the demo script (`docs/demo/script.md`) and the README around Bob", and wave H does that.
 - **Why:** The brief's fallback rule: when something is ambiguous, take the reading closest to the stated aims (aim 1: "the demo script is rewritten around Bob") and record it.
 - **Confirmed 10:23:** The owner sent the missing text. Wave H rewrites the team demo script around the eight Bob steps and updates the README. The README's "What is simulated" section says plainly that the repo connection points at folders in this repo, and that connectors, agents, the chat and the Teams handover are simulated. After each gate, both workstreams are reported side by side. At 12:30 building stops, every commit that is not green is reverted, and the Bob walk runs twice.
+
+### 38. A pending Hard Stop is matched by its trigger item (supersedes the matching part of decision 30)
+
+- **Decided:** `NeedsDecision` gains an optional `triggerItemId`. This is additive, and no existing field changes meaning. `roleFilter` masks a pending failure using that field, and falls back to the reason text only when the field is missing. The audit residue is correct as it stands. When the Pathway changes, a kept Failed Outcome raises `hs-failed` again, because Hard Stop decisions are dropped (`Design.MD` D2f.3), so someone has to confirm again.
+- **Why:** Workstream 1 had this left open from decision 30. With the old match, a Journey that failed and was then Dismissed could mask the wrong item.
+- **Evidence:** `docs/evidence/launchpad-build/w1-a/`; 96 Vitest tests.
+
+### 39. Stretch 1 and G1 share one review
+
+- **Decided:** Stretch 1, authoring Timers and Hard Stops on the canvas, is committed on its own, so it can be reverted alone. It is merged into G1 (decision 31) and done by the same agent, and G1's independent reviewer reviews both together. One known limit: the Hard Stop picker lists every Journey on the Pathway, not only those whose Hidden automation sets the Outcome. The PUT route still refuses an invalid save.
+- **Why:** One reviewer reads the whole canvas change once. The stretch commit stays separate, so it can be reverted.
+- **Evidence:** `docs/evidence/launchpad-build/stretch-1/` (25 of 25 drive checks); 102 Vitest tests.
