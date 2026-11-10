@@ -58,7 +58,7 @@ export interface PathwayItem {
   id: string; journeyId: string; journeyVersion: number;
   mandatory: boolean; dependsOn: DependencyRef[]; containerId?: string;
   lane: StageId; x: number; y: number;          // canvas position
-  addedBy?: { personId: string; name: string; addedOn?: ISODate }; // set only on an Addition
+  addedBy?: { personId: string; name: string; addedOn?: ISODate }; // set only on an Addition; addedOn is the Simulated date (Demo clock) it was made, absent on older or seeded Additions
 }
 
 export interface PathwaySnapshot {

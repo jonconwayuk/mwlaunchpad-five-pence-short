@@ -83,7 +83,7 @@ export function StarterPreview({ query = '?as=starter', personId, firstName = 't
         {waiting[0]?.waitingDays !== undefined && (
           <p className="mt-1 text-[15px] text-[var(--muted)]">Day {waiting[0].waitingDays} of your wait</p>
         )}
-        {(state as typeof state & { basedOn?: string }).basedOn && <p className="mt-1 text-[15px] text-[var(--muted)]">{(state as typeof state & { basedOn?: string }).basedOn}</p>}
+        {state.basedOn && <p className="mt-1 text-[15px] text-[var(--muted)]">{state.basedOn}</p>}
       </header>
 
       {/* Phone: one column in DOM order, help first so it is never held behind Actions. Desktop: the plan on the left, help and waiting card on the right. */}

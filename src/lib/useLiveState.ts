@@ -6,6 +6,7 @@ export interface LiveData {
   engineState: EngineState;
   person: { id: string; name: string };
   simulatedDate: string;
+  basedOn?: string;
   personas: { id: string; name: string }[];
 }
 

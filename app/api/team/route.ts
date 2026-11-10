@@ -28,7 +28,7 @@ export const GET = apiHandler(async (req: Request) => {
     return {
       person: { id: p.id, name: p.name, startDate: p.startDate },
       engineState,
-      basedOn: getAppliedBasis(p.id)?.text,
+      ...(as === 'line-manager' && { basedOn: getAppliedBasis(p.id)?.text }),
       ...(as === 'line-manager' && { chooseResults: chooseResults(input) }),
     };
   });

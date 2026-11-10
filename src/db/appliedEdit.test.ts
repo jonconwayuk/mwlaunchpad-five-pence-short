@@ -1,4 +1,5 @@
 import { randomUUID } from 'node:crypto';
+import { filterForViewer } from '@/src/lib/roleFilter';
 import { beforeAll, describe, expect, it } from 'vitest';
 
 process.env.DATABASE_URL = `file:/tmp/ae-${randomUUID()}.db`;
@@ -40,8 +41,19 @@ describe('editing an Applied Pathway', () => {
     const live = m.q.getPathwayVersionSemver('pw-infra-e', m.q.getAppliedPathway('person-bob')!.snapshot.version)!;
     expect(b.text).toBe(`Based on ${b.title} ${live}, modified: 1 Journey added`);
     expect(b.changes[0]).toMatchObject({ by: 'HR Partner', on: '2026-11-10' });
+    const seen = filterForViewer(m.engine.computeState(m.q.buildEngineInput('person-bob')), 'starter');
+    expect(seen.items.find((i) => i.journeyId === extra.id)?.addedBy?.name).toBe('HR Partner');
     expect(ids('person-a')).toEqual(aBefore);
     expect(m.q.getAppliedBasis('person-a')!.added).toBe(aAdded);
     expect(m.q.listPathways().find((p) => p.id === 'pw-infra-e')!.modifiedCount).toBe(aAdded ? 2 : 1);
+  });
+
+  it('answers 403 over the route, when HR tries to remove a template Journey', async () => {
+    const { DELETE } = await import('@/app/api/additions/route');
+    const res = await (DELETE as (r: Request, c: unknown) => Promise<Response>)(new Request('http://x/api/additions', {
+      method: 'DELETE', headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ personId: 'person-bob', itemId: 'i-contracting', byPersonId: hr }),
+    }), {});
+    expect(res.status).toBe(403);
   });
 });

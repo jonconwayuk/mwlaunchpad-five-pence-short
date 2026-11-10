@@ -132,7 +132,7 @@ export function buildTemplate(tpl: Template): Omit<PathwaySnapshot, 'id' | 'vers
 }
 export { TEMPLATES };
 
-export const HR_ADDER = { personId: 'hr-partner', name: 'HR Partner' };
+export const HR_ADDER = { personId: 'hr-partner', name: 'HR Partner', addedOn: DEMO_T };
 export const PERSON_A_ADDITIONS = {
   timers: [{ id: 't-delay', label: '30 days after Offer accepted', anchor: { kind: 'offer-accepted' }, offsetDays: 30 }] as TimerDef[],
   items: [
