@@ -10,9 +10,11 @@ export function DemoControls({ data, today }: { data: ControlsData; today: strin
   const [msg, setMsg] = useState('');
   const [personId, setPersonId] = useState(data.starters[0]?.id ?? '');
   const [date, setDate] = useState(today);
-  const [wIdx, setWIdx] = useState(0);
+  const [wKey, setWKey] = useState('');
   const starter = data.starters.find((s) => s.id === personId);
-  const w = data.waiting[wIdx] ?? data.waiting[0];
+  // Keyed, not indexed: the list shifts after a refresh. A vanished key falls back to the first, shown in the select.
+  const keyOf = (x: { personId: string; itemId: string }) => `${x.personId}:${x.itemId}`;
+  const w = data.waiting.find((x) => keyOf(x) === wKey) ?? data.waiting[0];
 
   async function post(url: string, body?: unknown) {
     const res = await fetch(url, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body ?? {}) });
@@ -44,8 +46,8 @@ export function DemoControls({ data, today }: { data: ControlsData; today: strin
       <span className="flex items-center gap-1">
         {w ? (
           <>
-            <select aria-label="Waiting automation" value={wIdx} onChange={(e) => setWIdx(Number(e.target.value))} className="max-w-[220px] rounded-[4px] border border-hairline px-1 py-1">
-              {data.waiting.map((x, i) => <option key={x.personId + x.itemId} value={i}>{x.personName}: {x.title}</option>)}
+            <select aria-label="Waiting automation" value={keyOf(w)} onChange={(e) => setWKey(e.target.value)} className="max-w-[220px] rounded-[4px] border border-hairline px-1 py-1">
+              {data.waiting.map((x) => <option key={keyOf(x)} value={keyOf(x)}>{x.personName}: {x.title}</option>)}
             </select>
             {w.setsOutcome && <button className={btn} onClick={() => post('/api/simulate', { ...w, result: 'passed' })}>Simulate passed</button>}
             {w.setsOutcome && <button className={btn} onClick={() => post('/api/simulate', { ...w, result: 'failed' })}>Simulate failed</button>}

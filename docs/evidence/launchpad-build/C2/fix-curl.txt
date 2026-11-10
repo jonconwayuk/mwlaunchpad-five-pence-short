@@ -1,0 +1,6 @@
+{"set":"2026-13-45"} -> {"ok":false,"error":"Enter a real date as YYYY-MM-DD."}
+{"set":"2026-02-30"} -> {"ok":false,"error":"Enter a real date as YYYY-MM-DD."}
+{"advanceDays":100000000} -> {"ok":false,"error":"Enter 3650 days or fewer."}
+{"advanceDays":1} -> {"ok":true,"data":{"simulatedDate":"2026-11-11"}}
+Simulated date 
+Simulated date <!-- -->11 Nov 2026</div><main class="m
