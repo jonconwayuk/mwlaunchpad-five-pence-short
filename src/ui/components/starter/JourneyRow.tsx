@@ -19,8 +19,10 @@ const LOOK: Record<JourneyStatus, { box: string; title: string; word: string }> 
   cancelled: { box: 'bg-charcoal text-paper', title: '', word: 'Stopped' },
 };
 
-export function JourneyRow({ item, act, receipt, onReceipt }: {
+export function JourneyRow({ item, act, receipt, onReceipt, actingFor }: {
   item: ItemState; act: Act; receipt?: string; onReceipt: (itemId: string) => void;
+  /** The starter's name when a Delegate is viewing (D12a.4). */
+  actingFor?: string;
 }) {
   const look = LOOK[item.status];
   const action = item.status === 'action-required' ? item.currentAction : undefined;
@@ -37,7 +39,9 @@ export function JourneyRow({ item, act, receipt, onReceipt }: {
       </div>
       {item.addedBy && <p className="text-[14px] text-[var(--muted)]">Added by {item.addedBy.name}</p>}
       {action && action.type !== 'provide' && <p className="mt-1">{action.label}</p>}
-      {action && <ActionControl item={item} act={act} onReceipt={onReceipt} />}
+      {action && actingFor && action.starterOnly
+        ? <p className="mt-2 text-[15px] text-[var(--muted)]">Waiting for {actingFor}</p>
+        : action && <ActionControl item={item} act={act} onReceipt={onReceipt} />}
       {receipt && <p className="mt-1 text-[15px] text-[var(--muted)]">Submitted {receipt}</p>}
       {!item.mandatory && (item.status === 'action-required' || item.status === 'in-progress') && (
         <button type="button" className={`${QUIET} mt-3`} onClick={() => void act(item.itemId, 'skip')}>

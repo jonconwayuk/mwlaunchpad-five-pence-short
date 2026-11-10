@@ -5,27 +5,55 @@ import { useLiveState } from '@/src/lib/useLiveState';
 import { STAGES, STAGE_LABEL, shortDate } from './format';
 import { JourneyRow, type Act } from './JourneyRow';
 import { WaitingCard } from './WaitingCard';
+import { Reminders } from './Reminders';
+import { HelpChat } from '@/src/ui/components/chat/HelpChat';
 
 // The Blocked Flag only picks the card and is never shown. After wave C the server strips it for a
 // starter, so a waiting item is also recognised by its Usual Range.
 const isWaiting = (i: ItemState) => i.status === 'in-progress' && (i.blockedFlag || i.usualRange !== undefined);
 
-export function StarterPreview() {
-  const { state, refresh } = useLiveState('?as=starter');
+const PAGE = 'mx-auto w-full max-w-[420px] px-5 pt-8 pb-16 text-[17px] leading-[1.55] text-ink lg:max-w-[1080px] lg:px-10';
+
+/** Before HR applies a Pathway, /api/state answers 404: a calm welcome, never an endless Loading. */
+export function NoPlan({ firstName, personId }: { firstName: string; personId: string }) {
+  return (
+    <main className={PAGE}>
+      <div className="lg:grid lg:grid-cols-[minmax(0,1fr)_360px] lg:gap-12">
+        <div>
+          <h1 className="font-serif text-[27px] leading-tight text-racing">Welcome, {firstName}.</h1>
+          <p className="mt-3 max-w-[52ch]">HR is getting your plan ready. You do not need to do anything yet; it will appear here as soon as it is ready.</p>
+        </div>
+        <div className="mt-8 lg:mt-0"><HelpChat personId={personId} /></div>
+      </div>
+    </main>
+  );
+}
+
+export const ActingFor = ({ name }: { name: string }) => (
+  <p role="status" className="mb-6 rounded-[6px] bg-calm px-4 py-2 text-[15px] font-medium">Acting for {name}</p>
+);
+
+export function StarterPreview({ query = '?as=starter', personId, firstName = 'there', actorPersonId }: {
+  query?: string; personId: string; firstName?: string; actorPersonId?: string;
+}) {
+  const { state, loading, refresh } = useLiveState(query);
   // shortcut: receipts live in the page only, lost on reload; upgrade when /api/state returns Provide receipts.
   const [receipts, setReceipts] = useState<Record<string, string>>({});
 
-  if (!state) {
-    return <main className="mx-auto max-w-[420px] px-5 py-8 text-[17px] text-[var(--muted)]">Loading your journeys</main>;
+  if (!state && loading) {
+    return <main className={`${PAGE} text-[var(--muted)]`}>Loading your journeys</main>;
   }
+  // A 404 (no Applied Pathway yet) or any other failure on the first load reads as the calm welcome.
+  if (!state) return <NoPlan firstName={firstName} personId={personId} />;
 
   const { engineState: es, person, simulatedDate } = state;
+  const actingFor = (es as typeof es & { actingFor?: string }).actingFor;
   const act: Act = async (itemId, actionId, value) => {
     try {
-      const res = await fetch('/api/actions', {
+      const res = await fetch(`/api/actions${actingFor ? '?as=delegate' : ''}`, {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ itemId, actionId, value, actorPersonId: person.id }),
+        body: JSON.stringify({ itemId, actionId, value, actorPersonId: actorPersonId ?? person.id, personId: person.id }),
       });
       return res.ok; // a 404 or 501 before wave C stays quiet
     } catch {
@@ -38,7 +66,7 @@ export function StarterPreview() {
   // The server applies D2f.4 for the starter: Failed items are masked while pending, `stopped` after Confirm.
   if ((es as typeof es & { stopped?: boolean }).stopped) {
     return (
-      <main className="mx-auto max-w-[420px] px-5 py-8 text-[17px] leading-[1.55] text-ink">
+      <main className={PAGE}>
         <p className="font-serif text-[21px] text-racing">Your recruiter will be in touch.</p>
       </main>
     );
@@ -47,7 +75,8 @@ export function StarterPreview() {
   const rest = es.items.filter((i) => !isWaiting(i));
 
   return (
-    <main className="mx-auto max-w-[420px] px-5 pt-8 pb-16 text-[17px] leading-[1.55] text-ink">
+    <main className={PAGE}>
+      {actingFor && <ActingFor name={actingFor} />}
       <header>
         <h1 className="font-serif text-[27px] leading-tight text-racing">{STAGE_LABEL[es.stage]}</h1>
         {waiting[0]?.waitingDays !== undefined && (
@@ -55,39 +84,50 @@ export function StarterPreview() {
         )}
       </header>
 
-      {waiting.length > 0 && (
-        <div className="mt-6 flex flex-col gap-4">
-          {waiting.map((i) => <WaitingCard key={i.itemId} item={i} />)}
+      {/* Phone: one column in DOM order. Desktop: the plan on the left, waiting card and help on the right. */}
+      <div className="lg:grid lg:grid-cols-[minmax(0,1fr)_360px] lg:grid-rows-[auto_1fr] lg:items-start lg:gap-x-12">
+        {waiting.length > 0 && (
+          <div className="mt-6 flex flex-col gap-4 lg:col-start-2 lg:row-start-1">
+            {waiting.map((i) => <WaitingCard key={i.itemId} item={i} />)}
+          </div>
+        )}
+
+        <div className="lg:col-start-1 lg:row-span-2 lg:row-start-1">
+          {es.nextUp && <p className="mt-6 max-w-[62ch]">{es.nextUp.line}</p>}
+
+          {STAGES.map((stage) => {
+            const items = rest.filter((i) => i.stage === stage);
+            if (items.length === 0) return null;
+            return (
+              <section key={stage} aria-labelledby={`stage-${stage}`} className="mt-8">
+                <h2
+                  id={`stage-${stage}`}
+                  className={stage === es.stage ? 'sr-only' : 'mb-3 font-serif text-[21px] text-racing'}
+                >
+                  {STAGE_LABEL[stage]}
+                </h2>
+                <ul className="flex flex-col gap-3">
+                  {items.map((i) => (
+                    <JourneyRow
+                      key={i.itemId}
+                      item={i}
+                      act={act}
+                      actingFor={actingFor}
+                      receipt={receipts[i.itemId]}
+                      onReceipt={(id) => setReceipts((r) => ({ ...r, [id]: shortDate(simulatedDate) }))}
+                    />
+                  ))}
+                </ul>
+              </section>
+            );
+          })}
         </div>
-      )}
 
-      {es.nextUp && <p className="mt-6 max-w-[62ch]">{es.nextUp.line}</p>}
-
-      {STAGES.map((stage) => {
-        const items = rest.filter((i) => i.stage === stage);
-        if (items.length === 0) return null;
-        return (
-          <section key={stage} aria-labelledby={`stage-${stage}`} className="mt-8">
-            <h2
-              id={`stage-${stage}`}
-              className={stage === es.stage ? 'sr-only' : 'mb-3 font-serif text-[21px] text-racing'}
-            >
-              {STAGE_LABEL[stage]}
-            </h2>
-            <ul className="flex flex-col gap-3">
-              {items.map((i) => (
-                <JourneyRow
-                  key={i.itemId}
-                  item={i}
-                  act={act}
-                  receipt={receipts[i.itemId]}
-                  onReceipt={(id) => setReceipts((r) => ({ ...r, [id]: shortDate(simulatedDate) }))}
-                />
-              ))}
-            </ul>
-          </section>
-        );
-      })}
+        <div className="mt-8 flex flex-col gap-8 lg:col-start-2 lg:row-start-2">
+          <Reminders notifications={es.notifications} />
+          <HelpChat personId={person.id} />
+        </div>
+      </div>
     </main>
   );
 }
