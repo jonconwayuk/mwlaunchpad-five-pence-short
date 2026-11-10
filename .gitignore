@@ -26,7 +26,7 @@ appsettings.Development.json
 *.db
 
 # Next.js and Node
-.next/
+.next*/
 node_modules/
 *.tsbuildinfo
 next-env.d.ts
