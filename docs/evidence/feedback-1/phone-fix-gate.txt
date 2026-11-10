@@ -1,0 +1,5 @@
+Gate after the phone fix, 11:06, HEAD 7455ca2, clean worktree
+check: 169 tests passed
+build run 1: FAILED, SqliteError duplicate column name: semver while collecting page data (parallel workers racing the check-then-ALTER in src/db/client.ts on an unseeded db)
+build runs 2 and 3 from a fresh db: green
+Flake handed to a fix agent; the demo instance is seeded before build, so it is not exposed.
