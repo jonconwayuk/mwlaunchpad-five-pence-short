@@ -1,0 +1,4 @@
+GET /api/state
+{"ok":true,"data":{"engineState":{"today":"2026-11-10","stage":"pre-employment","personStatus":"joiner","dayNumber":-55,"items":[{"mandatory":true,"available":true,"blockedFlag":false,"overdue":false,"unmetDependencies":[],"itemId":"i-contracting","journeyId":"j-contracting","title":"Contracting","stage":"pre-contract","status":"done","availableSince":"2026-10-20","doneAt":"2026-10-24","outcome":"
+GET /api/state?personId=person-b
+{"ok":true,"data":{"engineState":{"today":"2026-11-10","stage":"pre-employment","personStatus":"joiner","dayNumber":-55,"items":[{"mandatory":true,"available":true,"blockedFlag":false,"overdue":false,

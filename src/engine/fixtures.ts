@@ -3,7 +3,7 @@ import type { EngineState, ItemState } from './types';
 const base = { mandatory: true, available: false, blockedFlag: false, overdue: false, unmetDependencies: [] };
 
 const items: ItemState[] = [
-  { ...base, itemId: 'i-contracting', journeyId: 'j-contracting', title: 'Contracting', stage: 'pre-employment',
+  { ...base, itemId: 'i-contracting', journeyId: 'j-contracting', title: 'Contracting', stage: 'pre-contract',
     status: 'done', available: true, availableSince: '2026-10-20', doneAt: '2026-10-24', outcome: 'done' },
   { ...base, itemId: 'i-payroll', journeyId: 'j-payroll', title: 'Payroll', stage: 'pre-employment',
     status: 'action-required', available: true, availableSince: '2026-10-24',
@@ -38,7 +38,7 @@ export const demoState: EngineState = {
   needsDecisions: [],
   tasks: [{
     itemId: 'i-checks', actionId: 'a-vetting', label: 'Chase the vetting check',
-    owner: 'hr', personId: 'p-alex', starterName: 'Alex Morgan', raisedOn: '2026-11-10',
+    owner: 'hr', personId: 'person-a', starterName: 'Alex Morgan', raisedOn: '2026-11-10',
   }],
   notifications: [],
   nextUp: { itemId: 'i-payroll', line: 'Next: add your bank details so we can set up your pay.' },

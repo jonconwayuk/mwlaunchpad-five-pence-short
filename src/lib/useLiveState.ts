@@ -10,16 +10,20 @@ export interface LiveData {
 }
 
 /** Polls GET /api/state every 3000 ms, paused while the tab is hidden. */
+// `query` is a raw query string including the leading '?', e.g. '?as=starter'.
 export function useLiveState(query = '') {
   const [state, setState] = useState<LiveData | null>(null);
   const [loading, setLoading] = useState(true);
 
   const refresh = useCallback(async () => {
-    const res = await fetch(`/api/state${query}`, { cache: 'no-store' });
-    const body = (await res.json()) as { ok: true; data: LiveData } | { ok: false; error: string };
-    if (!body.ok) throw new Error(body.error);
-    setState(body.data);
-    setLoading(false);
+    try {
+      const res = await fetch(`/api/state${query}`, { cache: 'no-store' });
+      const body = (await res.json()) as { ok: true; data: LiveData } | { ok: false; error: string };
+      if (!body.ok) throw new Error(body.error);
+      setState(body.data);
+    } finally {
+      setLoading(false);
+    }
   }, [query]);
 
   useEffect(() => {
@@ -28,7 +32,11 @@ export function useLiveState(query = '') {
     };
     tick();
     const id = setInterval(tick, 3000);
-    return () => clearInterval(id);
+    document.addEventListener('visibilitychange', tick);
+    return () => {
+      clearInterval(id);
+      document.removeEventListener('visibilitychange', tick);
+    };
   }, [refresh]);
 
   return { state, loading, refresh };
