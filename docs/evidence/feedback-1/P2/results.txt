@@ -1,0 +1,15 @@
+GET
+{"ok":true,"data":[{"id":"wd-1001","name":"Maya Rahman","role":"Infrastructure engineer","jobFamily":"Modern Workplace","grade":"E","location":"Edinburgh","startDate":"2026-12-07","lineManagerId":"lm-hannah","lineManagerName":"Hannah Price","added":false},{"id":"wd-1002","name":"Owen Griffiths","rol
+POST add
+{"ok":true,"data":{"personId":"workday-wd-1001"}}
+duplicate
+{"ok":false,"error":"Maya Rahman has already been added."} [409]
+on people page:
+Maya Rahman
+apply
+{"ok":true,"data":{"appliedPathwayId":"applied-workday-wd-1001"}}
+reset
+{"ok":true,"data":{"reset":true}}
+after reset on people page:
+0
+Screenshot taken with wd-1002 added, before the final reset.
