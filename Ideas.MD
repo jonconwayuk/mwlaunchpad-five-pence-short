@@ -1,6 +1,8 @@
 # Ideas.MD: MW Launchpad
 
-Working log of the team's ideas for the LaunchPad '26 hack. Ideas here are raw input for design. Agreed decisions move to Design.MD.
+> **Superseded.** This is the team's early raw ideas log, kept for history only. Many ideas here were changed or dropped. `Design.MD`, `GLOSSARY.md` and `docs/adr/` are the source of truth; do not build from this file.
+
+Working log of the team's ideas for the LaunchPad '26 hack.
 
 ## Hack context
 
