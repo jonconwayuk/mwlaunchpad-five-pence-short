@@ -1,0 +1,16 @@
+POST new:
+{"ok":true,"data":{"id":"c4-demo-journey","title":"C4 demo journey","description":"Synthetic","ownerTeam":"People team","stage":"onboarding","tags":{"jobFamily":"IT"},"actions":[{"id":"a1","type":"rea
+
+GET has it:
+"id":"c4-demo-journey","version":1,"title":"C4 demo journey","description":"Synthetic","ownerTeam":"People team","stage"
+POST again:
+"version":2
+invalid:
+{"ok":false,"error":"id: id must be a lowercase slug; title: Invalid input: expected string, received undefined; description: Invalid input: expected string, received undefined; ownerTeam: Invalid input: expected string, received undefined; stage: Invalid option: expected one of \"pre-contract\"|\"pre-employment\"|\"onboarding\"|\"first-30-days\"; tags: Invalid input: expected object, received undefined; actions: Too small: expected array to have >=1 items; declaresOutcome: Invalid input: expected boolean, received undefined"} 400
+journeys page:
+ MW Launchpad Simulated date ... Admin Portal Journeys Pathways People Demo controls Plus 1 day Plus 1 week Set date Alex Morgan Sam Okafor Dana Whitfield Offer accepted Plus 3 weeks Day 1 Day 14 Day 30 Alex Morgan : Pre-employment checks Simulate passed Simulate failed Simulate returned Reset demo Journey library New journey Search Job family All Branch Software engineering Executive HR IT Role All Customer service colleague Software engineer Managing director Executive assistant Line manager Grade All Colleague Manager Senior manager Executive Platform All Retail Technology Group Functions Location All Cardiff Leeds London Edinburgh Title Owner team Stage Version Applied Skip rate Tags Contracting HR Pre-contract v1 — — — Payroll HR Pre-employment v1 — — — Pre-employment checks HR Pre-employment v1 — — — ID creation (photo) Security Pre-employment v1 — — — Manag
+pathways page:
+ MW Launchpad Simulated date ... Admin Portal Journeys Pathways People Demo controls Plus 1 day Plus 1 week Set date Alex Morgan Sam Okafor Dana Whitfield Offer accepted Plus 3 weeks Day 1 Day 14 Day 30 Alex Morgan : Pre-employment checks Simulate passed Simulate failed Simulate returned Reset demo Pathway library Search Job family All Branch Software engineering Executive HR IT Role All Customer service colleague Software engineer Managing director Executive assistant Line manager Grade All Colleague Manager Senior manager Executive Platform All Retail Technology Group Functions Location All 
+builder:
+200
+200
