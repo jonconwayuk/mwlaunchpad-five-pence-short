@@ -205,6 +205,20 @@ describe('Hard Stops (rule 5)', () => {
   });
 });
 
+describe('Hard Stops, trigger item', () => {
+  it('Needs decision, on failed and on deadline, names the item that triggered it', () => {
+    expect(computeState(branchInput({ progress: checksFailed })).needsDecisions[0].triggerItemId).toBe('i-checks');
+    expect(computeState(branchInput({ today: '2026-12-31', progress: contracted })).needsDecisions[0].triggerItemId).toBe('i-checks');
+  });
+
+  it('Hard Stop, when a different Pathway with the same Hard Stop id is applied over kept Failed progress, raises a Needs decision again', () => {
+    // Re-applying a different Pathway keeps progress but drops decisions (src/db/queries.ts); D2f.3: a person always confirms.
+    const base = branchInput({ progress: checksFailed });
+    const input = { ...base, pathway: { ...base.pathway, id: 'ps-other-1', pathwayId: 'pw-other', title: 'Other' } };
+    expect(computeState(input).needsDecisions).toEqual([expect.objectContaining({ hardStopId: 'hs-checks-failed', triggerItemId: 'i-checks' })]);
+  });
+});
+
 describe('Stages (rules 6 and 9)', () => {
   it('Stage, for an item with no unmet Dependencies, does not hold it back', () => {
     const input = branchInput({ progress: contracted });

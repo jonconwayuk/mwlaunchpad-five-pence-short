@@ -1,0 +1,4 @@
+     × starter state, with two Hard Stops pending, masks only the item whose own Hard Stop is pending 3ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+AssertionError: expected { itemId: 'i-checks-2', …(17) } to match object { status: 'done', outcome: 'failed' }
+      Tests  1 failed | 10 passed (11)

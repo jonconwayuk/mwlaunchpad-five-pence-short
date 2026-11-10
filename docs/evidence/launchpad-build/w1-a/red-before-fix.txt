@@ -1,0 +1,17 @@
+     × starter state, with two Hard Stops pending, masks only the item whose own Hard Stop is pending 3ms
+     × Needs decision, on failed and on deadline, names the item that triggered it 2ms
+     × Hard Stop, when a different Pathway with the same Hard Stop id is applied over kept Failed progress, raises a Needs decision again 1ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  src/lib/roleFilter.test.ts > filterForViewer, D2f.4 masking for the starter > starter state, with two Hard Stops pending, masks only the item whose own Hard Stop is pending
+AssertionError: expected { itemId: 'i-checks-2', …(17) } to match object { status: 'done', outcome: 'failed' }
+- Expected
++ Received
+ FAIL  src/engine/__tests__/engine.test.ts > Hard Stops, trigger item > Needs decision, on failed and on deadline, names the item that triggered it
+AssertionError: expected undefined to be 'i-checks' // Object.is equality
+- Expected:
++ Received:
+ FAIL  src/engine/__tests__/engine.test.ts > Hard Stops, trigger item > Hard Stop, when a different Pathway with the same Hard Stop id is applied over kept Failed progress, raises a Needs decision again
+AssertionError: expected [ { …(7) } ] to deeply equal [ ObjectContaining{…} ]
+- Expected
++ Received
+      Tests  3 failed | 51 passed (54)

@@ -121,6 +121,8 @@ export interface TimerState { timerId: string; firesOn?: ISODate; fired: boolean
 export interface NeedsDecision {
   hardStopId: string; label: string; reason: string;
   stopsItemIds: string[]; wholePathway: boolean; raisedOn: ISODate; extendAllowed: boolean;
+  /** The Failed item (on-failed) or the watched item (on-deadline). */
+  triggerItemId?: string;
 }
 
 export interface TaskRef {

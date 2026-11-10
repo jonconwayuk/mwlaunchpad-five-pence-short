@@ -1,4 +1,3 @@
-import { failedReason } from '@/src/engine/hardStops';
 import type { EngineState, ItemState } from '@/src/engine/types';
 
 export type Viewer = 'starter' | 'delegate' | 'line-manager' | 'buddy' | 'hr';
@@ -37,7 +36,9 @@ export function filterForViewer(
  */
 function starterView(state: EngineState, items: ItemState[]): { stopped: boolean; items: ItemState[] } {
   const pending = (i: ItemState) => i.outcome === 'failed'
-    && state.needsDecisions.some((n) => !n.extendAllowed && n.reason === failedReason(i.title));
+    && state.needsDecisions.some((n) => !n.extendAllowed
+      // Fallback for a Needs decision raised without triggerItemId: match the reason text.
+      && (n.triggerItemId ? n.triggerItemId === i.itemId : n.reason === `${i.title} failed`));
   const decidedFailure = items.some((i) => i.outcome === 'failed' && !pending(i));
   return {
     stopped: decidedFailure && items.some((i) => i.status === 'cancelled'),

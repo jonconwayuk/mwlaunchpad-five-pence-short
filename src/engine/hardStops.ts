@@ -29,9 +29,6 @@ export function dismissedFailedItemIds(input: EngineInput): Set<string> {
     hs.trigger.kind === 'on-failed' && decisionsFor(hs.id, input).some((d) => d.decision === 'dismiss') ? [hs.trigger.itemId] : []));
 }
 
-/** The Needs decision reason for a Failed Outcome; roleFilter matches it to mask the item for the starter. */
-export const failedReason = (title: string): string => `${title} failed`;
-
 /** Days added to a deadline Timer by Extend decisions. */
 export function extensionDays(timerId: string, input: EngineInput): number {
   return input.pathway.hardStops
@@ -51,14 +48,14 @@ export function needsDecisions(input: EngineInput, ev: Evaluator): NeedsDecision
     if (t.kind === 'on-failed') {
       const s = ev.item(t.itemId);
       if (s.outcome === 'failed' && s.doneAt) {
-        raised.push({ ...base, reason: failedReason(s.title), raisedOn: s.doneAt, extendAllowed: false });
+        raised.push({ ...base, reason: `${s.title} failed`, raisedOn: s.doneAt, extendAllowed: false, triggerItemId: t.itemId });
       }
     } else {
       const firesOn = ev.timerFiresOn(t.timerId);
       const watched = ev.item(t.watchesItemId);
       const timer = input.pathway.timers.find((x) => x.id === t.timerId);
       if (firesOn && firesOn <= input.today && watched.status !== 'done' && watched.status !== 'skipped') {
-        raised.push({ ...base, reason: `${watched.title} is not done by ${timer?.label ?? 'its deadline'}`, raisedOn: firesOn, extendAllowed: true });
+        raised.push({ ...base, reason: `${watched.title} is not done by ${timer?.label ?? 'its deadline'}`, raisedOn: firesOn, extendAllowed: true, triggerItemId: t.watchesItemId });
       }
     }
   }

@@ -1,0 +1,4 @@
+Audit residue: re-applying a DIFFERENT Pathway that shares Hard Stop id hs-failed raises it again over kept Failed progress.
+Mechanism (read, not changed): src/db/queries.ts keeps progress that still matches the new snapshot but deletes Hard Stop decisions when the Pathway differs.
+Conclusion: correct per Design.MD D2f.3 ("A person always confirms"). The new Pathway's Hard Stop has never been decided, and the kept Failed Outcome is a real failure, so a Needs decision is right.
+Pinned by engine test: "Hard Stop, when a different Pathway with the same Hard Stop id is applied over kept Failed progress, raises a Needs decision again" (src/engine/__tests__/engine.test.ts). No change to src/db.

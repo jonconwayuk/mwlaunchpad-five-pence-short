@@ -79,6 +79,25 @@ describe('filterForViewer, D2f.4 masking for the starter', () => {
     expect(s.items.find((i) => i.itemId === 'i-payroll')?.status).toBe('cancelled');
     expect(s.stopped).toBe(true);
   });
+  it('starter state, with two Hard Stops pending, masks only the item whose own Hard Stop is pending', () => {
+    // A second copy of the same Journey (same title) failed too, but its Hard Stop was Dismissed.
+    const input = branchInput({
+      progress: [...failedToday, done('i-checks-2', 'a-rtw', '2026-10-23'), done('i-checks-2', 'a-vetting', T, { automationResult: 'failed' })],
+      hardStopDecisions: [{ hardStopId: 'hs-checks-2-failed', decision: 'dismiss', reason: 'Retest booked', at: T }],
+    });
+    const p = input.pathway;
+    p.items.push({ ...p.items.find((i) => i.id === 'i-checks')!, id: 'i-checks-2', containerId: undefined });
+    p.timers.push({ id: 't-payroll-deadline', label: 'Offer accepted', anchor: { kind: 'offer-accepted' }, offsetDays: 1 });
+    p.hardStops.push(
+      { id: 'hs-checks-2-failed', label: 'Second checks failed', trigger: { kind: 'on-failed', itemId: 'i-checks-2' }, stops: { wholePathway: true, itemIds: [], containerIds: [] } },
+      { id: 'hs-payroll-deadline', label: 'Payroll late', trigger: { kind: 'on-deadline', timerId: 't-payroll-deadline', watchesItemId: 'i-payroll' }, stops: { wholePathway: false, itemIds: ['i-buddy'], containerIds: [] } },
+    );
+    const raw = computeState(input);
+    expect(raw.needsDecisions.map((n) => n.hardStopId).sort()).toEqual(['hs-checks-failed', 'hs-payroll-deadline']);
+    const s = filterForViewer(raw, 'starter');
+    expect(s.items.find((i) => i.itemId === 'i-checks')).toMatchObject({ status: 'in-progress', outcome: undefined });
+    expect(s.items.find((i) => i.itemId === 'i-checks-2')).toMatchObject({ status: 'done', outcome: 'failed' });
+  });
   it('starter state, when only a deadline Hard Stop cancelled items, is not stopped', () => {
     expect(filterForViewer({ ...raw, items: raw.items.map((i, n) => (n === 0 ? { ...i, status: 'cancelled' as const } : i)) }, 'starter').stopped).toBe(false);
   });
