@@ -29,3 +29,12 @@
 09:28 | D2 | implementer | opus | PUT/publish Pathway routes, canvas loads draft and library from DB, Save draft/Publish wired, journeys owner fix
 09:28 | E1a | implementer | sonnet | README rewrite per E1 step 5, npm audit, grep sweeps (report only)
 09:33 | C3 | fix implementer | sonnet | Scoped fix: Addition loop guard, After a Container, Buddy filter strips automation detail, Remove matches before-it-starts, JSON/unknown-person 400s, copy
+09:39 | INT | integration reviewer + demo script | opus | Walk BUILD-PLAN section 9 across all faces on a private instance of 4c88233; report cross-face bugs; write docs/demo/script.md
+09:39 | D1 | reviewer | opus | Re-verify chains 1-3 and Hard Stop end to end, load-bearing tests, D3/D2f.4 conformance, no regressions on /me
+09:42 | D1 | fix implementer | opus | Scoped fix: Dismiss proceeds past a Failed Outcome, Container test load-bearing, server-side starter masking in roleFilter
+09:42 | D2 | reviewer | opus | Re-verify D2 Done-when (save/reload/publish/ADR-0002) in Chrome, zod on PUT, canvas regressions at 1280
+09:43 | INT | fix implementer | sonnet | Re-apply keeps progress and Additions (beat 2), NeedsDecisionPanel label, Container capitalisation
+09:45 | E1 | implementer (fonts) | sonnet | Switch IBM Plex to next/font/local with committed woff2 + OFL, so builds need no network
+09:45 | D2 | fix implementer | opus | Scoped fix: PUT validates journeyVersion, Timer anchors, Container consistency, loop message; canvas stage polish and 1280 width
+09:48 | E1 | security reviewer | opus | security-review skill over 1c782c8..HEAD: validation, injection, state corruption, secrets, config, deps
+09:50 | E1 | fix implementer (security) | sonnet | Clock upper bound, starter Task filter, evidence path scrub, security headers, id length limits

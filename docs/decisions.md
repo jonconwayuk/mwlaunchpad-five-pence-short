@@ -2,7 +2,7 @@
 
 This file tracks acceptance against the spec (`Design.MD`) and carries the decision log, as the phase workflow requires (`docs/workflow/phase-workflow.md`).
 
-Open items waiting on the owner carry the pending marker. The grep command in the `CLAUDE.md` orientation table gives the authoritative list (this paragraph deliberately doesn't spell the token, so it never counts as an item). **Open count: 2.** This is the only place the count is kept. When an item resolves, rewrite its marker to the resolved form, "was" followed by the token.
+Open items waiting on the owner carry the pending marker. The grep command in the `CLAUDE.md` orientation table gives the authoritative list (this paragraph deliberately doesn't spell the token, so it never counts as an item). **Open count: 3.** This is the only place the count is kept. When an item resolves, rewrite its marker to the resolved form, "was" followed by the token.
 
 ## Acceptance against the spec
 
@@ -17,10 +17,10 @@ One row per `BUILD-PLAN.md` task (waves A to E), updated as each phase lands. Th
 | B4 Pathway builder canvas | Accepted | `docs/evidence/launchpad-build/B4/`, decision 21 |
 | C1 Real state API with role filtering | Accepted | `docs/evidence/launchpad-build/C1/`, decision 22 |
 | C2 People, apply a Pathway, Demo controls | Accepted | `docs/evidence/launchpad-build/C2/`, decision 22 |
-| C3 Manager and Buddy view, Additions, Needs decision | In progress (fix loop running) | `docs/evidence/launchpad-build/C3/` |
+| C3 Manager and Buddy view, Additions, Needs decision | Accepted | `docs/evidence/launchpad-build/C3/` |
 | C4 Journey builder and the libraries | Accepted, one gap passed to D2 | `docs/evidence/launchpad-build/C4/`, decision 22 |
-| D1 Chains and the Hard Stop end to end | In progress | |
-| D2 Canvas persistence | In progress | |
+| D1 Chains and the Hard Stop end to end | Accepted (390px headless, not on a device) | `docs/evidence/launchpad-build/D1/`, decisions 26, 27, 30 |
+| D2 Canvas persistence | Accepted | `docs/evidence/launchpad-build/D2/` |
 | E1 Freeze preparation | In progress (README and sweeps) | |
 | Live updates over server-sent events | Deviation | B1 (polling every 3 s), decision 9 |
 | Deploy once | Deviation | B13 (local network only), decision 9 |
@@ -235,3 +235,56 @@ Numbered once, in order, never renumbered or deleted. A reversed decision gets a
 - **Decided:** This partly supersedes decision 10's "waves still run in order". From 09:28, wave D (D1, D2) and the first half of E1 (README, `npm audit`, the grep sweeps) start while the C3 review is still running. Exclusive file ownership still applies. Every task still gets a fresh implementer, an independent reviewer and at most one fix loop. After all the waves, one compatibility review runs across the whole build, its bugs are fixed, and then the final E1 half runs (security review and the full demo walkthrough). A push still needs a green `npm run check` and `npm run build` (decisions 11 and 12).
 - **Why:** Owner's instruction, 10 Nov 2026 09:27: "pivot to building waves in parallel and review for compatibility at the end of all waves and fix any bugs, but do not compromise what you are already doing."
 - **Evidence:** This entry; the delegation ledger.
+
+### 24. One npm audit exception: the postcss bundled inside Next
+
+- **Decided:** We accept the single high-severity `npm audit` finding until after the hackathon. It is `postcss` <= 8.5.22, bundled inside `next` (`node_modules/next/node_modules/postcss`). There are no critical findings. The only moderate findings are in the dev-only `@typescript-eslint` chain.
+- **Why:** That postcss runs only at build time, over our own CSS, so the demo never feeds it untrusted input. The only fix is `next@16.4.6`, a major upgrade the stack constraint (Next.js 15) rules out an hour before the freeze.
+- **Evidence:** `docs/evidence/launchpad-build/E1/audit-prod.txt` and `audit-all.txt`.
+
+### 25. A live team demo instance, and the compatibility review moved earlier
+
+- **Decided:** From 09:37 a demo instance serves the last gated commit on the local network (B13). It runs from a clean worktree at `/tmp/demo`, outside the repo working tree, with its own database. Its command is `next start -H 0.0.0.0 -p 3000`. It is rebuilt only from commits that passed a gate, so agents' in-progress edits never reach it. The end-of-waves compatibility review (decision 23) now starts against waves A to C at once, on a second private instance. Its findings go into the wave D and E fix loops, and it writes the team's demo script at `docs/demo/script.md`. The final compatibility pass after wave D still runs.
+- **Why:** Owner's instruction, 10 Nov 2026 09:36: improve the process so the team can run a first demo as soon as possible, without compromising the build plan.
+- **Evidence:** This entry; the delegation ledger; `docs/demo/script.md`.
+
+### 26. Two engine fallbacks in decision 16 are reversed to follow Design.MD
+
+- **Decided:** This points back at decision 16, which is not edited.
+  - A `returned` Hidden automation now means finished, with no pass or fail (`Design.MD` D3). Before, it sent the item back to the starter. That earlier fallback left the "Send welcome pack" and "Badge request" automations unfinishable, so chains 1 and 2 could never fire.
+  - A Failed Outcome no longer meets a Dependency or completes a Container (`Design.MD` D2f.4). It still counts as done for Journey Duration.
+  - A Failed item keeps its "while you wait" message, so the Starter Preview does not change while the Needs decision is pending.
+  - `/me` shows only "Your recruiter will be in touch." once a Hard Stop is confirmed. This is marked `shortcut:` in `src/ui/components/starter/format.ts`: after a Dismiss, the Failed item still shows as a wait.
+- **Why:** D1 ran the three chains and the Hard Stop end to end, and each of these blocked one of them. The spec decides; the earlier fallbacks were guesses.
+- **Evidence:** `docs/evidence/launchpad-build/D1/`, plus tests in `src/engine/__tests__/engine.test.ts` and `src/ui/components/starter/format.test.ts`.
+
+### 27. "Recruiter" in the stopped copy contradicts the glossary - `OWNER-PENDING`
+
+- **Finding (spec against glossary, not reconciled):** `Design.MD` D2f.4 says that after a confirmed Hard Stop the starter sees that "their recruiter will be in touch". `GLOSSARY.md` lists "recruiter" under Avoid as a name for the HR Partner.
+- **Fallback until the team rules:** Keep the `Design.MD` wording, "Your recruiter will be in touch."
+- **Question for the owner:** (a) Keep "recruiter" and remove it from the Avoid list. **Recommended,** because to a starter the recruiter is the person who will actually call them. (b) Change the copy to "Your HR Partner will be in touch."
+- **Evidence:** D1 report, 09:45.
+
+### 28. The build fetches fonts from Google, so a venue network can break it
+
+- **Finding:** At 09:43 `npm run build` failed inside `next/font/google`: the loader got an unexpected response while fetching IBM Plex. A retry a minute later passed. `next/font/google` self-hosts the fonts at runtime, but it downloads them at build time, so a build on venue wifi can fail.
+- **Decided:** The final E1 pass switches to `next/font/local`, with the IBM Plex Sans and Serif woff2 files committed under `src/ui/fonts/`. IBM Plex is under the SIL Open Font License, which allows this. Until then the team builds before going on stage, never at the venue.
+- **Evidence:** `docs/evidence/launchpad-build/wave-gates/` (the failing gate run, then the passing retry).
+
+### 29. Findings from the first cross-face demo walk
+
+- **Re-applying a Pathway wiped the person's story.** Re-applying "Branch colleague" to Persona A, which section 9 beat 2 does, cleared her seeded progress and Additions. That broke beats 5 and 6. **Decided:** Re-applying keeps the progress, decisions and Additions that still exist in the new snapshot, and re-applying the same Pathway keeps the original `appliedOn`. This reverses the "clears progress" part of decision 17. It is in a scoped integration fix.
+- **"Stopped" stays.** Cancelled Journeys show "Stopped" on the Starter Preview, because `BUILD-PLAN.md` section 5.3 sets that word. No change.
+- **Up to about 3 seconds for an Addition to appear.** The server answers in 0.03 s, but the phone polls every 3000 ms (B1). That is the plan's own number, so no change. Server-sent events remain the production path.
+- **The canvas is 1460px wide on `pw-engineer` at 1280.** Passed to the D2 fix loop.
+- **Persona B's Needs decision at reset distracts during beat 4.** This is decision 19, still waiting on the owner. The demo script tells the presenter to leave it untouched.
+- **Evidence:** `docs/evidence/launchpad-build/integration/walk-1.md`; `docs/demo/script.md`.
+
+### 30. D1 fix choices to check in the compatibility pass
+
+- **Decided:**
+  - `roleFilter` finds a pending failure through its Needs decision reason, using the shared `failedReason()` in `src/engine/hardStops.ts`. `NeedsDecision` has no trigger-item field.
+  - The starter and the Delegate no longer receive an automation `currentAction`. The glossary says a Hidden automation is never shown to the starter.
+  - `StarterPreview` reads the server's `stopped` flag through a cast, because `useLiveState`'s type does not declare it.
+- **Why:** These are the smallest changes that keep the engine contract. Matching on a reason string is fragile: the compatibility pass checks it, and the clean fix is a `triggerItemId` on `NeedsDecision`, an additive change to `src/engine/types.ts`.
+- **Evidence:** `docs/evidence/launchpad-build/D1/fix-curl.txt`; 75 Vitest tests.
