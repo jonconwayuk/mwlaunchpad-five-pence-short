@@ -1,0 +1,7 @@
+      Tests  163 passed (163)
+   Start at  10:40:25
+   Duration  877ms (tests 76%, import 16%, transform 6%, worker 2%)
+
+---BUILD
+ ✓ Compiled successfully in 2.4s
+Wave G shared gate 10:40 on 68a8d11: check 163 tests, build clean. Section 9 + Bob by API on 07806c0 (same code for those paths): S9.5 Day 18 [21,35]; all faces 200 incl. Bob's Studio/team pages; Bob apply + 21 days; chat routes to Payroll helper; S9.8 reset identical. Reviews pending: G1, G3, G6, G7; fix running: G4.

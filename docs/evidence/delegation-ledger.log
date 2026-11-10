@@ -60,3 +60,11 @@
 10:32 | W2+W1 | G4 | implementer | opus | Insights: completion times, by business area/role/grade, Stage filter, Journey drill-down (absorbs insight strip)
 10:32 | W2+W1 | G6 | implementer | opus | Joiner view desktop+phone, empty state, scripted agent chat + simulated Teams handover (absorbs assistant), Acting for banner
 10:32 | W2 | G7 | implementer | opus | Manager and Buddy view desktop+phone, friendly progress, handovers, Send a Reminder now
+10:36 | W2 | F1 | fix implementer | sonnet | Sync never rolls back a newer publish, file-named JSON errors, missing template Journey error, writeJourneyFile order
+10:37 | W2 | G7 | reviewer | opus | Demo-path review: Hannah/Bob progress, Add a journey, Reminder, handovers, Buddy filter, regressions
+10:38 | W2 | G4 | reviewer | opus | Demo-path review of Insights charts, Stage filter, drill-down, dataviz quality, zod
+10:38 | W2 | G6 | reviewer | opus | Demo-path review: Bob empty state, chat routing, handover, desktop/phone, Reminders, Acting for, Persona A unchanged
+10:38 | W2 | G2 | reviewer | opus | Demo-path review: catalogue, repo panel + sync, view as code, connector picker, publish writes file, round-trip
+10:39 | W2 | G3 | reviewer | opus | Demo-path review: find Bob, apply in 3 clicks, Delegate, Send a Reminder now, state merge, zod
+10:40 | W2+W1 | G1 | reviewer | opus | Demo-path review of filters, semver publish, stretch-1 authoring (decision 39), canvas regressions
+10:40 | W2 | G4 | fix implementer | sonnet | All-Stages totals sum per Stage, test, direct label on longest dot

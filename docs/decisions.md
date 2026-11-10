@@ -360,3 +360,12 @@ Numbered once, in order, never renumbered or deleted. A reversed decision gets a
   - The semver bump values are `patch`, `minor` and `major`, through `publishPathwaySemver`. `publishPathway` still returns the integer.
 - **Why:** The same reasoning as decision 15. Seven tracks shouldn't wait about ten minutes for a review whose fixes land in files they don't own.
 - **Evidence:** `docs/evidence/feedback-1/wave-F-gate.txt`.
+
+### 41. Compressed schedule for a team look at about 11:00, on a second instance
+
+- **Decided:**
+  - Every wave G implementer and the F1 fix hand back by 10:50, with the demo path first and green. Whatever is left becomes a follow-up fix, with the reason recorded.
+  - The six wave G reviews run together straight after. Demo-path bugs block; polish is a follow-up.
+  - The gated build goes on a **second** demo instance, `http://<laptop-ip>:3001`, from its own worktree (`/tmp/demo2`) and its own database. Port 3000 stays on `pre-feedback-1`, as the owner instructed (decision 31), so the team can compare the two.
+  - Fix loops and wave H carry on while the team looks. Every later green gate refreshes port 3001.
+- **Why:** Owner's instruction, 10:37: "optimise to complete ASAP, 1 is worst case, ideally we want to check the next demo in the next 20 mins".
