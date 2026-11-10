@@ -2,7 +2,7 @@ import type {
   ActionDef, DependencyRef, EngineInput, ISODate, JourneyDef, JourneyStatus, OutcomeValue, PathwayItem, TimerDef,
 } from './types';
 import { addDays, latest } from './dates';
-import { cancelledItemIds, extensionDays } from './hardStops';
+import { cancelledItemIds, dismissedFailedItemIds, extensionDays } from './hardStops';
 import { ownerOf, walkActions, type ActionWalk } from './status';
 
 export interface EvaluatedItem {
@@ -14,6 +14,8 @@ export interface EvaluatedItem {
 
 export interface Evaluator {
   item(itemId: string): EvaluatedItem;
+  /** Done, and not Failed unless its Hard Stop was Dismissed: what a Container counts as done. */
+  passed(itemId: string): boolean;
   containerCompletedOn(containerId: string): ISODate | undefined;
   timerFiresOn(timerId: string): ISODate | undefined;
   anchoredFiresOn(timer: TimerDef): ISODate | undefined;
@@ -23,11 +25,14 @@ export interface Evaluator {
 export function createEvaluator(input: EngineInput): Evaluator {
   const { pathway, person, today } = input;
   const cancelled = cancelledItemIds(input);
+  const dismissed = dismissedFailedItemIds(input);
   const items = new Map<string, EvaluatedItem>();
   const visiting = new Set<string>();
 
-  // A Failed Outcome unlocks nothing: its Hard Stop decides what happens next (D2f).
-  const isMet = (s: EvaluatedItem): boolean => (s.status === 'done' && s.outcome !== 'failed') || s.status === 'skipped';
+  // A Failed Outcome unlocks nothing until its Hard Stop is Dismissed (D2f).
+  const passed = (s: EvaluatedItem): boolean =>
+    s.status === 'done' && (s.outcome !== 'failed' || dismissed.has(s.item.id));
+  const isMet = (s: EvaluatedItem): boolean => passed(s) || s.status === 'skipped';
 
   const metOn = (dep: DependencyRef): ISODate | undefined => {
     if (dep.kind === 'item') {
@@ -77,12 +82,13 @@ export function createEvaluator(input: EngineInput): Evaluator {
       items.set(id, s);
       return s;
     },
+    passed: (id) => passed(ev.item(id)),
     // Rule 3: complete when every mandatory item inside is done; optional items never hold it up.
     containerCompletedOn(containerId) {
       const c = pathway.containers.find((x) => x.id === containerId);
       if (!c) throw new Error(`Unknown Container ${containerId}`);
       const mandatory = c.itemIds.map((i) => ev.item(i)).filter((s) => s.item.mandatory);
-      if (!mandatory.every((s) => s.status === 'done' && s.outcome !== 'failed')) return undefined;
+      if (!mandatory.every(passed)) return undefined;
       return latest(mandatory.map((s) => s.doneAt as ISODate)) ?? person.offerAcceptedDate;
     },
     timerFiresOn(timerId) {

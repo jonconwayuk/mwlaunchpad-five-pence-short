@@ -1,4 +1,4 @@
-import type { ISODate, ItemState, StageId } from '@/src/engine/types';
+import type { ISODate, StageId } from '@/src/engine/types';
 
 export const STAGES: StageId[] = ['pre-contract', 'pre-employment', 'onboarding', 'first-30-days'];
 
@@ -21,17 +21,4 @@ export function bandScale(days: number, [lo, hi]: [number, number]) {
   const max = Math.ceil((Math.max(hi, days) + 7) / 7) * 7;
   const pct = (n: number) => (Math.min(n, max) / max) * 100;
   return { max, lo: pct(lo), hi: pct(hi), today: pct(days), ticks: Array.from({ length: max / 7 + 1 }, (_, i) => pct(i * 7)) };
-}
-
-/**
- * D2f.4: the starter never hears of a failure from the app first. A Failed Outcome keeps showing as the
- * wait until its Hard Stop is decided; once Confirm has Cancelled items, the Pathway is stopped.
- * shortcut: after Dismiss a Failed item still shows as a wait; upgrade when the engine reports decided Hard Stops.
- */
-export function starterView(items: ItemState[]): { stopped: boolean; items: ItemState[] } {
-  const failed = items.some((i) => i.outcome === 'failed');
-  return {
-    stopped: failed && items.some((i) => i.status === 'cancelled'),
-    items: items.map((i) => (i.outcome === 'failed' ? { ...i, status: 'in-progress', outcome: undefined, doneAt: undefined } : i)),
-  };
 }

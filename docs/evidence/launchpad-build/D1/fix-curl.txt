@@ -1,0 +1,23 @@
+D1 fix loop, live check on port 3082 with a throwaway DB (DATABASE_URL=file:/tmp/d1f.db), synthetic seed data, Demo clock 2026-11-10.
+Starter state = GET /api/state?personId=person-a&as=starter. Run 1's diff compares ALL items (15 itemId entries) and containers, before vs pending.
+
+== Run 1: reset, Simulate Failed, Dismiss
+-- starter state before (i-checks, i-id, containers):
+  (full before state omitted; i-checks before: status in-progress, waitingDays 18, usualRange [21,35], whileYouWait set; c-cleared doneCount 0/3)
+-- POST /api/simulate failed:
+{"ok":true,"error":null}
+-- HR view i-checks after failure:
+{"checks":{"status":"done","outcome":"failed"},"needsDecisions":["hs-failed"]}
+-- diff starter before vs pending (empty = identical):
+(no difference)
+-- POST dismiss:
+{"ok":true,"needsDecisions":[],"error":null}
+-- starter after Dismiss:
+{"stopped":false,"items":[{"itemId":"i-contracting","status":"done","available":true,"outcome":"done"},{"itemId":"i-payroll","status":"action-required","available":true,"outcome":null},{"itemId":"i-checks","status":"done","available":true,"outcome":"failed"},{"itemId":"i-id","status":"action-required","available":true,"outcome":null},{"itemId":"i-device","status":"done","available":true,"outcome":"done"},{"itemId":"i-manager-ready","status":"done","available":true,"outcome":"done"},{"itemId":"i-buddy","status":"not-started","available":false,"outcome":null},{"itemId":"i-pulse-14","status":"not-started","available":false,"outcome":null},{"itemId":"i-pulse-30","status":"not-started","available":false,"outcome":null},{"itemId":"i-uniform","status":"skipped","available":true,"outcome":"skipped"},{"itemId":"i-induction","status":"not-started","available":false,"outcome":null},{"itemId":"i-cash","status":"not-started","available":false,"outcome":null},{"itemId":"i-start-delay","status":"not-started","available":false,"outcome":null},{"itemId":"i-events","status":"not-started","available":false,"outcome":null}],"containers":[{"containerId":"c-cleared","complete":false,"doneCount":1}]}
+
+== Run 2: reset, Simulate Failed, Confirm
+{"ok":true,"error":null}
+-- POST confirm:
+{"ok":true,"needsDecisions":[],"error":null}
+-- starter after Confirm:
+{"stopped":true,"cancelled":["i-payroll","i-id","i-buddy","i-pulse-14","i-pulse-30","i-induction","i-cash","i-start-delay","i-events"]}

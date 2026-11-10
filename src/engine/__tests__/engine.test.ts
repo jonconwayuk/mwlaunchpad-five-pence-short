@@ -167,6 +167,29 @@ describe('Hard Stops (rule 5)', () => {
     expect(state.items.find((i) => i.itemId === 'i-payroll')?.status).toBe('action-required');
   });
 
+  it('Pathway Item, when its failed Dependency\'s Hard Stop is Dismissed, becomes available', () => {
+    const input = branchInput({ progress: checksFailed,
+      hardStopDecisions: [{ hardStopId: 'hs-checks-failed', decision: 'dismiss', reason: 'Retest booked', at: T }] });
+    expect(itemOf(input, 'i-id')).toMatchObject({ available: true, status: 'action-required' });
+  });
+
+  it('Container, when every other mandatory item is done and one is Failed with its Hard Stop pending, is not complete', () => {
+    const input = branchInput({ progress: [...checksFailed, done('i-payroll', 'a-bank', '2026-10-23')] });
+    input.pathway.containers[0].itemIds = ['i-payroll', 'i-checks'];
+    const state = computeState(input);
+    expect(state.containers[0]).toMatchObject({ complete: false, doneCount: 1, remainingItemIds: ['i-checks'] });
+    expect(state.items.find((i) => i.itemId === 'i-buddy')?.status).toBe('not-started');
+  });
+
+  it('Container, when its Failed item\'s Hard Stop is Dismissed, completes and unlocks its dependents', () => {
+    const input = branchInput({ progress: [...checksFailed, done('i-payroll', 'a-bank', '2026-10-23')],
+      hardStopDecisions: [{ hardStopId: 'hs-checks-failed', decision: 'dismiss', reason: 'Retest booked', at: T }] });
+    input.pathway.containers[0].itemIds = ['i-payroll', 'i-checks'];
+    const state = computeState(input);
+    expect(state.containers[0]).toMatchObject({ complete: true, doneCount: 2, remainingItemIds: [] });
+    expect(state.items.find((i) => i.itemId === 'i-buddy')?.available).toBe(true);
+  });
+
   it('Hard Stop on deadline, when the watched item is not done, raises a Needs decision with Extend allowed', () => {
     const state = computeState(branchInput({ today: '2026-12-31', progress: contracted }));
     expect(state.needsDecisions).toEqual([expect.objectContaining({

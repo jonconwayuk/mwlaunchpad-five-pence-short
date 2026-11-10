@@ -23,6 +23,15 @@ export function cancelledItemIds(input: EngineInput): Set<string> {
   return new Set(confirmed.flatMap((hs) => targetsOf(hs, input)));
 }
 
+/** Items whose on-failed Hard Stop was Dismissed: their Failed Outcome no longer holds anything up. */
+export function dismissedFailedItemIds(input: EngineInput): Set<string> {
+  return new Set(input.pathway.hardStops.flatMap((hs) =>
+    hs.trigger.kind === 'on-failed' && decisionsFor(hs.id, input).some((d) => d.decision === 'dismiss') ? [hs.trigger.itemId] : []));
+}
+
+/** The Needs decision reason for a Failed Outcome; roleFilter matches it to mask the item for the starter. */
+export const failedReason = (title: string): string => `${title} failed`;
+
 /** Days added to a deadline Timer by Extend decisions. */
 export function extensionDays(timerId: string, input: EngineInput): number {
   return input.pathway.hardStops
@@ -42,7 +51,7 @@ export function needsDecisions(input: EngineInput, ev: Evaluator): NeedsDecision
     if (t.kind === 'on-failed') {
       const s = ev.item(t.itemId);
       if (s.outcome === 'failed' && s.doneAt) {
-        raised.push({ ...base, reason: `${s.title} failed`, raisedOn: s.doneAt, extendAllowed: false });
+        raised.push({ ...base, reason: failedReason(s.title), raisedOn: s.doneAt, extendAllowed: false });
       }
     } else {
       const firesOn = ev.timerFiresOn(t.timerId);

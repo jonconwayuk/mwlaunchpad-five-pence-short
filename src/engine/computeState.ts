@@ -65,7 +65,7 @@ export function computeState(input: EngineInput): EngineState {
 
   const containers = pathway.containers.map((c) => {
     const mandatory = items.filter((i) => c.itemIds.includes(i.itemId) && i.mandatory);
-    const remaining = mandatory.filter((i) => i.status !== 'done');
+    const remaining = mandatory.filter((i) => !ev.passed(i.itemId));
     return { containerId: c.id, label: c.label, complete: remaining.length === 0,
       doneCount: mandatory.length - remaining.length, mandatoryCount: mandatory.length,
       remainingItemIds: remaining.map((i) => i.itemId) };
