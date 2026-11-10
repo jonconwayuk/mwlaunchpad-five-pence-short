@@ -5,11 +5,11 @@ import {
   type Connection, type Edge, type Node, type NodeChange,
 } from '@xyflow/react';
 import { useCallback, useEffect, useMemo, useReducer, useRef, useState, type DragEvent } from 'react';
-import type { DependencyRef, PathwaySnapshot, StageId, Tags } from '@/src/engine/types';
+import type { AnchorKind, DependencyRef, HardStopDef, PathwaySnapshot, StageId, Tags, TimerDef } from '@/src/engine/types';
 import { LIBRARY, STAGES, TAG_LISTS, setLibrary, type LibraryJourney } from './library';
 import {
   CARD_H, CARD_W, LANE_W, blockPositions, canvasReducer, cardSubtitle, dependencyKey, fitToLanes, laneExtent, laneX, loopMessage,
-  nextFreeY, snapToLane, timerLabel, titleOfJourney,
+  nextFreeY, nextId, snapToLane, timerLabel, timerMessage, timerRemovalMessage, titleOfItem, titleOfJourney,
 } from './model';
 import { nodeTypes } from './nodes';
 
@@ -44,14 +44,14 @@ function buildNodes(s: PathwaySnapshot, prev: Node[]): Node[] {
   }, false));
   // Re-placed on every change, below the lowest card in their lane, so a moved or added card never ends up under one.
   const at = blockPositions(s);
-  const block = { draggable: false, selectable: false, connectable: false };
-  const timers: Node[] = s.timers.map((t) => ({
+  const block = { draggable: false, selectable: true, connectable: false };
+  const timers: Node[] = s.timers.map((t) => keep({
     id: `timer:${t.id}`, type: 'timer', position: at.get(`timer:${t.id}`)!, ...block, data: { label: timerLabel(t) },
-  }));
-  const hardStops: Node[] = s.hardStops.map((h) => ({
+  }, false));
+  const hardStops: Node[] = s.hardStops.map((h) => keep({
     id: `hardStop:${h.id}`, type: 'hardStop', position: at.get(`hardStop:${h.id}`)!, ...block,
     data: { label: h.label, detail: h.stops.wholePathway ? 'Stops the whole pathway' : 'Stops the work it is connected to' },
-  }));
+  }, false));
   return [...lanes, ...containers, ...items, ...timers, ...hardStops];
 }
 
@@ -134,6 +134,86 @@ function Library({ onAdd, onDragStage }: { onAdd: (journeyId: string) => void; o
   );
 }
 
+const field = `w-full rounded-[4px] border border-[var(--hairline)] px-2 py-1 text-[13px] text-ink ${focus}`;
+const panel = 'absolute inset-y-0 right-0 z-10 w-[264px] space-y-4 overflow-y-auto border-l border-[var(--hairline)] bg-paper p-4';
+const removeButton = `w-full rounded-[4px] border border-charcoal px-3 py-1.5 text-charcoal ${focus}`;
+const saveButton = `w-full rounded-[4px] bg-heritage px-3 py-1.5 text-paper ${focus}`;
+
+/** Edits one Timer; keyed by its id so the form resets when another is selected. */
+function TimerPanel({ snapshot, timer, onSave, onRemove }: {
+  snapshot: PathwaySnapshot; timer: TimerDef; onSave: (t: TimerDef) => string | null; onRemove: () => void;
+}) {
+  const [label, setLabel] = useState(timer.label);
+  const [anchor, setAnchor] = useState(timer.anchor.kind === 'item-done' ? `item:${timer.anchor.itemId ?? ''}` : timer.anchor.kind);
+  const [days, setDays] = useState(String(timer.offsetDays));
+  const [message, setMessage] = useState<string | null>(null);
+  const toTimer = (): TimerDef => ({
+    ...timer, label: label.trim(), offsetDays: Number(days),
+    anchor: anchor.startsWith('item:') ? { kind: 'item-done', itemId: anchor.slice(5) } : { kind: anchor as AnchorKind },
+  });
+  return (
+    <aside className={panel} aria-label="Timer">
+      <h2 className="text-[18px] font-semibold text-racing">Timer</h2>
+      <label className="grid gap-0.5 text-[13px] text-[var(--muted)]">Label
+        <input value={label} onChange={(e) => setLabel(e.target.value)} className={field} />
+      </label>
+      <label className="grid gap-0.5 text-[13px] text-[var(--muted)]">Anchor
+        <select value={anchor} onChange={(e) => setAnchor(e.target.value)} className={field}>
+          <option value="offer-accepted">Offer accepted</option>
+          <option value="start-date">Start date</option>
+          {snapshot.items.map((i) => <option key={i.id} value={`item:${i.id}`}>When {titleOfItem(snapshot.items, i.id)} is done</option>)}
+          {timer.anchor.kind === 'container-complete' && <option value="container-complete">When a Container is complete</option>}
+        </select>
+      </label>
+      <label className="grid gap-0.5 text-[13px] text-[var(--muted)]">Offset in days (below 0 counts back from the start date)
+        <input type="number" step={1} value={days} onChange={(e) => setDays(e.target.value)} className={field} />
+      </label>
+      {message && <p role="alert" className="text-[13px] text-charcoal">{message}</p>}
+      <button type="button" onClick={() => setMessage(onSave(toTimer()) ?? 'Timer saved.')} className={saveButton}>Save Timer</button>
+      <button type="button" onClick={() => { const m = timerRemovalMessage(snapshot, timer.id); if (m) setMessage(m); else onRemove(); }}
+        className={removeButton}>Remove Timer</button>
+    </aside>
+  );
+}
+
+/** Edits one Hard Stop: its label, the Journey whose Failed Outcome sets it off, and what it stops. */
+function HardStopPanel({ snapshot, hardStop, onSave, onRemove }: {
+  snapshot: PathwaySnapshot; hardStop: HardStopDef; onSave: (h: HardStopDef) => void; onRemove: () => void;
+}) {
+  const save = (patch: Partial<HardStopDef>) => onSave({ ...hardStop, ...patch });
+  const stops = hardStop.stops;
+  return (
+    <aside className={panel} aria-label="Hard Stop">
+      <h2 className="text-[18px] font-semibold text-racing">Hard Stop</h2>
+      <label className="grid gap-0.5 text-[13px] text-[var(--muted)]">Label
+        <input defaultValue={hardStop.label} onBlur={(e) => { if (e.target.value.trim()) save({ label: e.target.value.trim() }); }} className={field} />
+      </label>
+      {hardStop.trigger.kind === 'on-failed' && (
+        <label className="grid gap-0.5 text-[13px] text-[var(--muted)]">On Failed of (a Journey whose Hidden automation sets the Outcome)
+          <select value={hardStop.trigger.itemId} onChange={(e) => save({ trigger: { kind: 'on-failed', itemId: e.target.value } })} className={field}>
+            {snapshot.items.map((i) => <option key={i.id} value={i.id}>{titleOfItem(snapshot.items, i.id)}</option>)}
+          </select>
+        </label>
+      )}
+      <fieldset className="space-y-1 text-[13px]">
+        <legend className="text-[var(--muted)]">Stops</legend>
+        <label className="flex items-center gap-2">
+          <input type="checkbox" checked={stops.wholePathway} onChange={() => save({ stops: { ...stops, wholePathway: !stops.wholePathway } })}
+            className={`accent-[var(--heritage)] ${focus}`} />The whole pathway
+        </label>
+        {!stops.wholePathway && snapshot.items.map((i) => (
+          <label key={i.id} className="flex items-center gap-2">
+            <input type="checkbox" checked={stops.itemIds.includes(i.id)} className={`accent-[var(--heritage)] ${focus}`}
+              onChange={() => save({ stops: { ...stops, itemIds: stops.itemIds.includes(i.id) ? stops.itemIds.filter((x) => x !== i.id) : [...stops.itemIds, i.id] } })} />
+            {titleOfItem(snapshot.items, i.id)}
+          </label>
+        ))}
+      </fieldset>
+      <button type="button" onClick={onRemove} className={removeButton}>Remove Hard Stop</button>
+    </aside>
+  );
+}
+
 /** Sends the draft or publishes it; returns the API's data or throws its plain-English error. */
 async function call<T>(url: string, method: 'PUT' | 'POST', body?: unknown): Promise<T> {
   const res = await fetch(url, { method, headers: { 'content-type': 'application/json' }, body: body === undefined ? undefined : JSON.stringify(body) });
@@ -154,7 +234,16 @@ function Builder({ draft }: { draft: PathwaySnapshot }) {
   const { screenToFlowPosition, getViewport, setViewport } = useReactFlow();
   const paneRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => setNodes((prev) => buildNodes(snapshot, prev)), [snapshot]);
+  // A Timer or Hard Stop just added from the header opens selected; React Flow reports node selection, so it is set on the node.
+  const pendingSelect = useRef<string | null>(null);
+  useEffect(() => {
+    const id = pendingSelect.current;
+    pendingSelect.current = null;
+    setNodes((prev) => {
+      const next = buildNodes(snapshot, prev);
+      return id ? next.map((n) => ({ ...n, selected: n.id === id })) : next;
+    });
+  }, [snapshot]);
   const url = `/api/pathways/${snapshot.pathwayId}`;
   const published = useRef<PathwaySnapshot | null>(null);
   const saveDraft = useCallback(async (s: PathwaySnapshot) => {
@@ -198,6 +287,22 @@ function Builder({ draft }: { draft: PathwaySnapshot }) {
   const edges = useMemo(() => buildEdges(snapshot), [snapshot]);
   const itemIds = useMemo(() => new Set(snapshot.items.map((i) => i.id)), [snapshot]);
   const selected = snapshot.items.find((i) => i.id === selectedId);
+  const selectedTimer = snapshot.timers.find((t) => `timer:${t.id}` === selectedId);
+  const selectedHardStop = snapshot.hardStops.find((h) => `hardStop:${h.id}` === selectedId);
+  const select = (nodeId: string) => { pendingSelect.current = nodeId; setSelectedId(nodeId); };
+  const addTimer = () => {
+    const timer: TimerDef = { id: nextId('t', snapshot.timers), label: 'New Timer', anchor: { kind: 'start-date' }, offsetDays: 0 };
+    dispatch({ type: 'saveTimer', timer });
+    select(`timer:${timer.id}`);
+  };
+  const addHardStop = () => {
+    const first = snapshot.items[0];
+    if (!first) { setNotice('Add a Journey first: a Hard Stop needs a Journey that can fail.'); return; }
+    const hardStop: HardStopDef = { id: nextId('hs', snapshot.hardStops), label: 'New Hard Stop', trigger: { kind: 'on-failed', itemId: first.id },
+      stops: { wholePathway: true, itemIds: [], containerIds: [] } };
+    dispatch({ type: 'saveHardStop', hardStop });
+    select(`hardStop:${hardStop.id}`);
+  };
 
   const onNodesChange = useCallback((changes: NodeChange[]) => setNodes((ns) => applyNodeChanges(changes, ns)), []);
   const isValidConnection = useCallback((c: Connection | Edge) => itemIds.has(c.source) && itemIds.has(c.target), [itemIds]);
@@ -254,6 +359,10 @@ function Builder({ draft }: { draft: PathwaySnapshot }) {
             ))}
           </div>
         </details>
+        <button type="button" onClick={addTimer}
+          className={`shrink-0 rounded-[4px] border border-[var(--hairline)] px-3 py-1.5 text-[13px] ${focus}`}>Add a Timer</button>
+        <button type="button" onClick={addHardStop}
+          className={`shrink-0 rounded-[4px] border border-[var(--hairline)] px-3 py-1.5 text-[13px] ${focus}`}>Add a Hard Stop</button>
         <button type="button" onClick={() => void saveDraft(snapshot)}
           className={`shrink-0 rounded-[4px] border border-heritage px-3 py-1.5 text-heritage ${focus}`}>Save draft</button>
         <button type="button" onClick={() => void publish()}
@@ -272,7 +381,7 @@ function Builder({ draft }: { draft: PathwaySnapshot }) {
             nodes={shownNodes} edges={edges} nodeTypes={nodeTypes} onInit={fitLanes}
             onNodesChange={onNodesChange} onConnect={onConnect} isValidConnection={isValidConnection}
             onNodeDragStop={(_, n) => { if (itemIds.has(n.id)) dispatch({ type: 'move', itemId: n.id, x: n.position.x, y: n.position.y }); }}
-            onSelectionChange={({ nodes: sel }) => setSelectedId(sel.length === 1 && sel[0] && itemIds.has(sel[0].id) ? sel[0].id : null)}
+            onSelectionChange={({ nodes: sel }) => setSelectedId(sel.length === 1 && sel[0] && (itemIds.has(sel[0].id) || /^(timer|hardStop):/.test(sel[0].id)) ? sel[0].id : null)}
             deleteKeyCode={null} connectionLineStyle={{ stroke: 'var(--everyday)', strokeWidth: 2 }}
             translateExtent={[[-200, -200], [LANE_W * STAGES.length + 200, 1600]]}
             minZoom={0.4} maxZoom={1.5}
@@ -280,7 +389,7 @@ function Builder({ draft }: { draft: PathwaySnapshot }) {
         </div>
         {selected && (
           // An overlay, so opening it never squeezes the lanes off the screen.
-          <aside className="absolute inset-y-0 right-0 z-10 w-[264px] space-y-4 overflow-y-auto border-l border-[var(--hairline)] bg-paper p-4" aria-label="Pathway Item">
+          <aside className={panel} aria-label="Pathway Item">
             <div>
               <h2 className="text-[18px] font-semibold text-racing">{titleOfJourney(selected.journeyId)}</h2>
               <p className="text-[13px] text-[var(--muted)]">{stageLabel(selected.lane)}</p>
@@ -304,10 +413,38 @@ function Builder({ draft }: { draft: PathwaySnapshot }) {
                   </li>
                 ))}
               </ul>
+              {snapshot.timers.length > 0 && (
+                <select value="" aria-label="Wait for a Timer" className={`mt-2 ${field}`}
+                  onChange={(e) => {
+                    const after = canvasReducer(snapshot, { type: 'waitForTimer', itemId: selected.id, timerId: e.target.value });
+                    setNotice(after === snapshot ? 'That would make a loop: the Timer already waits for this Journey.' : null);
+                    if (after !== snapshot) dispatch({ type: 'waitForTimer', itemId: selected.id, timerId: e.target.value });
+                  }}>
+                  <option value="">Wait for a Timer…</option>
+                  {snapshot.timers.filter((t) => !selected.dependsOn.some((d) => d.kind === 'timer' && d.timerId === t.id))
+                    .map((t) => <option key={t.id} value={t.id}>{t.label} ({timerLabel(t)})</option>)}
+                </select>
+              )}
             </div>
             <button type="button" onClick={() => { dispatch({ type: 'remove', itemId: selected.id }); setSelectedId(null); }}
-              className={`w-full rounded-[4px] border border-charcoal px-3 py-1.5 text-charcoal ${focus}`}>Remove from pathway</button>
+              className={removeButton}>Remove from pathway</button>
           </aside>
+        )}
+        {selectedTimer && (
+          <TimerPanel key={selectedTimer.id} snapshot={snapshot} timer={selectedTimer}
+            onSave={(t) => {
+              const m = timerMessage(t);
+              if (m) return m;
+              if (canvasReducer(snapshot, { type: 'saveTimer', timer: t }) === snapshot) return 'That would make a loop: something this Timer waits for already waits for it.';
+              dispatch({ type: 'saveTimer', timer: t });
+              return null;
+            }}
+            onRemove={() => { dispatch({ type: 'removeTimer', timerId: selectedTimer.id }); setSelectedId(null); }} />
+        )}
+        {selectedHardStop && (
+          <HardStopPanel key={selectedHardStop.id} snapshot={snapshot} hardStop={selectedHardStop}
+            onSave={(h) => dispatch({ type: 'saveHardStop', hardStop: h })}
+            onRemove={() => { dispatch({ type: 'removeHardStop', hardStopId: selectedHardStop.id }); setSelectedId(null); }} />
         )}
       </div>
     </div>

@@ -3,7 +3,7 @@ import { demoState } from '@/src/engine/fixtures';
 import { setLibrary } from './library';
 import {
   blockPositions, cardSubtitle, CARD_H, CARD_W, fitToLanes, canvasReducer, HARD_STOP_H, laneX, LANE_W, loopMessage, nextFreeY,
-  findWaitCycle, snapshotFromFixture, snapToLane, TIMER_H, timerLabel, timerLane,
+  findWaitCycle, nextId, snapshotFromFixture, snapToLane, TIMER_H, timerLabel, timerLane, timerMessage, timerRemovalMessage,
 } from './model';
 
 setLibrary([
@@ -120,5 +120,58 @@ describe('canvas model', () => {
     };
     expect(findWaitCycle(viaTimer, (id) => id)).toEqual([member, 'Timer Self', member]);
     expect(findWaitCycle(s, (id) => id)).toBeNull();
+  });
+});
+
+describe('canvas model: Timers and Hard Stops', () => {
+  const timer = { id: 't-new', label: 'Welcome call', anchor: { kind: 'start-date' as const }, offsetDays: 3 };
+
+  it('saveTimer, when the Timer is new, adds it to the snapshot', () => {
+    expect(canvasReducer(snap(), { type: 'saveTimer', timer }).timers.at(-1)).toEqual(timer);
+  });
+
+  it('saveTimer, when the Timer exists, replaces it in place', () => {
+    const s = canvasReducer(canvasReducer(snap(), { type: 'saveTimer', timer }), { type: 'saveTimer', timer: { ...timer, offsetDays: 5 } });
+    expect(s.timers.filter((t) => t.id === 't-new')).toEqual([{ ...timer, offsetDays: 5 }]);
+  });
+
+  it('saveTimer, when a negative offset is not anchored on the start date, refuses it', () => {
+    const bad = { ...timer, anchor: { kind: 'offer-accepted' as const }, offsetDays: -2 };
+    const s = snap();
+    expect(canvasReducer(s, { type: 'saveTimer', timer: bad })).toBe(s);
+    expect(timerMessage(bad)).toBe('Only a Timer anchored on the start date can count back before it.');
+    expect(timerMessage({ ...timer, offsetDays: -2 })).toBeNull();
+  });
+
+  it('waitForTimer, when called, adds a timer Dependency once', () => {
+    let s = canvasReducer(snap(), { type: 'saveTimer', timer });
+    s = canvasReducer(s, { type: 'waitForTimer', itemId: 'i-payroll', timerId: 't-new' });
+    s = canvasReducer(s, { type: 'waitForTimer', itemId: 'i-payroll', timerId: 't-new' });
+    expect(s.items.find((i) => i.id === 'i-payroll')!.dependsOn.filter((d) => d.kind === 'timer' && d.timerId === 't-new')).toHaveLength(1);
+  });
+
+  it('waitForTimer, when the Timer waits for the same item, refuses the loop', () => {
+    const s = canvasReducer(snap(), { type: 'saveTimer', timer: { ...timer, anchor: { kind: 'item-done', itemId: 'i-payroll' } } });
+    expect(canvasReducer(s, { type: 'waitForTimer', itemId: 'i-payroll', timerId: 't-new' })).toBe(s);
+  });
+
+  it('removeTimer, when an item waits for it, refuses in plain English', () => {
+    let s = canvasReducer(snap(), { type: 'saveTimer', timer });
+    s = canvasReducer(s, { type: 'waitForTimer', itemId: 'i-payroll', timerId: 't-new' });
+    expect(canvasReducer(s, { type: 'removeTimer', timerId: 't-new' })).toBe(s);
+    expect(timerRemovalMessage(s, 't-new')).toBe('Payroll waits for Welcome call. Remove that Dependency first.');
+  });
+
+  it('removeTimer, when nothing waits for it, removes it', () => {
+    const s = canvasReducer(snap(), { type: 'saveTimer', timer });
+    expect(canvasReducer(s, { type: 'removeTimer', timerId: 't-new' }).timers.some((t) => t.id === 't-new')).toBe(false);
+  });
+
+  it('saveHardStop and removeHardStop, when called, add and remove the Hard Stop', () => {
+    const hardStop = { id: nextId('hs', snap().hardStops), label: 'Payroll failed', trigger: { kind: 'on-failed' as const, itemId: 'i-payroll' },
+      stops: { wholePathway: false, itemIds: ['i-id'], containerIds: [] } };
+    const s = canvasReducer(snap(), { type: 'saveHardStop', hardStop });
+    expect(s.hardStops.at(-1)).toEqual(hardStop);
+    expect(canvasReducer(s, { type: 'removeHardStop', hardStopId: hardStop.id }).hardStops).toEqual(snap().hardStops);
   });
 });

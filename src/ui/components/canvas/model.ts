@@ -1,5 +1,5 @@
 import { wouldCreateLoop } from '@/src/engine/loops';
-import type { DependencyRef, EngineState, PathwayItem, PathwaySnapshot, StageId, Tags, TimerDef } from '@/src/engine/types';
+import type { DependencyRef, EngineState, HardStopDef, PathwayItem, PathwaySnapshot, StageId, Tags, TimerDef } from '@/src/engine/types';
 import { LIBRARY, STAGES } from './library';
 
 // Four lanes of 250 fit the 1020px left beside the library on a 1280px laptop at zoom 1.
@@ -165,7 +165,38 @@ export type CanvasAction =
   | { type: 'toggleMandatory'; itemId: string }
   | { type: 'remove'; itemId: string }
   | { type: 'removeDependency'; itemId: string; dependency: DependencyRef }
-  | { type: 'tags'; tags: Tags };
+  | { type: 'tags'; tags: Tags }
+  | { type: 'saveTimer'; timer: TimerDef }
+  | { type: 'removeTimer'; timerId: string }
+  | { type: 'waitForTimer'; itemId: string; timerId: string }
+  | { type: 'saveHardStop'; hardStop: HardStopDef }
+  | { type: 'removeHardStop'; hardStopId: string };
+
+/** The next free id with this prefix, for a new Timer or Hard Stop. */
+export function nextId(prefix: string, taken: { id: string }[]): string {
+  let n = 1;
+  while (taken.some((x) => x.id === `${prefix}-${n}`)) n += 1;
+  return `${prefix}-${n}`;
+}
+
+/** Plain-English refusal for a Timer edit; null when it is fine. Engine rule 4: only the start date counts back. */
+export function timerMessage(t: TimerDef): string | null {
+  if (!t.label.trim()) return 'Give the Timer a label.';
+  if (!Number.isInteger(t.offsetDays)) return 'Use a whole number of days.';
+  if (t.offsetDays < 0 && t.anchor.kind !== 'start-date') return 'Only a Timer anchored on the start date can count back before it.';
+  if (t.anchor.kind === 'item-done' && !t.anchor.itemId) return 'Choose the Journey the Timer waits for.';
+  return null;
+}
+
+/** Plain-English refusal to remove a Timer something still waits for; null when it is fine. */
+export function timerRemovalMessage(s: PathwaySnapshot, timerId: string): string | null {
+  const waiting = s.items.filter((i) => i.dependsOn.some((d) => d.kind === 'timer' && d.timerId === timerId));
+  const watched = s.hardStops.some((h) => h.trigger.kind === 'on-deadline' && h.trigger.timerId === timerId);
+  if (waiting.length === 0 && !watched) return null;
+  const label = s.timers.find((t) => t.id === timerId)?.label ?? timerId;
+  if (waiting.length === 0) return `A Hard Stop watches ${label}. Remove the Hard Stop first.`;
+  return `${waiting.map((i) => titleOfJourney(i.journeyId)).join(', ')} ${waiting.length === 1 ? 'waits' : 'wait'} for ${label}. Remove that Dependency first.`;
+}
 
 export function canvasReducer(s: PathwaySnapshot, a: CanvasAction): PathwaySnapshot {
   const update = (itemId: string, fn: (i: PathwayItem) => PathwayItem) =>
@@ -206,8 +237,31 @@ export function canvasReducer(s: PathwaySnapshot, a: CanvasAction): PathwaySnaps
       return update(a.itemId, (i) => ({ ...i, dependsOn: i.dependsOn.filter((d) => dependencyKey(d) !== dependencyKey(a.dependency)) }));
     case 'tags':
       return { ...s, tags: a.tags };
+    case 'saveTimer': {
+      if (timerMessage(a.timer)) return s;
+      const exists = s.timers.some((t) => t.id === a.timer.id);
+      return noCycle(s, { ...s, timers: exists ? s.timers.map((t) => (t.id === a.timer.id ? a.timer : t)) : [...s.timers, a.timer] });
+    }
+    case 'removeTimer':
+      return timerRemovalMessage(s, a.timerId) ? s : { ...s, timers: s.timers.filter((t) => t.id !== a.timerId) };
+    case 'waitForTimer':
+      if (!s.timers.some((t) => t.id === a.timerId)) return s;
+      return noCycle(s, update(a.itemId, (i) =>
+        i.dependsOn.some((d) => d.kind === 'timer' && d.timerId === a.timerId)
+          ? i
+          : { ...i, dependsOn: [...i.dependsOn, { kind: 'timer', timerId: a.timerId }] }));
+    case 'saveHardStop': {
+      if (!a.hardStop.label.trim()) return s;
+      const exists = s.hardStops.some((h) => h.id === a.hardStop.id);
+      return { ...s, hardStops: exists ? s.hardStops.map((h) => (h.id === a.hardStop.id ? a.hardStop : h)) : [...s.hardStops, a.hardStop] };
+    }
+    case 'removeHardStop':
+      return { ...s, hardStops: s.hardStops.filter((h) => h.id !== a.hardStopId) };
   }
 }
+
+/** Keeps the old snapshot when the new one would loop through a Timer; the UI names the loop first. */
+const noCycle = (before: PathwaySnapshot, after: PathwaySnapshot) => (findWaitCycle(after, (id) => titleOfItem(after.items, id)) ? before : after);
 
 /**
  * The first wait cycle through a Container or Timer, as names, or null. An item waits for each Dependency,

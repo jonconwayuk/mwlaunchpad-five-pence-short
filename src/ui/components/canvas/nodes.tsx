@@ -63,11 +63,11 @@ export function ContainerNode({ data }: NodeProps) {
   );
 }
 
-export function TimerNode({ data, dragging }: NodeProps) {
+export function TimerNode({ data, dragging, selected }: NodeProps) {
   const { label } = data as { label: string };
   return (
     <div style={{ width: CARD_W, height: TIMER_H }}
-      className={`flex items-center gap-2 rounded-[6px] border border-[var(--hairline)] bg-paper px-3 text-[13px] text-ink ${dragging ? 'shadow-lg' : ''}`}>
+      className={`flex items-center gap-2 rounded-[6px] border bg-paper px-3 text-[13px] text-ink ${selected ? 'border-vibrant ring-2 ring-vibrant' : 'border-[var(--hairline)]'} ${dragging ? 'shadow-lg' : ''}`}>
       <svg aria-hidden width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.6">
         <circle cx="8" cy="8" r="6" />
         <path d="M8 4.5V8l2.5 1.5" />
@@ -78,10 +78,10 @@ export function TimerNode({ data, dragging }: NodeProps) {
   );
 }
 
-export function HardStopNode({ data, dragging }: NodeProps) {
+export function HardStopNode({ data, dragging, selected }: NodeProps) {
   const { label, detail } = data as { label: string; detail: string };
   return (
-    <div style={{ width: CARD_W, minHeight: HARD_STOP_H }} className={`rounded-[6px] bg-charcoal px-3 py-2 text-paper ${dragging ? 'shadow-lg' : ''}`}>
+    <div style={{ width: CARD_W, minHeight: HARD_STOP_H }} className={`rounded-[6px] bg-charcoal px-3 py-2 text-paper ${selected ? 'ring-2 ring-vibrant' : ''} ${dragging ? 'shadow-lg' : ''}`}>
       <Handle type="target" position={Position.Left} isConnectable={false} className={fixedDot} />
       <Handle id="right" type="target" position={Position.Right} isConnectable={false} className={anchor} />
       <div className="text-[13px]">Hard Stop</div>
