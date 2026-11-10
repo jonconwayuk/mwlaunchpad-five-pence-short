@@ -28,11 +28,23 @@ describe('Starter Preview rows', () => {
   });
 
   it('a mandatory Journey, when rendered, never says required', () => {
-    expect(row({ id: 'a', type: 'read', label: 'Read' })).not.toMatch(/required/i);
+    expect(row({ id: 'a', type: 'read', label: 'Read' }, { status: 'in-progress' })).not.toMatch(/required|mandatory/i);
   });
 
   it('an optional open Journey, when rendered, offers Not for me', () => {
     expect(row({ id: 'a', type: 'read', label: 'Read' }, { mandatory: false })).toContain('Not for me');
+  });
+
+  it('a locked optional Journey, when rendered, has no Not for me button', () => {
+    const html = renderToStaticMarkup(<JourneyRow item={item({ status: 'not-started', mandatory: false })} act={async () => true} onReceipt={() => undefined} />);
+    expect(html).not.toContain('Not for me');
+    expect(html).toContain('Not started');
+  });
+
+  it('an in-progress Journey without a Usual Range, when rendered, shows the heritage bar and In progress', () => {
+    const html = renderToStaticMarkup(<JourneyRow item={item({ status: 'in-progress' })} act={async () => true} onReceipt={() => undefined} />);
+    expect(html).toContain('border-l-[3px] border-l-heritage');
+    expect(html).toContain('In progress');
   });
 });
 
@@ -49,5 +61,6 @@ describe('WaitingCard', () => {
   it('when overdue, gives the honest line', () => {
     const html = renderToStaticMarkup(<WaitingCard item={{ ...waiting, waitingDays: 40, overdue: true }} />);
     expect(html).toContain('This is taking longer than usual. Your manager knows and will be in touch.');
+    expect(html).toContain('bg-charcoal');
   });
 });

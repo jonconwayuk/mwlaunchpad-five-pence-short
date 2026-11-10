@@ -11,15 +11,13 @@ const QUIET = `${BUTTON} border border-[var(--hairline)] bg-paper text-heritage`
 
 /** Section 5.3: severity by darkness, weight, a word and a shape. Never a red or an amber. */
 const LOOK: Record<JourneyStatus, { box: string; title: string; word: string }> = {
-  'not-started': { box: 'border border-[var(--hairline)]', title: 'text-[var(--muted)]', word: 'Not yet' },
+  'not-started': { box: 'border border-[var(--hairline)]', title: 'text-[var(--muted)]', word: 'Not started' },
   'in-progress': { box: 'border border-[var(--hairline)] border-l-[3px] border-l-heritage', title: '', word: 'In progress' },
-  'action-required': { box: 'border border-[var(--hairline)] border-l-[3px] border-l-vibrant', title: 'font-semibold text-ink', word: 'Over to you' },
+  'action-required': { box: 'border border-[var(--hairline)] border-l-[3px] border-l-vibrant', title: 'font-semibold text-ink', word: 'Action required' },
   done: { box: 'border border-[var(--hairline)] border-l-[3px] border-l-racing', title: 'text-[var(--muted)]', word: 'Done' },
   skipped: { box: 'border border-dotted border-[var(--hairline)]', title: 'text-[var(--muted)]', word: 'Not for me' },
   cancelled: { box: 'bg-charcoal text-paper', title: '', word: 'Stopped' },
 };
-
-const TERMINAL: JourneyStatus[] = ['done', 'skipped', 'cancelled'];
 
 export function JourneyRow({ item, act, receipt, onReceipt }: {
   item: ItemState; act: Act; receipt?: string; onReceipt: (itemId: string) => void;
@@ -40,7 +38,7 @@ export function JourneyRow({ item, act, receipt, onReceipt }: {
       {action && action.type !== 'provide' && <p className="mt-1">{action.label}</p>}
       {action && <ActionControl item={item} act={act} onReceipt={onReceipt} />}
       {receipt && <p className="mt-1 text-[15px] text-[var(--muted)]">Submitted {receipt}</p>}
-      {!item.mandatory && !TERMINAL.includes(item.status) && (
+      {!item.mandatory && (item.status === 'action-required' || item.status === 'in-progress') && (
         <button type="button" className={`${QUIET} mt-3`} onClick={() => void act(item.itemId, 'skip')}>
           Not for me
         </button>
@@ -75,6 +73,7 @@ function ActionControl({ item, act, onReceipt }: { item: ItemState; act: Act; on
           <input
             type="checkbox"
             disabled={busy}
+            checked={busy}
             className={`size-6 accent-[var(--heritage)] ${FOCUS}`}
             onChange={(e) => e.target.checked && void run()}
           />
