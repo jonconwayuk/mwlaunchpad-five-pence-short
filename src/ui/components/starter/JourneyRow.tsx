@@ -1,6 +1,6 @@
 'use client';
 import { useState } from 'react';
-import type { ItemState, JourneyStatus } from '@/src/engine/types';
+import type { ActionStep, ActorRole, ItemState, JourneyStatus } from '@/src/engine/types';
 
 export type Act = (itemId: string, actionId: string, value?: string) => Promise<boolean>;
 
@@ -42,6 +42,7 @@ export function JourneyRow({ item, act, receipt, onReceipt, actingFor }: {
       {action && actingFor && action.starterOnly
         ? <p className="mt-2 text-[15px] text-[var(--muted)]">Waiting for {actingFor}</p>
         : action && <ActionControl item={item} act={act} onReceipt={onReceipt} />}
+      {item.actions && item.actions.length > 0 && <Steps itemId={item.itemId} steps={item.actions} />}
       {receipt && <p className="mt-1 text-[15px] text-[var(--muted)]">Submitted {receipt}</p>}
       {!item.mandatory && (item.status === 'action-required' || item.status === 'in-progress') && (
         <button type="button" className={`${QUIET} mt-3`} onClick={() => void act(item.itemId, 'skip')}>
@@ -49,6 +50,42 @@ export function JourneyRow({ item, act, receipt, onReceipt, actingFor }: {
         </button>
       )}
     </li>
+  );
+}
+
+const OWNER: Record<ActorRole, string | undefined> = {
+  starter: undefined, 'line-manager': 'Your Line Manager', buddy: 'Your buddy', hr: 'HR',
+};
+
+/** The list stays in the markup when collapsed (hidden), so the toggle's aria-controls always resolves. */
+export function Steps({ itemId, steps }: { itemId: string; steps: ActionStep[] }) {
+  const [open, setOpen] = useState(false);
+  const id = `steps-${itemId}`;
+  return (
+    <div className="mt-1">
+      <button type="button" aria-expanded={open} aria-controls={id} onClick={() => setOpen(!open)}
+        className={`flex min-h-11 items-center text-[15px] text-[var(--muted)] underline underline-offset-2 ${FOCUS}`}>
+        {open ? 'Hide steps' : `Show steps (${steps.length})`}
+      </button>
+      <ol id={id} hidden={!open} className="flex flex-col gap-2 pb-1 text-[15px]">
+        {steps.map((st) => {
+          const who = st.owner ? OWNER[st.owner] : undefined;
+          const tone = st.state === 'current' ? 'font-semibold text-ink' : st.state === 'upcoming' ? 'text-[var(--muted)]' : '';
+          return (
+            <li key={st.id} data-state={st.state} aria-current={st.state === 'current' ? 'step' : undefined} className={`flex items-start gap-2 ${tone}`}>
+              <span className="mt-0.5 flex w-4 shrink-0 justify-center">
+                {st.state === 'done' ? <Tick /> : <span aria-hidden="true" className={`mt-1 size-2 rounded-full ${st.state === 'current' ? 'bg-vibrant' : 'border border-[var(--muted)]'}`} />}
+              </span>
+              <span>
+                {st.label}
+                {who && <span className="text-[var(--muted)]"> ({who})</span>}
+                <span className="sr-only">{st.state === 'done' ? ', done' : st.state === 'current' ? ', current step' : ', upcoming'}</span>
+              </span>
+            </li>
+          );
+        })}
+      </ol>
+    </div>
   );
 }
 
