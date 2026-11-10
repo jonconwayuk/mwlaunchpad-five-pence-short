@@ -128,11 +128,27 @@ check('reload keeps positions', got.x === want.x && got.y === want.y && got.drop
 // 8. Publish shows the new version number.
 await js(`[...document.querySelectorAll('button')].find((b) => b.textContent === 'Publish').click()`);
 await wait(5000); // the first publish compiles its route in dev
-const pub = await js(`document.querySelector('[role=status]')?.textContent ?? ''`);
-check('Publish shows the version', pub === 'Published as version 2', JSON.stringify(pub));
+const header = await js(`document.querySelector('header').textContent`);
+check('Publish shows the live version', header.includes('Live version 1') === false && header.includes('Live version 2') && !header.includes('Draft v'), JSON.stringify(header));
 
 const shot = await send('Page.captureScreenshot', { format: 'png' });
 writeFileSync(new URL('./after-drive-1280.png', import.meta.url), Buffer.from(shot.data, 'base64'));
+// 9. Stage readiness at 1280 on each seeded Pathway: no Timer or Hard Stop covers a Journey card, nothing scrolls sideways.
+const base = url.replace(/\/portal\/pathways\/.*$/, '');
+for (const pw of ['pw-branch', 'pw-engineer', 'pw-executive']) {
+  await send('Page.navigate', { url: `${base}/portal/pathways/${pw}` }); await wait(5000);
+  const hits = await js(`(() => {
+    const box = (sel) => [...document.querySelectorAll(sel)].map((n) => ({ id: n.dataset.id, r: n.getBoundingClientRect() }));
+    const cards = box('.react-flow__node-journey'); const blocks = box('.react-flow__node-timer, .react-flow__node-hardStop');
+    return blocks.flatMap((b) => cards.filter((c) => b.r.left < c.r.right && c.r.left < b.r.right && b.r.top < c.r.bottom && c.r.top < b.r.bottom).map((c) => b.id + ' on ' + c.id));
+  })()`);
+  check(`${pw}: no Timer or Hard Stop overlaps a Journey card`, hits.length === 0, JSON.stringify(hits));
+  const sw = await js('document.documentElement.scrollWidth');
+  check(`${pw}: no sideways scroll at 1280`, sw <= 1280, `scrollWidth ${sw}`);
+  const pic = await send('Page.captureScreenshot', { format: 'png' });
+  writeFileSync(new URL(`./${pw}-1280.png`, import.meta.url), Buffer.from(pic.data, 'base64'));
+}
+
 writeFileSync(new URL('./drive-result.txt', import.meta.url), out.join('\n') + '\n');
 process.stdout.write(out.join('\n') + '\n');
 ws.close();

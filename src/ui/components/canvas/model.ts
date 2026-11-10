@@ -60,7 +60,62 @@ export function timerLabel(timer: TimerDef): string {
     'item-done': 'a Journey is done',
     'container-complete': 'a Container is complete',
   }[timer.anchor.kind];
+  if (n === 0) return `On ${anchor}`;
   return `${days} ${timer.offsetDays < 0 ? 'before' : 'after'} ${anchor}`;
+}
+
+// Timers and Hard Stops have no canvas position in PathwaySnapshot, so they are placed from what they gate.
+export const TIMER_H = 40;
+export const HARD_STOP_H = 100; // three lines, the label wrapping to two
+const GAP = 32; // clears a Container's dashed edge below its lowest card
+
+const nextLane = (stage: StageId): StageId => STAGES[Math.min(STAGES.findIndex((x) => x.id === stage) + 1, STAGES.length - 1)]!.id;
+
+/** The Stage lane a Timer sits in: the lane of the Journey it gates, else the lane of its Anchor. */
+export function timerLane(s: PathwaySnapshot, t: TimerDef): StageId {
+  const gated = s.items.find((i) => i.dependsOn.some((d) => d.kind === 'timer' && d.timerId === t.id));
+  if (gated) return gated.lane;
+  const a = t.anchor;
+  const laneOfItem = (itemId: string | undefined) => s.items.find((i) => i.id === itemId)?.lane;
+  if (a.kind === 'item-done') return laneOfItem(a.itemId) ?? 'onboarding';
+  if (a.kind === 'container-complete') return laneOfItem(s.containers.find((c) => c.id === a.containerId)?.itemIds[0]) ?? 'onboarding';
+  if (a.kind === 'offer-accepted') return 'pre-employment';
+  return t.offsetDays < 0 ? 'pre-employment' : nextLane('pre-employment');
+}
+
+/** Top-left of every Timer and Hard Stop, keyed by node id, stacked below the lowest Journey card in its lane so none overlaps. */
+export function blockPositions(s: PathwaySnapshot): Map<string, { x: number; y: number }> {
+  const blocks = [
+    ...s.timers.map((t) => ({ id: `timer:${t.id}`, lane: timerLane(s, t), h: TIMER_H })),
+    // Hard Stops go in the far-left lane: it holds the fewest cards, so they stay on the first screen and clear of the side panel.
+    ...s.hardStops.map((h) => ({ id: `hardStop:${h.id}`, lane: 'pre-contract' as StageId, h: HARD_STOP_H })),
+  ];
+  const next = new Map<StageId, number>();
+  const out = new Map<string, { x: number; y: number }>();
+  for (const b of blocks) {
+    const y = next.get(b.lane) ?? nextFreeY(s, b.lane);
+    out.set(b.id, { x: laneX(b.lane) + PAD, y });
+    next.set(b.lane, y + b.h + 16);
+  }
+  return out;
+}
+
+/** The first y in a lane below every Journey card in it, where a new card or block can start. */
+export const nextFreeY = (s: PathwaySnapshot, lane: StageId) =>
+  Math.max(TOP, ...s.items.filter((i) => i.lane === lane).map((i) => i.y + CARD_H + GAP));
+
+/** A muted second line that tells repeated Journeys apart: the Timer or Dependency that gates the card, else its place among them; null when the title is unique. */
+export function cardSubtitle(s: PathwaySnapshot, item: PathwayItem): string | null {
+  const twins = s.items.filter((i) => i.journeyId === item.journeyId);
+  if (twins.length < 2) return null;
+  for (const d of item.dependsOn) {
+    if (d.kind === 'timer') {
+      const t = s.timers.find((x) => x.id === d.timerId);
+      if (t) return t.anchor.kind === 'start-date' && t.offsetDays > 0 ? `Day ${t.offsetDays}` : timerLabel(t);
+    }
+    if (d.kind === 'item') return `After ${titleOfItem(s.items, d.itemId)}`;
+  }
+  return `${twins.indexOf(item) + 1} of ${twins.length}`;
 }
 
 /** Builds the initial PathwaySnapshot from the engine fixture (an EngineState). */
@@ -151,4 +206,38 @@ export function canvasReducer(s: PathwaySnapshot, a: CanvasAction): PathwaySnaps
     case 'tags':
       return { ...s, tags: a.tags };
   }
+}
+
+/**
+ * The first wait cycle through a Container or Timer, as names, or null. An item waits for each Dependency,
+ * a Container for each Journey in it, a Timer for its Anchor; the engine refuses any cycle in this graph.
+ */
+export function findWaitCycle(s: Pick<PathwaySnapshot, 'items' | 'containers' | 'timers'>, titleOf: (itemId: string) => string): string[] | null {
+  const waitsFor = new Map<string, string[]>();
+  for (const i of s.items) waitsFor.set(`item:${i.id}`, i.dependsOn.map(dependencyKey));
+  for (const c of s.containers) waitsFor.set(`container:${c.id}`, c.itemIds.map((x) => `item:${x}`));
+  for (const t of s.timers) {
+    const a = t.anchor;
+    waitsFor.set(`timer:${t.id}`, a.kind === 'item-done' ? [`item:${a.itemId}`] : a.kind === 'container-complete' ? [`container:${a.containerId}`] : []);
+  }
+  const name = (key: string) => {
+    const [kind, id] = [key.slice(0, key.indexOf(':')), key.slice(key.indexOf(':') + 1)];
+    if (kind === 'item') return titleOf(id);
+    if (kind === 'container') return `Container ${s.containers.find((c) => c.id === id)?.label ?? id}`;
+    return `Timer ${s.timers.find((t) => t.id === id)?.label ?? id}`;
+  };
+  const done = new Set<string>();
+  const path: string[] = [];
+  const visit = (key: string): string[] | null => {
+    const at = path.indexOf(key);
+    if (at >= 0) return [...path.slice(at), key].map(name);
+    if (done.has(key)) return null;
+    path.push(key);
+    for (const next of waitsFor.get(key) ?? []) { const c = visit(next); if (c) return c; }
+    path.pop();
+    done.add(key);
+    return null;
+  };
+  for (const key of waitsFor.keys()) { const c = visit(key); if (c) return c; }
+  return null;
 }

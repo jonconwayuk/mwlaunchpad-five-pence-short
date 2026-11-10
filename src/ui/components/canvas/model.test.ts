@@ -1,7 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import { demoState } from '@/src/engine/fixtures';
 import { setLibrary } from './library';
-import { fitToLanes, canvasReducer, laneX, LANE_W, loopMessage, snapshotFromFixture, snapToLane, timerLabel } from './model';
+import {
+  blockPositions, cardSubtitle, CARD_H, CARD_W, fitToLanes, canvasReducer, HARD_STOP_H, laneX, LANE_W, loopMessage, nextFreeY,
+  findWaitCycle, snapshotFromFixture, snapToLane, TIMER_H, timerLabel, timerLane,
+} from './model';
 
 setLibrary([
   { id: 'j-contracting', version: 1, title: 'Contracting', stage: 'pre-contract', tags: {} },
@@ -62,5 +65,60 @@ describe('canvas model', () => {
     const fitted = fitToLanes(out).items;
     expect(fitted[0]).toMatchObject({ x: laneX('onboarding') + 16, y: 192 });
     expect(fitted[1]).toBe(s.items[1]);
+  });
+
+  it('timerLabel, when the offset is 0, reads On start date', () => {
+    expect(timerLabel({ id: 't', label: 'x', anchor: { kind: 'start-date' }, offsetDays: 0 })).toBe('On start date');
+  });
+
+  it('timerLane, when a Journey waits for the Timer, puts it in that Journey lane, else in its Anchor lane', () => {
+    const s = snap();
+    const gated = { ...s, items: s.items.map((i) => (i.id === 'i-id' ? { ...i, dependsOn: [{ kind: 'timer' as const, timerId: 't-x' }] } : i)) };
+    const t = { id: 't-x', label: 'x', anchor: { kind: 'start-date' as const }, offsetDays: 14 };
+    expect(timerLane(gated, t)).toBe(s.items.find((i) => i.id === 'i-id')!.lane);
+    expect(timerLane(s, t)).toBe('onboarding');
+    expect(timerLane(s, { ...t, offsetDays: -7 })).toBe('pre-employment');
+  });
+
+  it('blockPositions, when built, stacks every Timer and Hard Stop below the cards in its lane with no overlap', () => {
+    const s = snap();
+    const at = blockPositions(s);
+    const boxes = [
+      ...s.items.map((i) => ({ x: i.x, y: i.y, w: CARD_W, h: CARD_H })),
+      ...s.timers.map((t) => ({ ...at.get(`timer:${t.id}`)!, w: CARD_W, h: TIMER_H })),
+      ...s.hardStops.map((h) => ({ ...at.get(`hardStop:${h.id}`)!, w: CARD_W, h: HARD_STOP_H })),
+    ];
+    const overlap = (a: (typeof boxes)[number], b: (typeof boxes)[number]) =>
+      a.x < b.x + b.w && b.x < a.x + a.w && a.y < b.y + b.h && b.y < a.y + a.h;
+    boxes.forEach((a, n) => boxes.slice(n + 1).forEach((b) => expect(overlap(a, b)).toBe(false)));
+    expect(at.get('hardStop:hs-checks-failed')!.y).toBeGreaterThanOrEqual(nextFreeY(s, 'pre-contract'));
+  });
+
+  it('cardSubtitle, when a Journey appears twice, names the Timer day that gates each, and null when unique', () => {
+    const s = snap();
+    const base = s.items[0]!;
+    const twins = {
+      ...s,
+      timers: [{ id: 't-14', label: 'x', anchor: { kind: 'start-date' as const }, offsetDays: 14 }],
+      items: [base, { ...base, id: 'b', dependsOn: [{ kind: 'timer' as const, timerId: 't-14' }] }, { ...base, id: 'c', dependsOn: [] }],
+    };
+    expect(cardSubtitle(twins, twins.items[1]!)).toBe('Day 14');
+    expect(cardSubtitle(twins, twins.items[2]!)).toBe('3 of 3');
+    expect(cardSubtitle(s, s.items[1]!)).toBeNull();
+  });
+
+  it('findWaitCycle, when a Journey waits for its own Container or a Timer anchored on itself, names the loop', () => {
+    const s = snap();
+    const c = s.containers[0]!;
+    const member = c.itemIds[0]!;
+    const viaContainer = { ...s, items: s.items.map((i) => (i.id === member ? { ...i, dependsOn: [{ kind: 'container' as const, containerId: c.id }] } : i)) };
+    expect(findWaitCycle(viaContainer, (id) => id)).toEqual([member, `Container ${c.label}`, member]);
+    const viaTimer = {
+      ...s,
+      timers: [{ id: 't-self', label: 'Self', anchor: { kind: 'item-done' as const, itemId: member }, offsetDays: 1 }],
+      items: s.items.map((i) => (i.id === member ? { ...i, dependsOn: [{ kind: 'timer' as const, timerId: 't-self' }] } : i)),
+    };
+    expect(findWaitCycle(viaTimer, (id) => id)).toEqual([member, 'Timer Self', member]);
+    expect(findWaitCycle(s, (id) => id)).toBeNull();
   });
 });

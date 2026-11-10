@@ -8,8 +8,8 @@ import { useCallback, useEffect, useMemo, useReducer, useRef, useState, type Dra
 import type { DependencyRef, PathwaySnapshot, StageId, Tags } from '@/src/engine/types';
 import { LIBRARY, STAGES, TAG_LISTS, setLibrary, type LibraryJourney } from './library';
 import {
-  CARD_H, CARD_W, LANE_W, canvasReducer, dependencyKey, fitToLanes, laneExtent, laneX, loopMessage,
-  snapToLane, timerLabel, titleOfJourney,
+  CARD_H, CARD_W, LANE_W, blockPositions, canvasReducer, cardSubtitle, dependencyKey, fitToLanes, laneExtent, laneX, loopMessage,
+  nextFreeY, snapToLane, timerLabel, titleOfJourney,
 } from './model';
 import { nodeTypes } from './nodes';
 
@@ -17,12 +17,6 @@ const DRAG_TYPE = 'application/x-launchpad-journey';
 const STAGE_TYPE = 'application/x-launchpad-stage';
 const focus = 'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-vibrant';
 const stageLabel = (id: string) => STAGES.find((s) => s.id === id)?.label ?? id;
-
-// Timers and Hard Stops have no canvas position in PathwaySnapshot, so their first spot is fixed here.
-const blockStart = (kind: 'timer' | 'hardStop', index: number) =>
-  kind === 'timer'
-    ? { x: laneX('onboarding') + 24, y: 200 + index * 90 }
-    : { x: laneX('pre-contract') + 16, y: 200 + index * 110 }; // far left, clear of the side panel
 
 function buildNodes(s: PathwaySnapshot, prev: Node[]): Node[] {
   const before = new Map(prev.map((n) => [n.id, n]));
@@ -46,16 +40,18 @@ function buildNodes(s: PathwaySnapshot, prev: Node[]): Node[] {
   });
   const items: Node[] = s.items.map((i) => keep({
     id: i.id, type: 'journey', position: { x: i.x, y: i.y }, extent: laneExtent(i.lane),
-    data: { title: titleOfJourney(i.journeyId), stage: stageLabel(i.lane), mandatory: i.mandatory },
+    data: { title: titleOfJourney(i.journeyId), subtitle: cardSubtitle(s, i) ?? stageLabel(i.lane), mandatory: i.mandatory },
   }, false));
-  const timers: Node[] = s.timers.map((t, index) => keep({
-    id: `timer:${t.id}`, type: 'timer', position: blockStart('timer', index), selectable: false, connectable: false,
-    data: { label: timerLabel(t) },
-  }, true));
-  const hardStops: Node[] = s.hardStops.map((h, index) => keep({
-    id: `hardStop:${h.id}`, type: 'hardStop', position: blockStart('hardStop', index), selectable: false, connectable: false,
+  // Re-placed on every change, below the lowest card in their lane, so a moved or added card never ends up under one.
+  const at = blockPositions(s);
+  const block = { draggable: false, selectable: false, connectable: false };
+  const timers: Node[] = s.timers.map((t) => ({
+    id: `timer:${t.id}`, type: 'timer', position: at.get(`timer:${t.id}`)!, ...block, data: { label: timerLabel(t) },
+  }));
+  const hardStops: Node[] = s.hardStops.map((h) => ({
+    id: `hardStop:${h.id}`, type: 'hardStop', position: at.get(`hardStop:${h.id}`)!, ...block,
     data: { label: h.label, detail: h.stops.wholePathway ? 'Stops the whole pathway' : 'Stops the work it is connected to' },
-  }, true));
+  }));
   return [...lanes, ...containers, ...items, ...timers, ...hardStops];
 }
 
@@ -165,7 +161,7 @@ function Builder({ draft }: { draft: PathwaySnapshot }) {
       await call(url, 'PUT', snapshot);
       const { version } = await call<{ version: number }>(`${url}/publish`, 'POST');
       setVersion(version + 1); // the draft is now the next version
-      setSaved(`Published as version ${version}`);
+      setSaved('Draft saved');
     } catch (e) { setSaved(e instanceof Error ? e.message : 'Could not publish.'); }
   };
   // Autosave the draft one second after the last change; the loaded draft itself is not re-saved.
@@ -218,7 +214,7 @@ function Builder({ draft }: { draft: PathwaySnapshot }) {
   const addToLane = (journeyId: string) => {
     const stage = LIBRARY.find((j) => j.id === journeyId)?.stage;
     if (!stage) return;
-    const lowest = Math.max(0, ...snapshot.items.filter((i) => i.lane === stage).map((i) => i.y + CARD_H + 32));
+    const lowest = nextFreeY(snapshot, stage);
     dispatch({ type: 'add', journeyId, x: laneX(stage), y: lowest });
     showCard(snapToLane(stage, laneX(stage), lowest).y);
   };
@@ -231,22 +227,31 @@ function Builder({ draft }: { draft: PathwaySnapshot }) {
   return (
     <div className="flex h-[calc(100vh-27px)] flex-col bg-paper text-[15px] leading-[1.45] text-ink">
       <header className="flex items-center gap-4 border-b border-[var(--hairline)] px-4 py-3">
-        <h1 className="text-[21.6px] font-semibold text-racing">Pathway: {snapshot.title}</h1>
-        <span className="text-[13px] text-[var(--muted)]">Draft v{version}</span>
-        <div className="flex flex-1 flex-wrap items-center gap-2">
-          {TAG_LISTS.map((list) => (
-            <select key={list.key} value={snapshot.tags[list.key] ?? ''} onChange={(e) => setTag(list.key, e.target.value)}
-              aria-label={list.label} className={`rounded-[4px] border border-[var(--hairline)] px-2 py-1 text-[13px] ${focus}`}>
-              <option value="">{list.label}: any</option>
-              {list.values.map((v) => <option key={v} value={v}>{v}</option>)}
-            </select>
-          ))}
-        </div>
-        {saved && <span role="status" className="text-[13px] text-[var(--muted)]">{saved}</span>}
+        <h1 className="min-w-0 truncate text-[21.6px] font-semibold text-racing">Pathway: {snapshot.title}</h1>
+        <span className="shrink-0 text-[13px] text-[var(--muted)]">{version > 1 ? `Live version ${version - 1}` : 'Not published yet'}</span>
+        {saved && <span role="status" className="min-w-0 truncate text-[13px] text-[var(--muted)]" title={saved}>{saved}</span>}
+        <div className="flex-1" />
+        <details className="relative shrink-0">
+          <summary className={`cursor-pointer list-none rounded-[4px] border border-[var(--hairline)] px-3 py-1.5 text-[13px] ${focus}`}>
+            Tags{Object.keys(snapshot.tags).length > 0 && <span className="text-[var(--muted)]"> ({Object.keys(snapshot.tags).length})</span>}
+          </summary>
+          <div className="absolute right-0 top-full z-20 mt-1 grid w-[240px] gap-2 rounded-[6px] border border-[var(--hairline)] bg-paper p-3">
+            {TAG_LISTS.map((list) => (
+              <label key={list.key} className="grid gap-0.5 text-[13px] text-[var(--muted)]">
+                {list.label}
+                <select value={snapshot.tags[list.key] ?? ''} onChange={(e) => setTag(list.key, e.target.value)}
+                  className={`rounded-[4px] border border-[var(--hairline)] px-2 py-1 text-[13px] text-ink ${focus}`}>
+                  <option value="">Any</option>
+                  {list.values.map((v) => <option key={v} value={v}>{v}</option>)}
+                </select>
+              </label>
+            ))}
+          </div>
+        </details>
         <button type="button" onClick={() => void saveDraft(snapshot)}
-          className={`rounded-[4px] border border-heritage px-3 py-1.5 text-heritage ${focus}`}>Save draft</button>
+          className={`shrink-0 rounded-[4px] border border-heritage px-3 py-1.5 text-heritage ${focus}`}>Save draft</button>
         <button type="button" onClick={() => void publish()}
-          className={`rounded-[4px] bg-heritage px-3 py-1.5 text-paper ${focus}`}>Publish</button>
+          className={`shrink-0 rounded-[4px] bg-heritage px-3 py-1.5 text-paper ${focus}`}>Publish</button>
       </header>
       <div className="relative flex min-h-0 flex-1">
         <Library onAdd={addToLane} onDragStage={setDragStage} />

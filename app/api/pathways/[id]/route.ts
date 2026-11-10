@@ -1,9 +1,10 @@
 import { z } from 'zod';
 import { wouldCreateLoop } from '@/src/engine';
-import type { PathwayItem } from '@/src/engine/types';
-import { getPathwayDraft, listJourneys, savePathwayDraft } from '@/src/db/queries';
+import type { PathwayItem, PathwaySnapshot } from '@/src/engine/types';
+import { getJourney, getPathwayDraft, listJourneys, savePathwayDraft } from '@/src/db/queries';
 import { ApiError, apiHandler } from '@/src/lib/apiHandler';
 import { TAG_LISTS } from '@/src/ui/components/canvas/library';
+import { findWaitCycle } from '@/src/ui/components/canvas/model';
 
 export const dynamic = 'force-dynamic';
 
@@ -32,11 +33,17 @@ const Snapshot = z.object({
   containers: z.array(z.strictObject({ id, label: z.string().trim().min(1).max(200), itemIds: z.array(id) })).max(50),
   timers: z.array(z.strictObject({
     id, label: z.string().trim().min(1).max(200),
-    anchor: z.strictObject({
-      kind: z.enum(['offer-accepted', 'start-date', 'item-done', 'container-complete']), itemId: id.optional(), containerId: id.optional(),
-    }),
+    anchor: z.discriminatedUnion('kind', [
+      z.strictObject({ kind: z.literal('offer-accepted') }),
+      z.strictObject({ kind: z.literal('start-date') }),
+      z.strictObject({ kind: z.literal('item-done'), itemId: id }),
+      z.strictObject({ kind: z.literal('container-complete'), containerId: id }),
+    ]),
     offsetDays: z.number().int().min(-365).max(365),
     reminder: z.strictObject({ to: role, aboutItemId: id, message: z.string().trim().min(1).max(500) }).optional(),
+  // Engine rule 4: a Timer counts back only from the start date.
+  }).refine((t) => t.offsetDays >= 0 || t.anchor.kind === 'start-date', {
+    message: 'Only a Timer anchored on the start date can count back before it.', path: ['offsetDays'],
   })).max(50),
   hardStops: z.array(z.strictObject({
     id, label: z.string().trim().min(1).max(200),
@@ -50,7 +57,7 @@ const Snapshot = z.object({
 type Snapshot = z.infer<typeof Snapshot>;
 
 /** Every id a snapshot mentions must exist inside it, and no Dependency may loop. */
-function checkRefs(s: Snapshot): void {
+function checkRefs(s: Snapshot, stored: PathwaySnapshot): void {
   const unique = (ids: string[], what: string) => {
     if (new Set(ids).size !== ids.length) throw new ApiError(`Two ${what} share an id.`);
     return new Set(ids);
@@ -65,15 +72,22 @@ function checkRefs(s: Snapshot): void {
     const j = journeys.get(i.journeyId);
     need(j !== undefined, `Journey ${i.journeyId} is not in the library.`);
     need(j?.stage === i.lane, `${j?.title ?? i.journeyId} belongs in its own Stage lane.`);
+    need(getJourney(i.journeyId, i.journeyVersion) !== undefined, `${j?.title ?? i.journeyId} has no version ${i.journeyVersion}.`);
+    need(i.containerId === undefined || (s.containers.find((c) => c.id === i.containerId)?.itemIds.includes(i.id) ?? false),
+      `${j?.title ?? i.journeyId} names a Container that does not hold it.`);
     need(i.containerId === undefined || containers.has(i.containerId), `A Pathway Item points at a Container that is not on this Pathway.`);
     for (const d of i.dependsOn) {
       need(d.kind === 'item' ? items.has(d.itemId) : d.kind === 'container' ? containers.has(d.containerId) : timers.has(d.timerId),
         'A Dependency points at something that is not on this Pathway.');
     }
   }
-  for (const c of s.containers) need(c.itemIds.every((x) => items.has(x)), `Container ${c.label} holds a Journey that is not on this Pathway.`);
+  for (const c of s.containers) {
+    need(c.itemIds.every((x) => items.has(x)), `Container ${c.label} holds a Journey that is not on this Pathway.`);
+    need(c.itemIds.every((x) => s.items.find((i) => i.id === x)?.containerId === c.id), `Container ${c.label} holds a Journey that does not name it.`);
+  }
   for (const t of s.timers) {
-    need((t.anchor.itemId === undefined || items.has(t.anchor.itemId)) && (t.anchor.containerId === undefined || containers.has(t.anchor.containerId))
+    const a = t.anchor;
+    need((a.kind !== 'item-done' || items.has(a.itemId)) && (a.kind !== 'container-complete' || containers.has(a.containerId))
       && (t.reminder === undefined || items.has(t.reminder.aboutItemId)), `Timer ${t.label} points at something that is not on this Pathway.`);
   }
   for (const h of s.hardStops) {
@@ -82,20 +96,24 @@ function checkRefs(s: Snapshot): void {
       && h.stops.itemIds.every((x) => items.has(x)) && h.stops.containerIds.every((x) => containers.has(x)),
     `Hard Stop ${h.label} points at something that is not on this Pathway.`);
   }
-  // Re-add each item Dependency one at a time, refusing the first one that closes a loop.
+  // Re-add each item Dependency one at a time, the stored draft's first, so the refusal names the new one that closes a loop.
   const titleOf = (itemId: string) => journeys.get(s.items.find((i) => i.id === itemId)?.journeyId ?? '')?.title ?? itemId;
   const built: PathwayItem[] = s.items.map((i) => ({ ...i, dependsOn: [] }));
-  for (const i of s.items) {
-    for (const d of i.dependsOn) {
-      if (d.kind !== 'item') continue;
-      const r = wouldCreateLoop(built, d.itemId, i.id, titleOf);
-      if (r.loops) {
-        const [source, target] = [titleOf(d.itemId), titleOf(i.id)];
-        throw new ApiError(source === target ? `${source} cannot wait for itself.` : `${source} already waits for ${target}, so ${target} cannot wait for ${source}.`);
-      }
-      built.find((b) => b.id === i.id)!.dependsOn.push(d);
+  const wasStored = (itemId: string, on: string) =>
+    stored.items.some((o) => o.id === itemId && o.dependsOn.some((d) => d.kind === 'item' && d.itemId === on));
+  const pairs = s.items.flatMap((i) => i.dependsOn.flatMap((d) => (d.kind === 'item' ? [{ i, d }] : [])));
+  const ordered = [...pairs.filter((p) => wasStored(p.i.id, p.d.itemId)), ...pairs.filter((p) => !wasStored(p.i.id, p.d.itemId))];
+  for (const { i, d } of ordered) {
+    const r = wouldCreateLoop(built, d.itemId, i.id, titleOf);
+    if (r.loops) {
+      const [source, target] = [titleOf(d.itemId), titleOf(i.id)];
+      throw new ApiError(source === target ? `${source} cannot wait for itself.` : `${source} already waits for ${target}, so ${target} cannot wait for ${source}.`);
     }
+    built.find((b) => b.id === i.id)!.dependsOn.push(d);
   }
+  // Loops through a Container or a Timer, which the item check above cannot see.
+  const cycle = findWaitCycle(s, titleOf);
+  if (cycle) throw new ApiError(`This would make a loop: ${cycle.join(' waits for ')}.`);
 }
 
 export const GET = apiHandler(async (_req: Request, { params }: Ctx) => {
@@ -106,10 +124,11 @@ export const GET = apiHandler(async (_req: Request, { params }: Ctx) => {
 
 export const PUT = apiHandler(async (req: Request, { params }: Ctx) => {
   const pathwayId = (await params).id;
-  if (!getPathwayDraft(pathwayId)) throw new ApiError('That Pathway was not found.', 404);
+  const stored = getPathwayDraft(pathwayId);
+  if (!stored) throw new ApiError('That Pathway was not found.', 404);
   const parsed = Snapshot.safeParse(await req.json().catch(() => null));
   if (!parsed.success) throw new ApiError(parsed.error.issues.map((i) => `${i.path.join('.')}: ${i.message}`).join('; '));
-  checkRefs(parsed.data);
+  checkRefs(parsed.data, stored);
   savePathwayDraft(pathwayId, parsed.data);
   return getPathwayDraft(pathwayId);
 });

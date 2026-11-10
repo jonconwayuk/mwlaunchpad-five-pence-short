@@ -1,4 +1,4 @@
-PASS four lanes fit at 1280: lane labels in view: [true,true,true,true] [[448,654,200],[654,860,200],[860,1066,200],[1066,1272,200]] innerWidth 1280
+PASS four lanes fit at 1280: lane labels in view: [true,true,true,true] [[448,654,170],[654,860,170],[860,1066,170],[1066,1272,170]] innerWidth 1280
 PASS drag tints the Journey Stage lane: tinted ["Pre-contractDrop here"], dragged card Stage "Pre-contract"
 PASS drag from library into its lane: dropped over Pre-contract, card x=516 (Onboarding lane is 500 to 750)
 PASS card cannot leave its Stage lane: dragged 400px right, card x=274 (Pre-employment lane is 250 to 500)
@@ -7,7 +7,13 @@ PASS Dependency connects: edges 12 -> 13
 PASS Mandatory toggles and shows a padlock: padlock on Pulse check false -> true
 PASS side panel leaves the Hard Stop visible: Hard Stop right edge 655.5989990234375, panel left 1016
 PASS removing a Dependency drops the edge: edges 13 -> 12
-PASS Container, Timer and Hard Stop render: ["Cleared to start","7 days before start date","5 days before start date","13 days after start date","29 days after start date","0 days after start date","7 days after start date","Hard StopPre-employment checks failedStops the whole pathway","Hard StopPre-employment checks not done in timeStops the work it is connected to"]
+PASS Container, Timer and Hard Stop render: ["Cleared to start","7 days before start date","5 days before start date","13 days after start date","29 days after start date","On start date","7 days after start date","Hard StopPre-employment checks failedStops the whole pathway","Hard StopPre-employment checks not done in timeStops the work it is connected to"]
 PASS autosave after a change: "Draft saved"
-PASS reload keeps positions: before {"x":266,"y":738.444,"drop":516}, after {"x":266,"y":738.444,"drop":516}
-PASS Publish shows the version: "Published as version 2"
+PASS reload keeps positions: before {"x":266,"y":737.534,"drop":516}, after {"x":266,"y":737.534,"drop":516}
+PASS Publish shows the live version: "Pathway: Branch colleagueLive version 2Draft savedTags (3)Job familyAnyBranchSoftware engineeringExecutiveHRITRoleAnyCustomer service colleagueSoftware engineerManaging directorExecutive assistantLine managerGradeAnyColleagueManagerSenior managerExecutivePlatformAnyRetailTechnologyGroup FunctionsLocationAnyCardiffLeedsLondonEdinburghSave draftPublish"
+PASS pw-branch: no Timer or Hard Stop overlaps a Journey card: []
+PASS pw-branch: no sideways scroll at 1280: scrollWidth 1280
+PASS pw-engineer: no Timer or Hard Stop overlaps a Journey card: []
+PASS pw-engineer: no sideways scroll at 1280: scrollWidth 1280
+PASS pw-executive: no Timer or Hard Stop overlaps a Journey card: []
+PASS pw-executive: no sideways scroll at 1280: scrollWidth 1280

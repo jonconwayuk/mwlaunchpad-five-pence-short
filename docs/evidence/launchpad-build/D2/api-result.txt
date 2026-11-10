@@ -1,10 +1,21 @@
 PASS re-POST 18 seeded Journeys, 0 rejected 
 PASS PUT a moved card and an added Journey with a Dependency
 PASS reload GET keeps positions and the Dependency
-PASS PUT with a Dependency loop is refused: 400 "Contracting already waits for Payroll, so Payroll cannot wait for Contracting."
+PASS PUT with a Dependency loop is refused: 400 "Payroll already waits for Contracting, so Contracting cannot wait for Payroll."
 PASS PUT with a dangling Dependency is refused: 400 "A Dependency points at something that is not on this Pathway."
 PASS PUT to an unknown Pathway is 404
+PASS PUT the stored pw-branch draft back unchanged: 200 
+PASS PUT the stored pw-engineer draft back unchanged: 200 
+PASS PUT the stored pw-executive draft back unchanged: 200 
+PASS PUT with a Journey version that does not exist is refused: 400 "Contracting has no version 999."
+PASS PUT a Timer item-done without itemId is refused: 400 "timers.6.anchor.itemId: Invalid input: expected string, received undefined"
+PASS PUT a negative offset on a non start-date Timer is refused: 400 "timers.6.offsetDays: Only a Timer anchored on the start date can count back before it."
+PASS PUT with a Container holding an item that does not name it is refused: 400 "Container Cleared to start holds a Journey that does not name it."
+PASS the loop message names the new Dependency (Contracting waits for Payroll): "Payroll already waits for Contracting, so Contracting cannot wait for Payroll."
+PASS PUT a Journey that waits for its own Container is refused: 400 "This would make a loop: Payroll waits for Container Cleared to start waits for Payroll."
+PASS PUT a Journey that waits for a Timer anchored on itself is refused: 400 "This would make a loop: Payroll waits for Timer Self waits for Payroll."
 PASS publish returns version 2
 PASS apply pw-branch to person-b
 PASS newly applied person-b gets the published Journey
+PASS person-b state still loads after publish and apply
 PASS person-a existing Applied Pathway is unchanged (ADR-0002)
