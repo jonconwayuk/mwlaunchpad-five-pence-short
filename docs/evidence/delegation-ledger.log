@@ -98,3 +98,8 @@
 12:02 W2 H3 walker sonnet: walk new steps (Workday, search+apply, edit Applied Pathway, Insights search), update script (decision 45)
 12:26 W2 S1 implementer sonnet: Skip (Demo) button on /me reusing completeInputs; Design.MD 1.5, decision 48 (owner request)
 12:27 W2 S1-review reviewer sonnet: review Skip (Demo) commit 83da62b
+12:36 W3 X1-engine implementer sonnet (worktree): expandable Journeys and new joiner Journeys (owner request)
+12:36 W3 X2-journeys implementer sonnet (worktree): expandable Journeys and new joiner Journeys (owner request)
+12:36 W3 X3-joiner implementer sonnet (worktree): expandable Journeys and new joiner Journeys (owner request)
+12:36 W3 X4-manager implementer sonnet (worktree): expandable Journeys and new joiner Journeys (owner request)
+12:38 W3 X-review reviewer sonnet: review 1477c58..22ecd56 (expandable Journeys, new Journeys)

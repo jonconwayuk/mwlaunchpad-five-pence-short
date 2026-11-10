@@ -6,7 +6,7 @@ The agreed spec for the LaunchPad '26 build. `Ideas.MD` is an early raw log, sup
 
 Agreed by the team on 9 Nov 2026 (Day 1). Every design question is settled except the demo script, which is parked. Later changes to an agreed decision should update this file, the glossary and any ADR it names.
 
-**Version 1.5** (10 Nov 2026). This is the project's spec under the phase workflow (`docs/workflow/phase-workflow.md`). It changes only by explicit amendment: each amendment bumps the version, adds a line to the amendment log below, and gets an entry in `docs/decisions.md`.
+**Version 1.6** (10 Nov 2026). This is the project's spec under the phase workflow (`docs/workflow/phase-workflow.md`). It changes only by explicit amendment: each amendment bumps the version, adds a line to the amendment log below, and gets an entry in `docs/decisions.md`.
 
 | Version | Date | Amendment | Decision |
 | --- | --- | --- | --- |
@@ -16,6 +16,7 @@ Agreed by the team on 9 Nov 2026 (Day 1). Every design question is settled excep
 | 1.3 | 10 Nov 2026 | Feedback 1 additions 17 to 19: an Integrations section on Hidden automations in the Journey builder, with a ServiceNow request-complete Notification to the joiner; Demo controls gain "ServiceNow: request complete" and "Complete {name}'s inputs" (D13); the help chat is always reachable from the joiner's first screen, and its handover names the Line Manager, Microsoft Teams, the agent and a summary, labelled as simulated (D11) | 44 |
 | 1.4 | 10 Nov 2026 | Feedback 1 additions 20 to 23: grade X for the executive, after G; supporting Pathways named with their grade; "Add new starter from Workday" on People (mocked, ADR-0005); search and filters when applying a Pathway; "Edit this pathway" adds Journeys to an Applied Pathway through Additions, template Journeys can never be removed, and the Applied Pathway shows "Based on {title} {semver}, modified" from its snapshot (ADR-0002 note) | 46 |
 | 1.5 | 10 Nov 2026 | D13 item 8: the "Complete {name}'s inputs" control is also on the Starter Preview (`/me`) as **Skip (Demo)**, a labelled demo shortcut, starter view only, never the Delegate view | 48 |
+| 1.6 | 10 Nov 2026 | Expandable Journeys: each Journey row on the Starter Preview opens to show its Actions in order (done, current, upcoming), never a Hidden automation (D1a); the Line Manager can open each of a starter's Journeys to see its Actions and owners, Hidden automations included; the Buddy view is unchanged (D5). Bob's Pathway gains first-week and first-month Journeys (`SEED-DATA.md`) | 50 |
 
 ## Decisions
 
@@ -40,6 +41,7 @@ _Named "Admin Portal" before version 1.2; the route `/portal` is unchanged._
 ### D1a. The starter's side is a live Starter Preview
 
 - A phone page that shows an Applied Pathway as the starter would see it: Journeys grouped by Stage, each with its Journey Status, plus a "what's next" line.
+- (1.6) Each Journey row expands, collapsed by default, to list its Actions in order as done, current or upcoming, with the owner when it is not the starter. Hidden automations and other people's Notifications are never listed. The list is read-only; the current Action's control stays on the row.
 - It is interactive: the starter (or their Delegate) completes their own Actions here: acknowledging Read cards, ticking Tasks, making Choose selections, submitting Provide forms and answering Pulse checks (D3, D9, D12a). No free-text chat; the scripted help chat is in D11 (1.2).
 - Built live from the back end, so a change made in the Onboarding Studio or by a Line Manager shows up in the preview. The key demo move is in D2.
 - Static mock-ups only for things we won't build, labelled as mock-ups. The help chat and Teams handover are scripted and labelled as simulated (D11).
@@ -190,7 +192,7 @@ Rules:
 ### D5. Manager and Buddy view (mobile)
 
 **Line Manager**
-- Sees: their starters (current Stage, Containers complete, next Container); Blocked Flags with reasons; the starter's Choose results; "Needs decision" alerts from Hard Stops.
+- Sees: their starters (current Stage, Containers complete, next Container); each Journey with its Journey Status, expandable to its Actions in order with owner and progress, Hidden automations included (1.6); Blocked Flags with reasons; the starter's Choose results; "Needs decision" alerts from Hard Stops.
 - Can: tick their own Tasks from their To-do list across all starters; add a Journey (D4a); override a Journey's status to Done with a recorded reason, except Journeys with a pass/fail Outcome; Confirm, Extend or Dismiss a Hard Stop (D2f); send the starter a note, shown on the Starter Preview.
 
 **Buddy**

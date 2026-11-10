@@ -460,3 +460,14 @@ Numbered once, in order, never renumbered or deleted. A reversed decision gets a
 
 - **Decided:** the owner asked for commits 83da62b (Skip (Demo), decision 48) and e5dc9b1 (ledger) to be pushed to `origin main`. The independent review passed, and `npm run check` passed in a clean worktree (218 tests).
 - **Why:** owner instruction. This sits outside decision 11's wave-gate pre-authorisation, so it is recorded here.
+
+### 50. Expandable Journeys and Bob's first week and month; Design.MD 1.6
+
+- **Decided:** the owner asked to "build out the rest of the joiner journeys and make sure they are expandable in the joiner view and the manager view".
+  - `ItemState.actions` (`ActionStep`) lists every Action of a Journey in order as done, current or upcoming. `filterForViewer` drops Hidden automations and other people's Notifications for the starter and Delegate, and removes the list for a Buddy (D5).
+  - On `/me` each Journey row has a collapsed "Show steps" disclosure. On `/team` the Line Manager gets a Journeys section, grouped by Stage, where each Journey opens to its Actions and owners.
+  - Bob's Pathway `pw-infra-e` gains Your first day, Mandatory training and Meet the team (Onboarding, Timer Day 1), Engineering community intro (reused), Change and on-call process (Timer Day 8) and the 30-day check-in (Timer Day 30). A drive through the real APIs to Day 30 ends with every Journey done.
+- **Spec:** Design.MD goes to 1.6 (D1a, D5).
+- **Process:** four implementers ran in parallel in worktrees, split by file ownership: engine and filter, Journeys and seed, joiner UI, and manager UI. The owner asked for parallel agents. The `ActionStep` contract was committed first, so no two touched the same file.
+- **Open:** the Line Manager view groups Journeys by Stage, not by Container, because the client state carries no Container membership. That can be upgraded by sending `itemIds` per Container.
+- **Why:** owner instruction.
