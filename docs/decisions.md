@@ -2,7 +2,7 @@
 
 This file tracks acceptance against the spec (`Design.MD`) and carries the decision log, as the phase workflow requires (`docs/workflow/phase-workflow.md`).
 
-Open items waiting on the owner carry the pending marker. The grep command in the `CLAUDE.md` orientation table gives the authoritative list (this paragraph deliberately doesn't spell the token, so it never counts as an item). **Open count: 1.** This is the only place the count is kept. When an item resolves, rewrite its marker to the resolved form, "was" followed by the token.
+Open items waiting on the owner carry the pending marker. The grep command in the `CLAUDE.md` orientation table gives the authoritative list (this paragraph deliberately doesn't spell the token, so it never counts as an item). **Open count: 2.** This is the only place the count is kept. When an item resolves, rewrite its marker to the resolved form, "was" followed by the token.
 
 ## Acceptance against the spec
 
@@ -10,11 +10,11 @@ One row per `BUILD-PLAN.md` task (waves A to E), updated as each phase lands. Th
 
 | Build plan item | Status | Evidence or decision |
 | --- | --- | --- |
-| A1 Scaffold, tokens, engine contract, fixtures | In progress (gate green, review pending) | `docs/evidence/launchpad-build/A1/` |
-| B1 Pathway engine and Vitest tests | Not started | |
-| B2 Database, seed data and mocked adapters | Not started | |
-| B3 Starter Preview | Not started | |
-| B4 Pathway builder canvas | Not started | |
+| A1 Scaffold, tokens, engine contract, fixtures | Accepted | `docs/evidence/launchpad-build/A1/`, decisions 14 and 15 |
+| B1 Pathway engine and Vitest tests | Accepted | `docs/evidence/launchpad-build/B1/`, decision 16 |
+| B2 Database, seed data and mocked adapters | Accepted | `docs/evidence/launchpad-build/B2/`, decisions 17 and 19 |
+| B3 Starter Preview | Accepted (390px by headless Chrome, not on a device) | `docs/evidence/launchpad-build/B3/`, decision 18 |
+| B4 Pathway builder canvas | Accepted, fix loop for stage polish running | `docs/evidence/launchpad-build/B4/`, decision 21 |
 | C1 Real state API with role filtering | Not started | |
 | C2 People, apply a Pathway, Demo controls | Not started | |
 | C3 Manager and Buddy view, Additions, Needs decision | Not started | |
@@ -127,3 +127,79 @@ Numbered once, in order, never renumbered or deleted. A reversed decision gets a
 - **Decided:** A1's gate (`npm run check` and `npm run build`) was green at 09:05, so wave A was committed and pushed then. Its independent reviewer runs at the same time as the wave B implementers. Any finding becomes a scoped fix in wave B's gate.
 - **Why:** The 127-minute critical path, started at 09:03, already ends after the 10:58 stop. Holding wave B back for a review of transcribed scaffold code would cost about ten minutes on that path.
 - **Evidence:** This entry; the delegation ledger.
+
+### 16. Engine fallbacks taken in B1
+
+- **Decided:** The B1 implementer resolved these ambiguities in the engine's rules (`BUILD-PLAN.md` section 4.2) with the fallbacks below.
+  - A Notification Action is sent as soon as it is reached and never holds a Journey up.
+  - An Action without an owner belongs to the starter. A Hidden automation gives `in-progress` with the Blocked Flag.
+  - A `returned` automation sends the item back to the starter's last Action before it, as `action-required`.
+  - Skipped counts as met for an item Dependency and an item-done Anchor (D7.2). A Container counts only `done` items, and a Failed Outcome counts as done.
+  - A confirmed Hard Stop cancels only targets that are not already done. Overrides apply first, and the latest one wins.
+  - Confirm or Dismiss settles a Hard Stop for good. Each Extend adds its days (default 7) to the deadline Timer.
+  - An item with no Dependencies is available from Offer accepted, because the apply date is not an engine input. This is marked `shortcut:` in the code.
+  - The Usual Range is the interpolated interquartile range, rounded. A wait past the top of the range is overdue.
+  - Day 0 is the day before the Start date. The person is a joiner before Day 1, a starter from Day 1 to Day 29, and onboarded from Day 30.
+  - Contracting is done when every Pre-contract item is done.
+  - A Reminder is skipped if the item it is about is done, skipped or cancelled by the time it fires.
+  - `nextUp` is the first `action-required` item in Pathway order.
+  - The D7.5 Day 30 Line Manager Tasks are not built, because they are outside rules 1 to 9.
+- **Why:** Each brief names the fallback to take when something is ambiguous. This entry records the fallbacks taken.
+- **Evidence:** `docs/evidence/launchpad-build/B1/`. The literal Done-when grep `react|next|drizzle` matches the contract field `nextUp`, so the import-level grep in `grep.txt` is the one that counts.
+
+### 17. Seed and data fallbacks taken in B2
+
+- **Decided:**
+  - Every Pathway's history uses Pathway version 1. The v3/v4 split is not seeded.
+  - Day N is a Start-date Timer with an offset of N-1.
+  - The On-failed Hard Stop stops the whole Pathway. The On-deadline Hard Stop stops Meet your buddy, and also the executive welcome on the Executive Pathway.
+  - `applyPathway` replaces the person's existing Applied Pathway and clears its progress.
+  - Persona A's Additions are made by `hr-partner`.
+  - The seed does not reproduce the fixture's Skipped and Cancelled demo items.
+  - Drafts are stored one row per element.
+  - Mocked adapter results are held in memory and reset on restart.
+  - The fixed ids are `person-a`, `person-b` and `person-c`, the Pathways are `pw-branch`, `pw-engineer` and `pw-executive`, and items are named `i-*`.
+  - `recordActionProgress` and `recordOverride` take `personId` first.
+- **Why:** These are the fallbacks the B2 brief allowed.
+- **Evidence:** `docs/evidence/launchpad-build/B2/`.
+
+### 18. Starter Preview fallbacks taken in B3
+
+- **Decided:**
+  - "Not for me" posts `{ itemId, actionId: 'skip', actorPersonId }` to `POST /api/actions`, and C1 records it as Skipped.
+  - The waiting card shows for an `in-progress` item that has a Usual Range or a Blocked Flag. After C1, the server strips the Blocked Flag for starters.
+  - The Provide receipt is held only on the page (marked `shortcut:` in the code). The submitted content is never kept.
+  - The status words for the four states section 5.3 leaves open are "Not yet", "In progress", "Over to you" and "Done".
+- **Why:** These are the fallbacks the B3 brief allowed.
+- **Evidence:** `docs/evidence/launchpad-build/B3/`.
+
+### 19. Persona B starts with a Needs decision already raised - `OWNER-PENDING`
+
+- **Finding (spec against seed data, not reconciled):** Persona B starts at T+5 (`SEED-DATA.md` section 2). The On-deadline Timer `t-deadline` fires at Start date minus 5, which is T itself. So straight after Reset demo the engine raises the `hs-deadline` Needs decision on Persona B, stopping Meet your buddy, and B's Payroll Reminder has already fired. This follows `Design.MD` D2f and B5 correctly. It just isn't a scripted demo moment.
+- **Fallback until the owner rules:** Leave the spec and the seed as they are, per `CLAUDE.md`. The demo script avoids opening Persona B's Needs decision.
+- **Question for the owner:** (a) Move Persona B's Start date later in `SEED-DATA.md`, for example to T+12. **Recommended.** (b) Keep it and script around it. (c) Change the deadline offset.
+- **Evidence:** B2 independent review, 09:14.
+
+### 20. Additive changes to the API and engine contract for wave C
+
+- **Decided:** `BUILD-PLAN.md` sections 4.2 and 4.3 gain these additive fields. Nothing existing is renamed or removed.
+  - `EngineInput.appliedOn?: ISODate`. An item with no Dependencies is available from the later of the apply date and Offer accepted. Without it, a Pathway applied live is overdue at once (B1 review).
+  - `POST /api/actions` takes an optional `personId`, the starter whose Applied Pathway it is. The default is `actorPersonId`, so the Starter Preview's existing posts work. `actionId: 'skip'` records Skipped (decision 18).
+  - `POST /api/simulate` and `POST /api/hard-stops/:id/decision` take `personId`, because Hard Stop and item ids are per Pathway, not per person.
+  - `src/lib/apiHandler.ts` exports `apiHandler(fn)` and `ApiError(message, status)`. The `as` filter lives in `src/lib/roleFilter.ts`, which C1 owns, so mutation routes return the same filtered shape.
+  - The Demo clock is persisted through `getDemoClock` and `setDemoClock`. For wave C, ownership of `src/lib/clock.ts` passes from A1 to C2.
+  - A phone picks its persona by opening `/persona/<A|B|C>`, which sets the `persona` cookie and redirects to `/me`. C2 owns `app/persona/**`. `/team` has its own viewer switcher for Line Managers and Buddies, which C3 owns.
+- **Why:** The contract as written cannot tell the starter from the actor, or one person's Hard Stop from another's. Phones on separate devices each need their own persona. These are the smallest additions that close those gaps.
+- **Evidence:** B1 and B3 reviews; the wave C briefs.
+
+### 21. Canvas fallbacks taken in B4
+
+- **Decided:**
+  - The canvas library is static in wave B. Its Journey tags are inferred from each owner team, because `SEED-DATA.md` section 3 gives none. This is marked `shortcut:`, and wave D2 loads the library from the database.
+  - The initial snapshot rebuilds the "after Contracting" Dependencies, adds the On-failed Hard Stop and the Payroll Reminder Timer, and uses the default Pathway tags Branch, Retail and Colleague.
+  - A Container's outline follows its items, so the Container cannot be dragged on its own. Timer and Hard Stop positions are held in canvas state only, because `PathwaySnapshot` has no x and y for them.
+  - Each library card has an "Add" button, so a Journey can be added from the keyboard.
+  - The Delete key is off. A Pathway Item is removed only through "Remove from pathway".
+  - `taste-skill` was not loaded by the B4 implementer. It is loaded by the B4 fix loop.
+- **Why:** These are the fallbacks the B4 brief allowed.
+- **Evidence:** `docs/evidence/launchpad-build/B4/`. The B4 review re-ran the headless Chrome drive at 1280 and 1440 wide, and every Done-when line passed. The library drag is a synthetic DragEvent in that drive, not a real mouse drag.

@@ -1,0 +1,9 @@
+
+ Test Files  4 passed (4)
+      Tests  55 passed (55)
+   Start at  09:17:16
+   Duration  98ms (transform 67%, import 18%, tests 11%, worker 4%)
+
+---BUILD
+ ✓ Compiled successfully in 2.3s
+ ✓ Generating static pages (18/18)

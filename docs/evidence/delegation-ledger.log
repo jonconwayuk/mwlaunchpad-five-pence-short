@@ -1,2 +1,16 @@
 # time | task | role | model | brief
 09:03 | A1 | implementer | sonnet | Scaffold Next 15 app, tokens, engine types/loops verbatim, fixtures, fixture-backed /api/state, stubs
+09:07 | A1 | reviewer | opus | Independently re-verify A1 Done-when lines, contract transcription, fixture coverage, layering
+09:07 | B1 | implementer | opus | Pathway engine rules 1-9 and resolveTimerDate with >=20 Vitest tests
+09:07 | B2 | implementer | sonnet | Drizzle schema, deterministic SEED-DATA seed, buildEngineInput and queries, mocked adapters
+09:07 | B3 | implementer | opus | Starter Preview /me with waiting card and Usual Range band, via useLiveState
+09:07 | B4 | implementer | opus | React Flow Pathway builder canvas: lanes, drag-on, Dependencies with loop refusal, side panel, read-only blocks
+09:10 | A1 | fix implementer | sonnet | Scoped fix: clock default+globalThis, Contracting stage, persona->person ids, ink date strip, useLiveState gaps, stub comments
+09:11 | B2 | reviewer | opus | Re-verify B2 Done-when (seed from empty, determinism, buildEngineInput, synthetic data), schema vs brief, layering
+09:12 | B3 | reviewer | opus | Re-verify B3 Done-when at 390px, status treatments, waiting card, polling, focus, copy rules
+09:13 | B1 | reviewer | opus | Re-verify B1 tests load-bearing, purity, and computeState(buildEngineInput) integration against B2 seed
+09:13 | B2 | fix implementer | sonnet | Scoped fix: transactional validated addAdditionToApplied(personId,item,timers), clear adapter state in seed
+09:14 | B4 | reviewer | opus | Re-run headless Chrome drive for B4 Done-when, check loop message direction, demo-readiness of canvas
+09:14 | B3 | fix implementer | sonnet | Scoped fix: in-progress row test, controlled Task tick box, no Not for me on locked items, GLOSSARY status words
+09:15 | B1 | fix implementer | opus | Scoped fix: appliedOn in EngineInput for availability, seed Persona A to match fixture story, overdue Task actionId
+09:16 | B4 | fix implementer | opus | Scoped fix: fit canvas at 1280 with overlay side panel, tidy same-lane edges, remove a Dependency, highlight target lane

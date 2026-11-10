@@ -13,6 +13,7 @@ The gate is `npm run check` (`tsc --noEmit && eslint . && vitest run`) at every 
 | When | Command | Result |
 | --- | --- | --- |
 | 09:02, before wave A | `npm run check` | Not runnable. There is no `package.json` yet, so npm exits with `enoent`. Wave A creates the scripts. |
-| Wave A gate | `npm run check`, `npm run build` | See `docs/evidence/launchpad-build/A1/` |
+| 09:05, wave A gate | `npm run check`, `npm run build` | Green, with 0 tests (`passWithNoTests`). See `docs/evidence/launchpad-build/A1/gate.txt` |
+| 09:17, wave B gate | `npm run check`, `npm run build` | Green. **Pinned: 55 Vitest tests.** See `docs/evidence/launchpad-build/wave-gates/wave-B.txt` |
 
 The pinned Vitest count is set at the wave B gate, from B1's test total, and recorded in the evidence for each wave after that.
