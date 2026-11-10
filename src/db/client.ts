@@ -34,13 +34,21 @@ CREATE TABLE IF NOT EXISTS handovers (id INTEGER PRIMARY KEY AUTOINCREMENT, pers
 const open = () => {
   const path = (process.env.DATABASE_URL ?? './launchpad.db').replace(/^file:/, '');
   const sqlite = new Database(path);
+  // Wait for the lock instead of failing when parallel build workers open the same database.
+  sqlite.pragma('busy_timeout = 5000');
   sqlite.pragma('journal_mode = WAL');
   sqlite.exec(DDL);
   // Optional columns added after the first build; older databases get them here.
   for (const [table, column] of [['journeys', 'semver'], ['pathway_versions', 'semver'],
     ['duration_history', 'business_area'], ['duration_history', 'role'], ['duration_history', 'grade']]) {
     const cols = sqlite.prepare(`PRAGMA table_info(${table})`).all() as { name: string }[];
-    if (!cols.some((c) => c.name === column)) sqlite.exec(`ALTER TABLE ${table} ADD COLUMN ${column} TEXT`);
+    if (cols.some((c) => c.name === column)) continue;
+    try {
+      sqlite.exec(`ALTER TABLE ${table} ADD COLUMN ${column} TEXT`);
+    } catch (e) {
+      // Parallel build workers race on the same database; the loser sees a duplicate column.
+      if (!(e instanceof Error && e.message.includes('duplicate column name'))) throw e;
+    }
   }
   return { sqlite, db: drizzle(sqlite, { schema }) };
 };
