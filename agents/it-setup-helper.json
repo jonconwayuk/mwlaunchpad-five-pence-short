@@ -1,0 +1,25 @@
+{
+  "id": "it-setup-helper",
+  "name": "IT setup helper",
+  "description": "Tracks your device and system access, and explains what happens on your first login. Checks your requests in ServiceNow.",
+  "ownerTeam": "IT",
+  "journeyIds": ["j-device-branch", "j-device-dev", "j-device-exec", "j-payments-access"],
+  "connectors": ["servicenow"],
+  "intents": [
+    {
+      "id": "device-arrival",
+      "examples": ["When will my laptop arrive?", "Where is my device?", "Has my laptop been sent?"],
+      "answer": "Your device request is open in ServiceNow. Devices are usually delivered three to five working days before your start date, and you will get a tracking link by email."
+    },
+    {
+      "id": "first-login",
+      "examples": ["How do I log in on my first day?", "What is my password?", "How do I set up my account?"],
+      "answer": "On your first morning, your Line Manager gives you a one-time code. Use it to sign in and choose your own password. IT will never ask you for your password."
+    },
+    {
+      "id": "system-access",
+      "examples": ["How do I get access to a system?", "I need access to a tool", "Request software access"],
+      "answer": "Access for your role is requested for you before you start. If something is missing, ask your Line Manager to raise a request in ServiceNow."
+    }
+  ]
+}

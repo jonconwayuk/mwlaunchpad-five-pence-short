@@ -1,0 +1,163 @@
+width 1280 scrollWidth 1280
+Simulated date 10 Nov 2026
+View
+Onboarding Studio
+Joiner
+Manager
+Buddy
+Person
+Bob Warwick
+Alex Morgan
+Sam Okafor
+Dana Whitfield
+Layout
+Phone
+Desktop
+
+Onboarding Studio
+
+Journeys
+Pathways
+People
+Insights
+Agent library
+Demo controls
+Plus 1 day
+Plus 1 week
+Set date
+Alex Morgan
+Sam Okafor
+Dana Whitfield
+Offer accepted
+Plus 3 weeks
+Day 1
+Day 14
+Day 30
+Alex Morgan: Pre-employment checks
+Simulate passed
+Simulate failed
+Simulate returned
+Reset demo
+Agent library
+
+Agents answer a new starter's questions at any time, alongside their Journeys. Each one knows one area and passes to a person when it cannot help.
+
+Simulated: scripted answers, no live AI
+
+Benefits helper
+
+Owned by Reward
+
+Explains your benefits, including the company car scheme, and when you can join each one.
+
+Used in
+
+Contracting
+
+Talks to
+
+Oracle
+
+Starters ask
+“Can I get a company car?”
+“How does the pension work?”
+Handover agent
+
+Owned by HR
+
+Passes your question to a person when the other agents cannot help. Opens a chat with your Line Manager in Teams (simulated).
+
+Used in
+
+Any Journey, when the starter asks for a person
+
+Talks to
+
+Teams (simulated)
+
+Starters ask
+“Can I talk to a person?”
+“I want to speak to someone”
+IT setup helper
+
+Owned by IT
+
+Tracks your device and system access, and explains what happens on your first login. Checks your requests in ServiceNow.
+
+Used in
+
+Branch device, Developer device, Executive device, Payments squad access package
+
+Talks to
+
+ServiceNow
+
+Starters ask
+“When will my laptop arrive?”
+“How do I log in on my first day?”
+Merch helper
+
+Owned by Retail
+
+Helps with your uniform order: sizes, delivery and swaps.
+
+Used in
+
+Uniform (Merch distribution)
+
+Talks to
+
+Oracle
+
+Starters ask
+“When will my uniform arrive?”
+“Can I change my uniform size?”
+Payroll helper
+
+Owned by HR
+
+Answers questions about pay day, payslips and the bank details we need to pay you.
+
+Used in
+
+Payroll
+
+Talks to
+
+Workday
+
+Starters ask
+“When do I get paid?”
+“Where can I see my payslip?”
+Vetting progress helper
+
+Owned by HR
+
+Explains where your pre-employment checks are and how long they usually take.
+
+Used in
+
+Pre-employment checks
+
+Talks to
+
+Workday
+
+Starters ask
+“How are my checks going?”
+“Why are my checks taking so long?”
+Your first weeks helper
+
+Owned by HR
+
+Answers everyday questions about your first day and first weeks: where to go, who you will meet and what to expect.
+
+Used in
+
+Meet your buddy, Branch induction, Engineering community intro, In-person events calendar, Pulse check
+
+Starters ask
+“What happens on my first day?”
+“What should I wear?”
+
+To add an agent, add a file to the agents folder. It appears here on the next visit.

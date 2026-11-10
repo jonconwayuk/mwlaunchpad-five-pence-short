@@ -1,0 +1,25 @@
+{
+  "id": "payroll-helper",
+  "name": "Payroll helper",
+  "description": "Answers questions about pay day, payslips and the bank details we need to pay you.",
+  "ownerTeam": "HR",
+  "journeyIds": ["j-payroll"],
+  "connectors": ["workday"],
+  "intents": [
+    {
+      "id": "pay-day",
+      "examples": ["When do I get paid?", "What day is pay day?", "When is my first salary paid?"],
+      "answer": "You are paid on the last working day of each month. If you start after the 15th, your first pay comes at the end of the following month and includes the days you have worked."
+    },
+    {
+      "id": "payslip",
+      "examples": ["Where can I see my payslip?", "How do I find my payslip?"],
+      "answer": "Your payslip appears in Workday two days before pay day. You will get a notification when it is ready."
+    },
+    {
+      "id": "bank-details",
+      "examples": ["How do I change my bank details?", "Where do I give my bank account details?"],
+      "answer": "Use the Payroll Journey to give or update your bank details. We pass them straight to the payroll system and do not keep them here."
+    }
+  ]
+}

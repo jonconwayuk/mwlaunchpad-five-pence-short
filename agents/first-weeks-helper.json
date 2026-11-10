@@ -1,0 +1,24 @@
+{
+  "id": "first-weeks-helper",
+  "name": "Your first weeks helper",
+  "description": "Answers everyday questions about your first day and first weeks: where to go, who you will meet and what to expect.",
+  "ownerTeam": "HR",
+  "journeyIds": ["j-buddy", "j-branch-induction", "j-eng-community", "j-events", "j-pulse"],
+  "intents": [
+    {
+      "id": "first-day",
+      "examples": ["What happens on my first day?", "Where do I go on day one?", "What time should I arrive?"],
+      "answer": "Arrive at 9am and ask for your Line Manager at reception. Your first morning is a welcome, your device and meeting your team."
+    },
+    {
+      "id": "dress-code",
+      "examples": ["What should I wear?", "Is there a dress code?"],
+      "answer": "Wear what you would for a client meeting on your first day. After that, follow what your team does."
+    },
+    {
+      "id": "buddy",
+      "examples": ["Who is my buddy?", "What does my buddy do?"],
+      "answer": "Your buddy is a colleague who has been here a while. They are there for the small questions, and will say hello before you start."
+    }
+  ]
+}

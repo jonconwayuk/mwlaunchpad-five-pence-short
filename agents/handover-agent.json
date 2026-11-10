@@ -1,0 +1,15 @@
+{
+  "id": "handover-agent",
+  "name": "Handover agent",
+  "description": "Passes your question to a person when the other agents cannot help. Opens a chat with your Line Manager in Teams (simulated).",
+  "ownerTeam": "HR",
+  "journeyIds": [],
+  "handover": true,
+  "intents": [
+    {
+      "id": "talk-to-person",
+      "examples": ["Can I talk to a person?", "I want to speak to someone", "Speak to a human", "Talk to my manager"],
+      "answer": "I have passed your question to your Line Manager. They will reply in Teams, usually within one working day."
+    }
+  ]
+}

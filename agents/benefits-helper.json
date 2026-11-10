@@ -1,0 +1,25 @@
+{
+  "id": "benefits-helper",
+  "name": "Benefits helper",
+  "description": "Explains your benefits, including the company car scheme, and when you can join each one.",
+  "ownerTeam": "Reward",
+  "journeyIds": ["j-contracting"],
+  "connectors": ["oracle"],
+  "intents": [
+    {
+      "id": "company-car",
+      "examples": ["Can I get a company car?", "How does the car scheme work?", "Am I eligible for a car?"],
+      "answer": "The company car scheme is open from your first day. You choose an electric car from the approved list and the cost comes out of your salary before tax. Your benefits pack has the list and the monthly costs."
+    },
+    {
+      "id": "pension",
+      "examples": ["How does the pension work?", "When does my pension start?"],
+      "answer": "You join the pension scheme automatically in your first month. You can change how much you put in at any time."
+    },
+    {
+      "id": "benefits-window",
+      "examples": ["When can I choose my benefits?", "What benefits do I get?"],
+      "answer": "You can choose your benefits in your first 30 days. After that, changes open once a year."
+    }
+  ]
+}

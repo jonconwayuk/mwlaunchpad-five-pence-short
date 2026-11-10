@@ -1,0 +1,25 @@
+{
+  "id": "vetting-progress-helper",
+  "name": "Vetting progress helper",
+  "description": "Explains where your pre-employment checks are and how long they usually take.",
+  "ownerTeam": "HR",
+  "journeyIds": ["j-checks"],
+  "connectors": ["workday"],
+  "intents": [
+    {
+      "id": "vetting-status",
+      "examples": ["How are my checks going?", "Where is my vetting?", "Has my background check finished?"],
+      "answer": "Your checks are with our vetting partner. Most finish within two to three weeks. There is nothing you need to do unless we contact you."
+    },
+    {
+      "id": "vetting-delay",
+      "examples": ["Why are my checks taking so long?", "My vetting is delayed", "Will my start date move?"],
+      "answer": "Some checks take longer, often while a past employer replies. That is normal. If your start date needs to move, HR will tell you first and agree a new date with you."
+    },
+    {
+      "id": "right-to-work",
+      "examples": ["What documents do I need for right to work?", "Which ID can I use?"],
+      "answer": "A valid passport is the simplest. The Pre-employment checks Journey lists the other documents we can accept."
+    }
+  ]
+}

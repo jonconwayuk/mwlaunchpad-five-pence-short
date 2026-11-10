@@ -1,0 +1,20 @@
+{
+  "id": "merch-helper",
+  "name": "Merch helper",
+  "description": "Helps with your uniform order: sizes, delivery and swaps.",
+  "ownerTeam": "Retail",
+  "journeyIds": ["j-uniform"],
+  "connectors": ["oracle"],
+  "intents": [
+    {
+      "id": "uniform-delivery",
+      "examples": ["When will my uniform arrive?", "Where is my uniform order?"],
+      "answer": "Uniform orders go out within five working days of choosing your size. It is delivered to your branch, ready for your first day."
+    },
+    {
+      "id": "uniform-size",
+      "examples": ["Can I change my uniform size?", "My uniform does not fit", "Swap my uniform"],
+      "answer": "Yes. Tell your Line Manager in your first week and a new size will be sent to your branch at no cost."
+    }
+  ]
+}
