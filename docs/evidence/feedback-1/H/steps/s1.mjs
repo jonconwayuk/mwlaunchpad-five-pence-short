@@ -1,0 +1,20 @@
+export default async ({ go, click, wait, text, js, select, shot, log }) => {
+  await go('/portal/journeys/new'); await wait(1500);
+  const t = await text();
+  log('1a repo panel: ' + (t.match(/Connected repository[\s\S]*?Last sync[^\n]*\n[^\n]*/)?.[0].replace(/\n/g, ' / ') ?? 'MISSING'));
+  log('1b sync: ' + await click('Sync from repository')); await wait(2500);
+  log('1b result: ' + ((await text()).match(/Last sync[^\n]*\n?[^\n]*/)?.[0].replace(/\n/g, ' ') ?? ''));
+  await shot('01-repo-sync');
+  await go('/portal/journeys'); await wait(1000);
+  log('1c library has new Journey: ' + /Service desk tools access/.test(await text()) + ' / ' + (await text()).match(/\d+ of \d+ Journeys/)?.[0]);
+  await go('/portal/journeys/j-h-demo'); await wait(2500);
+  log('1d connector select: ' + await select('Connector', 'ServiceNow')); await wait(500);
+  log('1d operation select: ' + await select('Operation', 'requestAccessPackage')); await wait(500);
+  log('1d op shown: ' + await js(`[...document.querySelectorAll('select')].map(s=>s.value).filter(v=>/servicenow|request/i.test(v)).join(',')`));
+  await shot('01-connector');
+  log('1e publish: ' + await click('Publish')); await wait(500);
+  log('1e bump: ' + await click('New content')); await wait(2500);
+  const t2 = await text();
+  log('1e after publish: ' + (t2.match(/v\d+\.\d+\.\d+/)?.[0]) + ' error? ' + (t2.match(/[^\n]*(rror|Could not)[^\n]*/)?.[0] ?? 'none'));
+  await shot('01-published');
+};

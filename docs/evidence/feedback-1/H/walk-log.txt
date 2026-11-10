@@ -1,0 +1,6 @@
+fix2 open form: NOT FOUND
+fix2 buttons: 
+fix2 open form: clicked
+fix2 buttons: Confirm | Add journey
+phone layout: set Phone
+phone frame width: 390

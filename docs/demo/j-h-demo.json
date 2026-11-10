@@ -1,0 +1,27 @@
+{
+  "id": "j-h-demo",
+  "semver": "1.0.0",
+  "title": "Service desk tools access",
+  "description": "Access to the service desk tools for infrastructure engineers.",
+  "ownerTeam": "Modern Workplace",
+  "stage": "onboarding",
+  "tags": {
+    "platform": "Technology",
+    "jobFamily": "Modern Workplace",
+    "role": "Infrastructure engineer",
+    "grade": "E"
+  },
+  "declaresOutcome": false,
+  "actions": [
+    {
+      "id": "j-h-demo-a1",
+      "type": "automation",
+      "label": "Service desk tools request"
+    },
+    {
+      "id": "j-h-demo-a2",
+      "type": "read",
+      "label": "How the service desk works"
+    }
+  ]
+}

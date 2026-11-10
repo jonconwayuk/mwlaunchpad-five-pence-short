@@ -1,0 +1,110 @@
+step0 reset: clicked
+step0 after: Applied 1 time,Applied 1 time,Applied 1 time,Applied 0 times
+setup person: set Bob Warwick
+1a repo panel: Connected repository /  / Points at the journeys/ folder in this repository. /  / Repository / This repository / Branch / main / Folder / journeys/ / Last sync / At the last Reset demo
+1b sync: clicked
+1b result: Last sync 2026-11-10 (Simulated date): 1 added
+1c library has new Journey: true / 22 of 22 Journeys
+1d connector select: set ServiceNow
+1d operation select: set requestAccessPackage
+1d op shown: servicenow,requestAccessPackage
+1e publish: clicked
+1e bump: clicked
+1e after publish: undefined error? none
+2a stage: set Onboarding
+2a grade: set Grade E
+2a library now: Branch inductionAdd, Engineering community introAdd, In-person events calendarAdd, Lab environmentAdd, Service desk tools accessAdd
+2b dropped node: ["i-j-h-demo-1"]
+2c Dependency edges 11 -> 12
+2d loop alert: "Service desk tools access already waits for Privileged access request, so Privileged access request cannot wait for Service desk tools access.Got it"
+2e publish: clicked
+2e dialog: "What kind of change is this?\n\nFix\nCorrects something small\nNew content\nAdds or changes Journeys\nBreaking change\nChanges how the Pathway works"
+2e bump: clicked
+2e header: Live version 1.1.0
+3a find: typed
+3a list: ["Bob WarwickInfrastructure engineer, grad"]
+3a open: clicked
+3b apply: clicked
+3b applied: Applied Pathway: Infrastructure engineer E version 1.1.0
+3c delegate: clicked
+3c pick: set Lena Brooks
+3c save: clicked
+3c shown: "Delegate\n\nLena Brooks can act for this person.\n"
+4a switch: set Joiner
+4a url: /me
+4b studio: set Onboarding Studio
+4b demo person: set Bob Warwick
+4b plus 3 weeks: clicked
+4b date: Simulated date 10 Nov 2026
+4b joiner: set Joiner
+4b waiting card: "\nYour offer\n\nDay 14 of your wait\n\nPrivileged access request\n\nYour admin access is with the Security team for approval. It usually takes three to four weeks, so there is nothing you need to do right now.\n\nDay 14\n0\n19\n28\ndays\n\nUsually 19 to 28 days\n\nNext: Read your offer\n\nYour offer\nContracting\nAction required\n\nRead your offer\n\nGot it\nGetting ready\nPayroll\nNot started\nPre-employment checks\nNo"
+4c help: clicked
+4c ask: clicked
+4c answer: "Simulated: scripted answers\n\nWhen will my laptop arrive?\n\nYour device request is open in ServiceNow. Devices are usually delivered three to five working days before your start date, and you will get a tracking link by email.\n\nAnswered by IT setup helper\n\nYour question\nAsk"
+4d type: typed
+4d ask: clicked
+4d answer: "lab budget?\n\nI'm not sure. Would you like to talk to a person?\n\nTalk to a person\nYour question\nAsk"
+4e handover: clicked
+4e result: "lab budget?\n\nI'm not sure. Would you like to talk to a person?\n\nSIMULATED TEAMS HANDOVER\n\nHannah Price will pick this up in Teams.\n\nHP\n\nHannah Price\n\nThanks, I have your question: “Can I talk to someone about my lab budget?”. I will reply here.\n\nYour question\nAsk"
+5a switch: set Manager
+5a url: /team?viewer=lm-hannah
+5b add: clicked
+5c journey: set Modern Workplace team access package (Getting ready)
+5c unlock: set After Cleared to start
+5c confirm: clicked
+5c manager sees: true
+5d joiner: set Joiner
+5d appeared on Bob's view 1502 ms after Confirm (includes the view switch)
+5d label: "Modern Workplace team access package\nAdded by Hannah Price\nRemove\nAdd a journey\nSend a Reminder now\nHave a look at the c"
+5f manager: set Manager
+5f pick: clicked
+5f send: clicked
+5f confirm text: "Reminder sent to Bob Warwick"
+5f joiner: set Joiner
+5f Bob sees reminder: true
+5g read offer: clicked Got it
+5h contract: typed into <input id="provide-i-contracting" required="" autocomplete="off" class="min-h-11
+5h contract submit: clicked
+5h after contract: "Next: Provide your bank details" checks: "Pre-employment checks\nAction required"
+5h payroll or checks: typed into <input id="provide-i-checks" required="" autocomplete="off" class="min-h-11 roun
+5h payroll or checks submit: clicked
+5h after payroll or checks: "Next: Provide your bank details" checks: "Pre-employment checks\nAction required"
+5h next: typed into <input id="provide-i-checks" required="" autocomplete="off" class="min-h-11 roun
+5h next submit: clicked
+5h after next: "Next: Provide your bank details" checks: "Pre-employment checks\nAction required"
+5i checks: submitted Submit
+5i after: "Pre-employment checks\n"
+5j Bob before: "Pre-employment checks\n\nYour checks are with our vetting partner. Most take three to five weeks, so there is nothing you need to do right now."
+5j studio: set Onboarding Studio
+5j waiting: set Bob Warwick: Pre-employment checks
+5j fail: clicked
+5j joiner: set Joiner
+5j Bob after fail (should be unchanged): "Pre-employment checks\n\nYour checks are with our vetting partner. Most take three to five weeks, so there is nothing you need to do right now." recruiter? false
+5j manager: set Manager
+5j Hannah: "To-do\nBob Warwick asked for help: Can I talk to someone about my lab budget?\n24 Nov, from their help chat\nSet three-month goals\nBob Warwick\nBob Warwick\n\nBob is in Pre-employment. 2 of 13 things done. Waiting on privileged access request, usually 19 to 28 days.\n\nNext: Payroll\n\nCleared to start\n0 of 3 done\n\nBlocked Flag: Privileged access request\nWaiting on Privileged access request for 14 days\n\nModern Workplace team access package\nAdded by Hannah Price\nRemove\nAdd a journey\nSend a Reminder now\nHav"
+5k reason: typed into <input class="min-h-[44px] rounded bg-paper px-3 text-ink fo
+5k dismiss: clicked
+5k after: Needs decision gone? true
+5l joiner: set Joiner
+5l Bob after dismiss: undefined ID: undefined
+6 buddy: set Buddy
+6 url: /team?viewer=buddy-leo
+6 Leo sees: "Your starters\n\n24 Nov\n\nBob Warwick\nBob is in Pre-employment.\nTo-do\n\nNothing to do right now.\n\nBob Warwick\n\nBob is in Pre-employment.\n\nCleared to start\n1 of 3 done\nNote to Bob Warwick\nSend note"
+6 leaks? {"needsDecision":false,"failed":false,"lab":false,"reminder":false,"addJourney":false,"pulse":false}
+7 studio: set Onboarding Studio
+7 insights: clicked
+7b role: clicked
+7b by role: Journeys by business area, role and grade / Each dot is one role: the middle Journey Duration for that group. Choose a Journey to see its full spread. / Business area / Role / Grade / Pre-employment checks / Pre-employment / Managing director, 35 days / Longest: Managing director, 35 days / Privileged access request / Pre-employment / Line manager,
+7c grade: clicked
+7c by grade: Journeys by business area, role and grade / Each dot is one grade: the middle Journey Duration for that group. Choose a Journey to see its full spread. / Business area / Role / Grade / Pre-employment checks / Pre-employment / B, 31 days / Longest: grade B, 31 days / Privileged access request / Pre-employment / B, 27 days / Longest: grade B, 27 days / P
+7d drill: clicked
+7d drill-down: ""
+7e stage filter: clicked
+7e: "How long onboarding usually takes, across 80 past starters in the Pre-employment Stage."
+7d drill: clicked
+7d drill-down: "rm (Merch distribution)\nPre-employment\nC, 9 days\nLongest: grade C, 9 days\n0\n20\n40\nPre-employment checks: Journey Duration\n\nPre-employment Stage, every past starter on every Pathway.\n\n0\n21\n35\n50 days\n\nPre-employment checks usually 21 to 35 days\n\nThat is the Usual Range, the middle half of 80 past starters. Half finished within 29 days. The quickest took 14 days and the longest 48. Each bar is how many starters took that many days; the shaded band is the Usual Range and the dark line is the middle.\n\nBuilt from synthetic history: made-up past starters, not real people."
+8 reset: clicked
+8 date: Simulated date 10 Nov 2026 | pathways: "Infrastructure engineer E\tVersion 1.0.0\tApplied 0 times\tModern Workplace, Infrastructure engineer, E, Technology"
+8 Bob: {"noPathway":true,"noDelegate":true}
+8 library: 21 of 21 Journeys new Journey present: false
+8 Hannah: {"helpAsk":false,"added":false,"needs":false}
