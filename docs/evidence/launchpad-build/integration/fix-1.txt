@@ -1,0 +1,10 @@
+apply A:
+{"ok":true,"data":{"appliedPathwayId":"applied-person-a"}}
+i-contracting 3
+i-payroll 18
+i-checks 18
+i-device 6
+i-manager-ready 5
+apply B:
+{"ok":true,"data":{"appliedPathwayId":"applied-person-b"}}
+i-contracting 0

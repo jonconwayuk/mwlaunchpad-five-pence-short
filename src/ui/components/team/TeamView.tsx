@@ -94,7 +94,7 @@ function StarterCard({ s, data, reload }: { s: TeamStarter; data: TeamData; relo
       <h2 className="text-[21px] font-semibold text-racing">{s.person.name}</h2>
       <p>{STAGE_LABEL[es.stage]}</p>
       <p className="text-[15px] text-[var(--muted)]">
-        {done} of {es.containers.length} containers complete{next ? `. Next: ${next.label}` : ''}
+        {done} of {es.containers.length} Containers complete{next ? `. Next: ${next.label}` : ''}
       </p>
 
       {isLm && blocked.map((i) => (

@@ -26,7 +26,7 @@ export function NeedsDecisionPanel({ personId, decisions }: { personId: string; 
       <ul>
         {decisions.map((d) => (
           <li key={d.hardStopId} className="flex items-center justify-between gap-4 border-t border-charcoal py-2">
-            <span><span aria-hidden className="mr-2 inline-block h-2 w-2 rounded-full bg-vibrant" />{d.label}: {d.reason}</span>
+            <span><span aria-hidden className="mr-2 inline-block h-2 w-2 rounded-full bg-vibrant" />{d.label}{d.reason !== d.label && `: ${d.reason}`}</span>
             <span className="flex shrink-0 gap-1">
               <button className={b} onClick={() => decide(d.hardStopId, 'confirm')}>Confirm</button>
               {d.extendAllowed && <button className={b} onClick={() => decide(d.hardStopId, 'extend')}>Extend by 7 days</button>}

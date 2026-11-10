@@ -106,14 +106,34 @@ export function applyPathway(pathwayId: string, personId: string, today: ISODate
     const p = db.select().from(s.pathways).where(eq(s.pathways.id, pathwayId)).get();
     if (p?.liveVersion == null) throw new Error(`Pathway ${pathwayId} has no published version`);
     if (!getPerson(personId)) throw new Error(`Unknown person ${personId}`);
-    const snapshot = db.select().from(s.pathwayVersions)
+    const live = db.select().from(s.pathwayVersions)
       .where(and(eq(s.pathwayVersions.pathwayId, pathwayId), eq(s.pathwayVersions.version, p.liveVersion))).get()!.snapshot;
     const id = `applied-${personId}`;
-    // Re-applying starts the story again.
-    for (const t of [s.appliedPathways, s.actionProgress, s.itemOverrides, s.hardStopDecisions]) {
-      db.delete(t).where(eq(t.personId, personId)).run();
+    // Re-applying keeps the story: Additions (and the Timers they use), plus progress, overrides and Hard Stop decisions that still match.
+    const old = getAppliedPathway(personId);
+    const carried = (old?.snapshot.items ?? []).filter((i) => i.addedBy && !live.items.some((l) => l.id === i.id));
+    const oldTimers = old?.snapshot.timers ?? [];
+    const timers = [...live.timers, ...oldTimers.filter((t) => !live.timers.some((l) => l.id === t.id)
+      && carried.some((i) => i.dependsOn.some((d) => d.kind === 'timer' && d.timerId === t.id)))];
+    const knownDep = (d: PathwayItem['dependsOn'][number]) =>
+      d.kind === 'item' ? [...live.items, ...carried].some((i) => i.id === d.itemId)
+        : d.kind === 'container' ? live.containers.some((c) => c.id === d.containerId)
+          : timers.some((t) => t.id === d.timerId);
+    const additions = carried.filter((i) => i.dependsOn.every(knownDep));
+    const snapshot = { ...live, items: [...live.items, ...additions], timers };
+    const itemIds = new Set(snapshot.items.map((i) => i.id));
+    const prune = <T extends { personId: string; itemId: string }>(table: typeof s.actionProgress | typeof s.itemOverrides) =>
+      (db.select().from(table).where(eq(table.personId, personId)).all() as T[])
+        .filter((r) => !itemIds.has(r.itemId)).forEach((r) => db.delete(table)
+          .where(and(eq(table.personId, personId), eq(table.itemId, r.itemId))).run());
+    prune(s.actionProgress);
+    prune(s.itemOverrides);
+    for (const r of db.select().from(s.hardStopDecisions).where(eq(s.hardStopDecisions.personId, personId)).all()) {
+      if (!snapshot.hardStops.some((h) => h.id === r.data.hardStopId)) db.delete(s.hardStopDecisions).where(eq(s.hardStopDecisions.id, r.id)).run();
     }
-    db.insert(s.appliedPathways).values({ id, personId, snapshot, appliedOn: today }).run();
+    const appliedOn = old && old.snapshot.pathwayId === pathwayId ? old.appliedOn : today;
+    db.delete(s.appliedPathways).where(eq(s.appliedPathways.personId, personId)).run();
+    db.insert(s.appliedPathways).values({ id, personId, snapshot, appliedOn }).run();
     return id;
   });
 }
