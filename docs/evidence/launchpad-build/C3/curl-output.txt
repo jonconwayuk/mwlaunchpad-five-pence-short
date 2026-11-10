@@ -1,0 +1,20 @@
+## 1. lm-chris adds Payments squad access package to person-b
+{"ok":true,"data":{"today":"2026-11-10","stage":"pre-contract","personStatus":"joiner","dayNumber":-4,"items":[{"itemId"
+/api/state starter item: {"itemId":"add-j-payments-access","title":"Payments squad access package","status":"in-progress","addedBy":{"personId":"lm-chris","name":"Chris Lee"}}
+state fetch ms: 120 (starter page polls every 3000 ms)
+## guard: buddy cannot add
+{"ok":false,"error":"Jo Patel is not the Line Manager for Sam Okafor"}
+## 2. buddy-jo /api/team
+contains "blockedFlag":true -> 0
+contains outcome -> 0
+contains chooseResults/needsDecisions entries -> 0
+LM view for comparison: blockedFlag true count 1
+## 3. Needs decision hs-deadline on person-b
+needsDecisions: [{"hardStopId":"hs-deadline","label":"Pre-employment checks not done in time","stopsItemIds":["i-buddy"],"wholePathway":false,"reason":"Pre-employment checks is not done by 5 days before Start date","raisedOn":"2026-11-10","extendAllowed":true}]
+before: [["i-buddy","not-started"]]
+reason missing:
+{"ok":false,"error":"A reason is required"}
+after confirm, needsDecisions: 0
+cancelled: [["i-buddy","cancelled","cancelled"]]
+second decision:
+{"ok":false,"error":"Hard Stop hs-deadline has no Needs decision for person-b"}
