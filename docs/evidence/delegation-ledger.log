@@ -69,3 +69,5 @@
 10:40 | W2+W1 | G1 | reviewer | opus | Demo-path review of filters, semver publish, stretch-1 authoring (decision 39), canvas regressions
 10:40 | W2 | G4 | fix implementer | sonnet | All-Stages totals sum per Stage, test, direct label on longest dot
 10:41 | W2 | G-follow | fix implementer | sonnet | G6 chat 404 + handover failure, G5 laptop examples, G2 sync skipped + last sync, G7 Plan stopped + reason hint
+10:44 | W2 | G1 | fix implementer | sonnet | Grade/location/jobFamily tags on Journey files so filters narrow, drive check proves it, plain Hard Stop label
+10:44 | both | H | integration walker + fixer | opus | Bob walk steps 1-8 in one browser window, fix what breaks with a test each, rewrite demo script and README (decision 37)

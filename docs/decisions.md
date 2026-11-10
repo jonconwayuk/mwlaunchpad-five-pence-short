@@ -369,3 +369,14 @@ Numbered once, in order, never renumbered or deleted. A reversed decision gets a
   - The gated build goes on a **second** demo instance, `http://<laptop-ip>:3001`, from its own worktree (`/tmp/demo2`) and its own database. Port 3000 stays on `pre-feedback-1`, as the owner instructed (decision 31), so the team can compare the two.
   - Fix loops and wave H carry on while the team looks. Every later green gate refreshes port 3001.
 - **Why:** Owner's instruction, 10:37: "optimise to complete ASAP, 1 is worst case, ideally we want to check the next demo in the next 20 mins".
+
+### 42. Wave G review results and two parked NEEDS notes
+
+- **Decided:**
+  - All seven wave G tasks are reviewed. G2, G3, G5 (after its fix), G6 and G7 pass. G4 failed on its All Stages totals, and that is fixed. G1 passes, with one demo gap, filters that narrow nothing, and its fix is running. The non-blocking findings are fixed together in a6d479a.
+  - **Parked, low value before the freeze:**
+    - G3's NEEDS: store who sent a Reminder (`byPersonId`), which needs a new column in `src/db`. The route checks the field but does not store it.
+    - G4's `shortcut:`: history rows have no starter key, so Insights groups past starters by row order. That is correct for the seed; the fix is an additive `starterKey` on `insightsData()`.
+  - Both are listed in the README's known gaps.
+- **Why:** Neither one changes anything the demo shows. Each needs a schema change in `src/db` after the wave G gate, which is a risk for no visible gain.
+- **Evidence:** the wave G reviewer reports; `docs/evidence/feedback-1/`.
