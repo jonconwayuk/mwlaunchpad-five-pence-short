@@ -11,11 +11,10 @@ export const isHireAdded = (hireId: string): boolean =>
 
 /** Stores only the fields the app already keeps for a Person (ADR-0005). Returns false if already added. */
 export function addNewStarter(h: WorkdayNewHire, offerAcceptedDate: string): boolean {
-  if (isHireAdded(h.id)) return false;
-  db.insert(persons).values({
+  const r = db.insert(persons).values({
     id: personIdForHire(h.id), name: h.name, role: 'starter',
-    tags: { jobFamily: h.jobFamily, role: h.role, grade: h.grade, location: h.location },
+    tags: { jobFamily: h.jobFamily, role: h.role, grade: h.grade, platform: h.platform, location: h.location },
     offerAcceptedDate, startDate: h.startDate, lineManagerId: h.lineManagerId,
-  }).run();
-  return true;
+  }).onConflictDoNothing().run();
+  return r.changes > 0;
 }

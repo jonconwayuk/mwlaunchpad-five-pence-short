@@ -10,18 +10,18 @@ const ADDRESSES: Record<string, string> = {
 
 /** A new hire waiting in Workday. Synthetic. Only name, tags, start date and Line Manager are kept when added. */
 export interface WorkdayNewHire {
-  id: string; name: string; role: string; jobFamily: string; grade: string; location: string;
+  id: string; name: string; role: string; jobFamily: string; grade: string; platform: string; location: string;
   startDate: string; lineManagerId: string; lineManagerName: string;
 }
 
 const NEW_HIRES: WorkdayNewHire[] = [
-  { id: 'wd-1001', name: 'Maya Rahman', role: 'Infrastructure engineer', jobFamily: 'Modern Workplace', grade: 'E', location: 'Edinburgh',
+  { id: 'wd-1001', name: 'Maya Rahman', role: 'Infrastructure engineer', jobFamily: 'Modern Workplace', grade: 'E', platform: 'Technology', location: 'Edinburgh',
     startDate: '2026-12-07', lineManagerId: 'lm-hannah', lineManagerName: 'Hannah Price' },
-  { id: 'wd-1002', name: 'Owen Griffiths', role: 'Customer service colleague', jobFamily: 'Branch', grade: 'B', location: 'Cardiff',
+  { id: 'wd-1002', name: 'Owen Griffiths', role: 'Customer service colleague', jobFamily: 'Branch', grade: 'B', platform: 'Retail', location: 'Cardiff',
     startDate: '2026-12-14', lineManagerId: 'lm-priya', lineManagerName: 'Priya Shah' },
-  { id: 'wd-1003', name: 'Tess Mbeki', role: 'Software engineer', jobFamily: 'Software engineering', grade: 'C', location: 'Leeds',
+  { id: 'wd-1003', name: 'Tess Mbeki', role: 'Software engineer', jobFamily: 'Software engineering', grade: 'C', platform: 'Technology', location: 'Leeds',
     startDate: '2027-01-11', lineManagerId: 'lm-chris', lineManagerName: 'Chris Lee' },
-  { id: 'wd-1004', name: 'Isla Fraser', role: 'Executive assistant', jobFamily: 'Executive', grade: 'D', location: 'London',
+  { id: 'wd-1004', name: 'Isla Fraser', role: 'Executive assistant', jobFamily: 'Executive', grade: 'D', platform: 'Group Functions', location: 'London',
     startDate: '2027-01-18', lineManagerId: 'lm-ruth', lineManagerName: 'Ruth King' },
 ];
 

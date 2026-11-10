@@ -11,16 +11,24 @@ export function WorkdayStarters() {
   const router = useRouter();
   const [hires, setHires] = useState<Hire[] | null>(null);
   const [message, setMessage] = useState('');
+  const [busy, setBusy] = useState(false);
 
   async function load() {
     const res = await (await fetch('/api/workday/new-starters')).json();
     setHires(res.ok ? res.data : []);
   }
   async function add(h: Hire) {
-    const res = await (await fetch('/api/workday/new-starters', { method: 'POST', body: JSON.stringify({ hireId: h.id }) })).json();
-    setMessage(res.ok ? `${h.name} added. Open them below to apply a Pathway.` : res.error);
-    await load();
-    router.refresh();
+    setBusy(true);
+    try {
+      const res = await (await fetch('/api/workday/new-starters', { method: 'POST', body: JSON.stringify({ hireId: h.id }) })).json();
+      setMessage(res.ok ? `${h.name} added. Open them below to apply a Pathway.` : res.error);
+      await load();
+      router.refresh();
+    } catch {
+      setMessage('Could not reach Workday. Try again.');
+    } finally {
+      setBusy(false);
+    }
   }
 
   return (
@@ -40,7 +48,7 @@ export function WorkdayStarters() {
                   <span className="block text-muted">{h.role}, {h.jobFamily}, grade {h.grade}, {h.location}</span>
                   <span className="block text-muted">Starts {h.startDate}. Line Manager: {h.lineManagerName}</span>
                 </span>
-                <button type="button" disabled={h.added} onClick={() => add(h)}
+                <button type="button" disabled={h.added || busy} onClick={() => add(h)}
                   className="rounded-[4px] border border-hairline px-3 py-1 text-[13px] disabled:opacity-50">
                   {h.added ? 'Added' : 'Add'}
                 </button>
