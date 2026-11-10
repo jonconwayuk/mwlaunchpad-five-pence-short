@@ -1,0 +1,25 @@
+width 1280 scrollWidth 1460
+Simulated date 10 Nov 2026
+
+Admin Portal
+
+Journeys
+Pathways
+People
+Demo controls
+Plus 1 day
+Plus 1 week
+Set date
+Alex Morgan
+Sam Okafor
+Dana Whitfield
+Offer accepted
+Plus 3 weeks
+Day 1
+Day 14
+Day 30
+Alex Morgan: Pre-employment checks
+Simulate passed
+Simulate failed
+Simulate returned
+Reset demo

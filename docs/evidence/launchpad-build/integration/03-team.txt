@@ -1,0 +1,36 @@
+width 390 scrollWidth 390
+Simulated date 10 Nov 2026
+Viewing as
+Priya Shah, Line Manager
+Tom Evans, Buddy
+Chris Lee, Line Manager
+Jo Patel, Buddy
+Ruth King, Line Manager
+Mark Allen, Buddy
+Your starters
+
+10 Nov
+
+Needs decision
+
+Sam Okafor: Pre-employment checks not done in time
+
+Pre-employment checks is not done by 5 days before Start date
+
+Reason
+Confirm
+Extend 7 days
+Dismiss
+To-do
+
+Nothing to do right now.
+
+Sam Okafor
+
+Your offer
+
+0 of 1 containers complete. Next: Cleared to start
+
+Add a journey
+Note to Sam Okafor
+Send note
