@@ -75,3 +75,10 @@
 11:06 W2 H-fix-migrate implementer sonnet: make the column migration in src/db/client.ts race-safe (duplicate column flake at build)
 11:12 W2 H-review reviewer opus: independent review of d1ea8be 7455ca2 4d14ae3 1f05018 ac41693 (wave H fixes, phone fix, db race, script+README)
 11:14 W2 H-review-fix implementer sonnet: 3 NICE findings (TopStrip Studio container, README face name, script git clean)
+11:31 W2 A17 implementer sonnet: item 17 ServiceNow request complete -> joiner Notification
+11:31 W2 B18 implementer sonnet: item 18 Complete inputs Demo control
+11:31 W2 C19 implementer sonnet: item 19 Teams handover wording, manager Task, Agent library
+11:34 W2 C19-review reviewer opus: independent review of C19 working-tree changes
+11:34 W2 A17-review reviewer opus: independent review of A17 working-tree changes
+11:37 W2 H2 walker opus: walk new Bob steps (17-19) in one window, update docs/demo/script.md, list fixes
+11:37 W2 B18-review reviewer opus: independent review of the item 18 commit
