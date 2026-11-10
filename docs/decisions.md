@@ -446,3 +446,12 @@ Numbered once, in order, never renumbered or deleted. A reversed decision gets a
   - If P4 isn't green by 12:50, it's parked and not merged.
 - **Fallback, already in the build:** the Line Manager's "Add a journey" (Additions, decision 26 era, live on Bob's phone within 3 seconds) already edits Bob's in-flight Pathway. The demo can show that move whatever happens to P4.
 - **Why:** owner instruction. Their latest word on priority overrides the 12:30 stop for this one task only.
+
+### 48. Skip (Demo) on the Starter Preview; Design.MD 1.5
+
+- **Decided:**
+  - The owner asked for a "Skip (Demo)" button on `/me`. While information-gathering Actions wait on the joiner (Read, Provide, Choose, their own Tasks), it completes them all with synthetic values, so the demo can move on to the WaitingCard, the Hidden automations and the later stages.
+  - It reuses `completeInputs` from the Demo controls, so every engine rule still applies. It is hidden when nothing waits and in the Delegate view.
+- **Spec:** Design.MD goes to 1.5. D13 item 8 now puts the inputs control on `/me` as a labelled demo shortcut, starter view only.
+- **Process:** the `anthropic-skills:phase-workflow` skill was not installed this session, so the repo copy `docs/workflow/phase-workflow.md` was used, with the owner's approval.
+- **Why:** owner instruction.

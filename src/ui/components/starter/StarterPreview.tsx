@@ -1,11 +1,12 @@
 'use client';
 import { useState } from 'react';
-import type { ItemState } from '@/src/engine/types';
+import type { EngineState, ItemState } from '@/src/engine/types';
 import { useLiveState } from '@/src/lib/useLiveState';
 import { STAGES, STAGE_LABEL, shortDate } from './format';
 import { JourneyRow, type Act } from './JourneyRow';
 import { WaitingCard } from './WaitingCard';
 import { LatestNotification, Reminders } from './Reminders';
+import { completeInputs, resultMessage, selectInputs } from '@/src/ui/components/demo-controls/inputs';
 import { HelpChat } from '@/src/ui/components/chat/HelpChat';
 
 // The Blocked Flag only picks the card and is never shown. After wave C the server strips it for a
@@ -32,6 +33,34 @@ export function NoPlan({ firstName, personId }: { firstName: string; personId: s
 export const ActingFor = ({ name }: { name: string }) => (
   <p role="status" className="mb-6 rounded-[6px] bg-calm px-4 py-2 text-[15px] font-medium">Acting for {name}</p>
 );
+
+/** The starter's state has no Needs decisions (roleFilter), so selectInputs gets an empty list; a click that finds nothing accepted does nothing. */
+export const canSkip = (es: EngineState, actingFor?: string) =>
+  !actingFor && selectInputs({ ...es, needsDecisions: es.needsDecisions ?? [] }).length > 0;
+
+/** Demo shortcut: completes every joiner input, then refreshes. Returns a message only if something was refused or failed. */
+export async function skipInputs(personId: string, refresh: () => Promise<unknown>): Promise<string | undefined> {
+  const r = await completeInputs(personId);
+  await refresh().catch(() => undefined);
+  return r.refused || r.error ? resultMessage(r) : undefined;
+}
+
+export function SkipDemo({ personId, refresh }: { personId: string; refresh: () => Promise<unknown> }) {
+  const [busy, setBusy] = useState(false);
+  const [message, setMessage] = useState<string>();
+  return (
+    <div className="mt-3">
+      <button
+        type="button" disabled={busy} title="Demo shortcut: completes your inputs with synthetic values"
+        className="min-h-11 rounded-[4px] border border-[var(--hairline)] bg-paper px-4 font-medium text-heritage focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-vibrant disabled:opacity-60"
+        onClick={() => { setBusy(true); void skipInputs(personId, refresh).then(setMessage).finally(() => setBusy(false)); }}
+      >
+        Skip (Demo)
+      </button>
+      {message && <p role="status" className="mt-1 text-[15px] text-[var(--muted)]">{message}</p>}
+    </div>
+  );
+}
 
 export function StarterPreview({ query = '?as=starter', personId, firstName = 'there', actorPersonId }: {
   query?: string; personId: string; firstName?: string; actorPersonId?: string;
@@ -84,6 +113,7 @@ export function StarterPreview({ query = '?as=starter', personId, firstName = 't
           <p className="mt-1 text-[15px] text-[var(--muted)]">Day {waiting[0].waitingDays} of your wait</p>
         )}
         {state.basedOn && <p className="mt-1 text-[15px] text-[var(--muted)]">{state.basedOn}</p>}
+        {canSkip(es, actingFor) && <SkipDemo personId={person.id} refresh={refresh} />}
       </header>
 
       {/* Phone: one column in DOM order, help first so it is never held behind Actions. Desktop: the plan on the left, help and waiting card on the right. */}

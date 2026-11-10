@@ -6,7 +6,7 @@ The agreed spec for the LaunchPad '26 build. `Ideas.MD` is an early raw log, sup
 
 Agreed by the team on 9 Nov 2026 (Day 1). Every design question is settled except the demo script, which is parked. Later changes to an agreed decision should update this file, the glossary and any ADR it names.
 
-**Version 1.4** (10 Nov 2026). This is the project's spec under the phase workflow (`docs/workflow/phase-workflow.md`). It changes only by explicit amendment: each amendment bumps the version, adds a line to the amendment log below, and gets an entry in `docs/decisions.md`.
+**Version 1.5** (10 Nov 2026). This is the project's spec under the phase workflow (`docs/workflow/phase-workflow.md`). It changes only by explicit amendment: each amendment bumps the version, adds a line to the amendment log below, and gets an entry in `docs/decisions.md`.
 
 | Version | Date | Amendment | Decision |
 | --- | --- | --- | --- |
@@ -15,6 +15,7 @@ Agreed by the team on 9 Nov 2026 (Day 1). Every design question is settled excep
 | 1.2 | 10 Nov 2026 | Mentor feedback 1: Onboarding Studio replaces Admin Portal as the visible name; grades A to G; Journeys and connectors as config as code (ADR-0007); Agent library; scripted help chat with simulated Teams handover; Insights; Delegate management in People; Send a Reminder now; semantic versions; single-window view and switchers; Bob Warwick as protagonist; D15 omissions narrowed | 31 to 37 |
 | 1.3 | 10 Nov 2026 | Feedback 1 additions 17 to 19: an Integrations section on Hidden automations in the Journey builder, with a ServiceNow request-complete Notification to the joiner; Demo controls gain "ServiceNow: request complete" and "Complete {name}'s inputs" (D13); the help chat is always reachable from the joiner's first screen, and its handover names the Line Manager, Microsoft Teams, the agent and a summary, labelled as simulated (D11) | 44 |
 | 1.4 | 10 Nov 2026 | Feedback 1 additions 20 to 23: grade X for the executive, after G; supporting Pathways named with their grade; "Add new starter from Workday" on People (mocked, ADR-0005); search and filters when applying a Pathway; "Edit this pathway" adds Journeys to an Applied Pathway through Additions, template Journeys can never be removed, and the Applied Pathway shows "Based on {title} {semver}, modified" from its snapshot (ADR-0002 note) | 46 |
+| 1.5 | 10 Nov 2026 | D13 item 8: the "Complete {name}'s inputs" control is also on the Starter Preview (`/me`) as **Skip (Demo)**, a labelled demo shortcut, starter view only, never the Delegate view | 48 |
 
 ## Decisions
 
@@ -304,7 +305,7 @@ Demo moment (Persona C): the EA, under "Acting for [Exec]", picks the exec's dev
 5. Every face, phones included, shows a "Simulated date: …" strip.
 6. **Reset demo** reseeds the synthetic data so every run starts from the same state.
 7. Time only moves forward; to go back, reset.
-8. (1.3) **ServiceNow: request complete** sends the waiting ServiceNow Hidden automation through the Simulate path as Returned. The Notification Action after it in the Journey then tells the joiner. **Complete {name}'s inputs** completes every Action currently waiting on the selected joiner (Read, Provide, Choose and the joiner's Tasks) with synthetic values, through the normal actions API. It never touches Hidden automations, other people's Tasks or a Needs decision. Both controls are in Demo controls only.
+8. (1.3) **ServiceNow: request complete** sends the waiting ServiceNow Hidden automation through the Simulate path as Returned. The Notification Action after it in the Journey then tells the joiner. **Complete {name}'s inputs** completes every Action currently waiting on the selected joiner (Read, Provide, Choose and the joiner's Tasks) with synthetic values, through the normal actions API. It never touches Hidden automations, other people's Tasks or a Needs decision. ServiceNow: request complete is in Demo controls only. (1.5) The inputs control is also on `/me` as **Skip (Demo)**, a labelled demo shortcut that runs the same completion for the joiner. It shows only while something waits on the joiner, and never in the Delegate view.
 
 ### D14. Stack and live updates (ADR-0006)
 

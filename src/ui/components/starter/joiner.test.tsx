@@ -1,10 +1,25 @@
 import { renderToStaticMarkup } from 'react-dom/server';
-import { describe, expect, it } from 'vitest';
-import type { ItemState } from '@/src/engine/types';
+import { describe, expect, it, vi } from 'vitest';
+import type { EngineState, ItemState } from '@/src/engine/types';
 import { HelpChat } from '@/src/ui/components/chat/HelpChat';
 import { JourneyRow } from './JourneyRow';
 import { Reminders } from './Reminders';
-import { ActingFor, NoPlan } from './StarterPreview';
+import { completeInputs } from '@/src/ui/components/demo-controls/inputs';
+import { ActingFor, NoPlan, SkipDemo, canSkip, skipInputs } from './StarterPreview';
+
+vi.mock('@/src/ui/components/demo-controls/inputs', async (orig) => ({
+  ...(await orig<typeof import('@/src/ui/components/demo-controls/inputs')>()),
+  completeInputs: vi.fn(async () => ({ done: 2, refused: 0 })),
+}));
+
+const waitingRead: ItemState = {
+  itemId: 'i', journeyId: 'j', title: 'Welcome', stage: 'pre-employment', status: 'action-required',
+  mandatory: true, available: true, blockedFlag: false, overdue: false, unmetDependencies: [],
+  currentAction: { id: 'a', type: 'read', label: 'Read' },
+};
+// The starter view arrives with needsDecisions stripped (it may be absent altogether).
+const stateWith = (items: ItemState[]) => ({ items } as unknown as EngineState);
+
 
 describe('Joiner view', () => {
   it('no Applied Pathway, when rendered, welcomes the joiner by name and offers help', () => {
@@ -54,5 +69,32 @@ describe('Joiner view', () => {
     const card = renderToStaticMarkup(<HelpChat personId="p" initial={[{ kind: 'handover', lineManagerName: 'Hannah Price', question: 'xyz' }]} />);
     expect(card).toContain('Handing this to Hannah Price in Microsoft Teams');
     expect(card).toContain('Simulated: no message is sent to Microsoft Teams');
+  });
+});
+
+describe('Skip (Demo)', () => {
+  it('an input waiting on the joiner, when viewed as the starter, can be skipped', () => {
+    expect(canSkip(stateWith([waitingRead]))).toBe(true);
+    expect(renderToStaticMarkup(<SkipDemo personId="p" refresh={async () => undefined} />)).toContain('Skip (Demo)');
+  });
+
+  it('nothing waiting on the joiner, when viewed, hides Skip (Demo)', () => {
+    expect(canSkip(stateWith([{ ...waitingRead, status: 'done' }]))).toBe(false);
+  });
+
+  it('the Delegate view, when an input waits, hides Skip (Demo)', () => {
+    expect(canSkip(stateWith([waitingRead]), 'Dana Whitfield')).toBe(false);
+  });
+
+  it('a click, when it completes every input, calls completeInputs then refreshes and stays quiet', async () => {
+    const refresh = vi.fn(async () => undefined);
+    expect(await skipInputs('person-bob', refresh)).toBeUndefined();
+    expect(completeInputs).toHaveBeenCalledWith('person-bob');
+    expect(refresh).toHaveBeenCalledOnce();
+  });
+
+  it('a click, when an Action is refused, returns the result message', async () => {
+    vi.mocked(completeInputs).mockResolvedValueOnce({ done: 1, refused: 1 });
+    expect(await skipInputs('person-bob', async () => undefined)).toBe('Completed 1 Action. 1 refused');
   });
 });

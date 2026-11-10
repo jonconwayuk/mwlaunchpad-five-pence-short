@@ -30,7 +30,7 @@ Open `http://localhost:3000/portal`. The whole demo runs in that one window. The
 
 The black strip at the top of every page is the switcher. **View** moves between Onboarding Studio, Joiner, Manager and Buddy. **Person** picks the starter, and Manager and Buddy follow that starter's Line Manager and Buddy. **Layout** shows the three people views in a phone frame or full width. The default person is Bob. Phones on the same wifi can still open `http://<laptop-ip>:3000/me`. `/persona/bob`, `/persona/A`, `/persona/B` and `/persona/C` set the person directly.
 
-Demo controls in the Studio move the Demo clock (including **Plus 3 weeks** for a starter), simulate system results (passed, failed, returned) and **Reset demo** to the seed data.
+Demo controls in the Studio move the Demo clock (including **Plus 3 weeks** for a starter), simulate system results (passed, failed, returned) and **Reset demo** to the seed data. On `/me` (starter view only), **Skip (Demo)** completes everything waiting on the joiner with synthetic values.
 
 ## Tests
 
