@@ -1,0 +1,28 @@
+import { rc } from './rc.mjs';
+const toView = async ({ select, js, wait }, v, path) => { await select(0, v); for (let i = 0; i < 60 && !(await js(`location.pathname.startsWith(${JSON.stringify(path)})`)); i++) await wait(250); await wait(3000); };
+export default async (c) => {
+  const { js, click, wait, text, shot, log, select, type } = c;
+  await toView(c, 'Joiner', '/me'); log('4a url: ' + await js('location.pathname+location.search'));
+  let t = await text();
+  log('4a pack: contracting ' + /Contracting/.test(t) + ', pulse ' + /Pulse/.test(t) + ', new journey ' + /Service desk tools access/.test(t) + ', equipment ' + /Equipment request/.test(t));
+  log('4a need help in first viewport: ' + await js(`(() => { const b = [...document.querySelectorAll('button,a')].find(b=>b.offsetParent && /Need help/.test(b.textContent)); if (!b) return 'MISSING'; const r=b.getBoundingClientRect(); return r.top >= 0 && r.bottom <= innerHeight ? 'yes top=' + Math.round(r.top) : 'no top=' + Math.round(r.top); })()`));
+  log('4a equipment line: ' + JSON.stringify(t.match(/Equipment request[^\n]*\n?[^\n]*\n?[^\n]*/)?.[0]));
+  await shot('04-bob-pack');
+  await toView(c, 'Onboarding Studio', '/portal');
+  log('4b demo person: ' + await select(3, 'Bob Warwick')); await wait(500);
+  log('4b plus 3 weeks: ' + await click('Plus 3 weeks')); await wait(2500);
+  log('4b date: ' + (await text()).match(/Simulated date[^\n]*\n?[^\n]*/)?.[0]?.replace(/\n/g, ' '));
+  await toView(c, 'Joiner', '/me');
+  t = await text(); log('4b waiting: ' + JSON.stringify(t.match(/Privileged access request[\s\S]{0,160}/)?.[0]));
+  await shot('04-bob-waiting-plus3w');
+  log('4c help: ' + await click('Need help?')); await wait(1500);
+  log('4c ask: ' + await click('When will my laptop arrive?')); await wait(2500);
+  t = await text(); log('4c answer: ' + JSON.stringify(t.slice(t.indexOf('laptop arrive'), t.indexOf('laptop arrive') + 400)));
+  log('4d type: ' + await type('input[placeholder="Ask a question"]', 'Can I talk to someone about my lab budget?')); await wait(200);
+  log('4d ask: ' + await click('Ask')); await wait(2500);
+  t = await text(); log('4d answer: ' + JSON.stringify(t.slice(t.lastIndexOf('lab budget'), t.lastIndexOf('lab budget') + 400)));
+  await shot('04-chat');
+  log('4e handover: ' + await click('Talk to a person')); await wait(3000);
+  t = await text(); log('4e result: ' + JSON.stringify(t.slice(t.lastIndexOf('lab budget'), t.lastIndexOf('lab budget') + 700)));
+  await shot('04-handover');
+};

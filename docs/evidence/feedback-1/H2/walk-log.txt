@@ -1,0 +1,181 @@
+p0 url: /portal/pathways
+p0 selects: 0:ViewOnboarding StudioJoinerMan=Onboarding Studio | 1:PersonBob WarwickAlex MorganSa=Bob Warwick | 2:LayoutPhoneDesktop=Desktop | 3:Person=Alex Morgan | 4:Waiting automation=Alex Morgan: Pre-employment checks | 5:Job familyAllBranchSoftware en=All | 6:RoleAllCustomer service collea=All | 7:GradeAllABCDEFG=All | 8:PlatformAllRetailTechnologyGro=All | 9:LocationAllCardiffLeedsLondonE=All
+p0 buttons: Plus 1 day | Plus 1 week | Set date | Offer accepted | Plus 3 weeks | Day 1 | Day 14 | Day 30 | Complete Alex's inputs | ServiceNow: request complete | Simulate passed | Simulate failed | Simulate returned | Reset demo
+0 reset: clicked
+0 person: set Bob Warwick
+0 layout: set Phone
+1 journeys nav: clicked
+1 count before: 22 of 22 Journeys
+1 new: clicked
+1a repo panel: Connected repository /  / Points at the journeys/ folder in this repository. /  / Repository / This repository / Branch / main / Folder / journeys/ / Last sync
+1b sync: clicked
+1b result: Last sync 2026-11-10 (Simulated date): 1 added
+1c journeys nav: clicked
+1c library: true / 23 of 23 Journeys
+1d open: clicked
+1d connector: set ServiceNow
+1d operation: set Request a team access package: channels, mailboxes and groups.
+1e publish: clicked
+1e bump: clicked
+1e after: 1.1.0 error? none
+1e view as code: clicked
+1e code: undefined connector true
+peek url /portal/journeys/j-h-demo semver: null op: null
+peek2: "o.json\n\nPublish\nConnected repository\n\nPoints at the journeys/ folder in this repository.\n\nRepository\nThis repository\nBranch\nmain\nFolder\njourneys/\nLast sync\nAt the last Reset demo\nSync from repository\nView as code"
+pre: Access to the service desk tools for infrastructure engineers. ### {
+  "id": "j-h-demo",
+  "semver": "1.1.0",
+  "title": "Service desk tools access",
+  "description": "Access to the service desk tools for infrastructure engineers.",
+  "ownerTeam": "Modern Workplace",
+  "stage": "onboarding",
+  "tags": {
+    "jobFamily": "Modern Workplace",
+    "role": "Infrastructu
+2 nav: clicked
+2 open: NOT FOUND
+2 url: /portal/journeys/j-h-demo
+2 selects: 0:Onboarding Studio | 1:Bob Warwick | 2:Phone | 3:Alex Morgan | 4:Alex Morgan: Pre-employment checks | 5:Onboarding | 6:Modern Workplace | 7:Infrastructure engineer | 8:E | 9:Technology | 10:None | 11:ServiceNow | 12:Request a team access package: channels, mailboxes and groups. | 13:Task
+links: Journeys>/portal/journeys | Pathways>/portal/pathways | People>/portal/people | Insights>/portal/insights | Agent library>/portal/agents | Back to the Journey library>/portal/journeys
+2 nav: clicked
+2 url1: /portal/journeys/j-h-demo dialog? none
+2 open: NOT FOUND
+2 url: /portal/journeys/j-h-demo
+2 selects: 0:Onboarding Studio | 1:Bob Warwick | 2:Phone | 3:Alex Morgan | 4:Alex Morgan: Pre-employment checks | 5:Onboarding | 6:Modern Workplace | 7:Infrastructure engineer | 8:E | 9:Technology | 10:None | 11:ServiceNow | 12:Request a team access package: channels, mailboxes and groups. | 13:Task
+rclick url: /portal/pathways
+2 open: clicked
+2 url: /portal/pathways/pw-infra-e
+2 selects: 0:Onboarding Studio | 1:Bob Warwick | 2:Phone | 3:Alex Morgan | 4:Alex Morgan: Pre-employment checks | 5:Modern Workplace | 6:Infrastructure engineer | 7:E | 8:Technology | 9:Any | 10:Any stage | 11:Any job family | 12:Any grade | 13:Any location
+2a stage: set Onboarding
+2a grade: set Grade E
+2a library now: Branch inductionAdd, Engineering community introAdd, In-person events calendarAdd, Lab environmentAdd, Service desk tools accessAdd
+2b dropped node: ["i-j-h-demo-1"]
+2c Dependency edges 11 -> 12
+2d loop alert: "Service desk tools access already waits for Privileged access request, so Privileged access request cannot wait for Service desk tools access.Got it"
+2e publish: clicked
+2e dialog: "What kind of change is this?\n\nFix\nCorrects something small\nNew content\nAdds or changes Journeys\nBreaking change\nChanges how the Pathway works"
+2e bump: clicked
+2e header: Live version 1.1.0
+3 people: clicked
+3a find: typed
+3a open: clicked
+3b suggested: "Infrastructure engineer E (suggested)" selected: Infrastructure engineer E (suggested)
+3b apply: clicked
+3b heading: "Applied Pathway: Infrastructure engineer E version 1.1.0"
+3c delegate: clicked
+3c pick: set Lena Brooks
+3c save: clicked
+3c shown: "Delegate\n\nLena Brooks can act for this person.\n"
+4a url: /portal/people/person-bob
+4a pack: contracting true, pulse true, new journey true, equipment true
+4a need help in first viewport: MISSING
+4a equipment line: "Equipment request\nSimulate passed\nSimulate failed"
+4b demo person: set Bob Warwick
+4b plus 3 weeks: clicked
+4b date: Simulated date 24 Nov 2026 View
+4b waiting: "Privileged access request\n\nYour admin access is with the Security team for approval. It usually takes three to four weeks, so there is nothing you need to do right now.\n\nDay 14\n0\n19\n28\n"
+4c help: clicked
+4c ask: clicked
+4c answer: "laptop arrive?\n\nYour device request is open in ServiceNow. Devices are usually delivered three to five working days before your start date, and you will get a tracking link by email.\n\nAnswered by IT setup helper\n\nYour question\nAsk\nPrivileged access request\n\nYour admin access is with the Security team for approval. It usually takes three to four weeks, so there is nothing you need to do right now.\n"
+4d type: typed
+4d ask: clicked
+4d answer: "lab budget?\n\nI'm not sure. Would you like to talk to a person?\n\nTalk to a person\nYour question\nAsk\nPrivileged access request\n\nYour admin access is with the Security team for approval. It usually takes three to four weeks, so there is nothing you need to do right now.\n\nDay 14\n0\n19\n28\ndays\n\nUsually 19 to 28 days\n\nEquipment request\n\nNothing is needed from you right now.\n\nDay 14\n0\n5\n11\ndays\n\nUsually 5"
+4e handover: clicked
+4e result: "lab budget?”. I will reply here.\n\nYour question\nAsk\nPrivileged access request\n\nYour admin access is with the Security team for approval. It usually takes three to four weeks, so there is nothing you need to do right now.\n\nDay 14\n0\n19\n28\ndays\n\nUsually 19 to 28 days\n\nEquipment request\n\nNothing is needed from you right now.\n\nDay 14\n0\n5\n11\ndays\n\nUsually 5 to 11 days\n\nThis is taking longer than usual. Your manager knows and will be in touch.\n\nNext: Read your offer\n\nYour offer\nContracting\nAction required\n\nRead your offer\n\nGot it\nGetting ready\nPayroll\nNot started\nPre-employment checks\nNot started\nID creation (photo)\nNot started\nDeveloper device\nNot started\nManager ready\nNot started\nMeet your buddy\n"
+4e chat: "Need help?\nSimulated: scripted answers\n\nWhen will my laptop arrive?\n\nYour device request is open in ServiceNow. Devices are usually delivered three to five working days before your start date, and you will get a tracking link by email.\n\nAnswered by IT setup helper\n\nCan I talk to someone about my lab budget?\n\nI'm not sure. Would you like to talk to a person?\n\nHanding this to Hannah Price in Microsoft Teams\n\nHanded over by Handover agent. Asked: “Can I talk to someone about my lab budget?”\n\nSent to Hannah Price in Microsoft Teams.\n\nSimulated: no message is sent to Microsoft Teams\n\nHP\n\nHannah Price\n\nThanks, I have your question: “Can I talk to someone about my lab budget?”. I will reply here.\n\n"
+4e last part: "viceNow. Devices are usually delivered three to five working days before your start date, and you will get a tracking link by email.\n\nAnswered by IT setup helper\n\nCan I talk to someone about my lab budget?\n\nI'm not sure. Would you like to talk to a person?\n\nHanding this to Hannah Price in Microsoft Teams\n\nHanded over by Handover agent. Asked: “Can I talk to someone about my lab budget?”\n\nSent to Hannah Price in Microsoft Teams.\n\nSimulated: no message is sent to Microsoft Teams\n\nHP\n\nHannah Price\n\nThanks, I have your question: “Can I talk to someone about my lab budget?”. I will reply here.\n\nYour question\nAsk\nPrivileged access request\n\nYour admin access is with the Security team for approval. "
+5a url: /team?viewer=lm-hannah
+5a progress: "Bob Warwick\nAlex Morgan"
+5a teams task: " Patel, Buddy\nRuth King, Line Manager\nMark Allen, Buddy\nHannah Price, Line Manager\nLeo Grant, Buddy\nYour starters\n\n24 Nov\n\nTo-do\nBob Warwick asked for help: Can I talk to someone about my lab budget?\nFrom a Teams chat, handed over by Handover agent, 24 Nov\nSimulated: no message is sent to Microsoft Teams\nCheck in with Bob: Contracting is taking longer than usual\nBob Warwick\nCheck in with Bob: Equipment request is taking longer than usual\nBob Warwick\nBob Warwick\n\nBob is in Pre-contract. 0 of 13 t"
+5a simulated label: ["Simulated date 24 Nov 2026","Simulated: no message is sent to Microsoft Teams"]
+5b add: clicked
+5c journey: set Modern Workplace team access package (Getting ready)
+5c unlock: set After Cleared to start
+5c buttons: 
+5c confirm: clicked
+5d appeared on Bob's view 1510 ms after Add journey (includes the view switch)
+5d label: "Modern Workplace team access package\nNot started\n\nAdded by Hannah Price\n\nYour first week\nLab environment\nNot started\nSer"
+5f pick: clicked
+5f send: clicked
+5f confirm text: "Reminder sent to Bob Warwick"
+5f Bob sees reminder: true
+5g read offer: clicked Got it
+5h contract: typed into <input id="provide-i-contracting" required="" autocomplete="off" class="min-h-11
+5h contract submit: clicked
+5h after contract: "Next: Provide your bank details" checks: "Pre-employment checks\nAction required"
+5h payroll or checks: typed into <input id="provide-i-checks" required="" autocomplete="off" class="min-h-11 roun
+5h payroll or checks submit: clicked
+5h after payroll or checks: "Next: Provide your bank details" checks: "Pre-employment checks\nAction required"
+5h next: typed into <input id="provide-i-checks" required="" autocomplete="off" class="min-h-11 roun
+5h next submit: clicked
+5h after next: "Next: Provide your bank details" checks: "Pre-employment checks\nAction required"
+5i checks: submitted Submit
+5i after: "Pre-employment checks\n"
+5j Bob before: "Pre-employment checks\n\nYour checks are with our vetting partner. Most take three to five weeks, so there is nothing you need to do right now."
+5j studio: set Onboarding Studio
+5j waiting: set Bob Warwick: Pre-employment checks
+5j fail: clicked
+5j joiner: set Joiner
+5j Bob after fail (should be unchanged): "Pre-employment checks\n\nYour checks are with our vetting partner. Most take three to five weeks, so there is nothing you need to do right now." recruiter? false
+5j manager: set Manager
+5j Hannah: "To-do\nBob Warwick asked for help: Can I talk to someone about my lab budget?\nFrom a Teams chat, handed over by Handover agent, 24 Nov\nSimulated: no message is sent to Microsoft Teams\nSet three-month goals\nBob Warwick\nCheck in with Bob: Equipment request is taking longer than usual\nBob Warwick\nBob Warwick\n\nBob is in Pre-employment. 2 of 14 things done. Waiting on privileged access request, usually 19 to 28 days.\n\nNext: Payroll\n\nCleared to start\n0 of 3 done\n\nBlocked Flag: Privileged access request"
+5k reason: typed into <input class="min-h-[44px] rounded bg-paper px-3 text-ink fo
+5k dismiss: clicked
+5k after: Needs decision gone? true
+5l joiner: set Joiner
+5l Bob after dismiss: "Pre-employment checks\nDone" ID: "ID creation (photo)\nAction required"
+6 buddy: set Buddy
+6 url: /team?viewer=buddy-leo
+6 Leo sees: "Your starters\n\n24 Nov\n\nTo-do\n\nNothing to do right now.\n\nBob Warwick\n\nBob is in Pre-employment.\n\nCleared to start\n1 of 3 done\nNote to Bob Warwick\nSend note"
+6 leaks? {"needsDecision":false,"failed":false,"lab":false,"reminder":false,"addJourney":false,"pulse":false}
+c journeys: clicked
+c count: 23 of 23 Journeys
+c open: clicked
+c url: /portal/journeys/j-equipment-request
+c integrations: "Integrations (simulated)\n\nServiceNow: Raise an equipment request.\n\nWhen ServiceNow reports the request complete, notify the joiner.\n\nMove up\nMove down\nRemove\n::\n2. Notification\nOwner \nStarter\nLine Manager\nBuddy\nHR\nMove up\nMove down\nRemove\nRead\nNotification\nTask\nHidden automation\nChoose\nProvide\nAdd an action\nPublish\nConnected repository\n\nPoints at the journeys/ folder in this repository.\n\nRepository\nThis repository\nBranch\nmain\nFolder\njourneys/\nLast sync\nAt the last Reset demo\nSync from repository"
+c selects: Stage=Pre-employment | Job family=Modern Workplace | Role=Infrastructure engineer | Grade=E | Platform=None | Location=None | Connector=ServiceNow | Operation=Raise an equipment request | Owner=Starter | Action type=Task
+c plain words: "When ServiceNow reports the request complete, notify the joiner."
+c trigger word anywhere: false
+d demo person: set Bob Warwick
+d button enabled: true
+d press: clicked
+d studio feedback: ["ServiceNow: request complete"]
+d banner visible 616 ms after the press (includes the view switch): {"top":2796,"bottom":2843,"h":813,"scrollY":0,"text":"Your equipment request is complete. ServiceNow has confirmed it (simulated)."}
+d equipment card now: ["Equipment request\nDone\nModern Workplace team access package"]
+d2 matches: [{"tag":"P","role":"status","top":159,"cls":"mt-1 text-[19px] font-medium text-racing"},{"tag":"P","top":2796,"cls":""}]
+d2 scroll: {"sy":0,"sw":1280,"iw":1280}
+7 insights: clicked
+7 checks: {"starters80":true,"longest":"Managing director starters in Executive take longest: usually 55 to 67 days."}
+7 drill: clicked
+7 drill text: "usually 45 to 61 days"
+7b buttons: All Stages | Pre-contract | Pre-employment | Onboarding | First 30 days | Business area | Role | Grade | Pre-employment checksPre-employmentModern Workplac | Privileged access requestPre-employmentModern Work | PayrollPre-employmentExecutive, 22 daysLongest: Ex | ID creation (photo)Pre-employmentBranch, 9 daysLon | ContractingPre-contractBranch, 9 daysLongest: Bran | Branch devicePre-employmentBranch, 8 daysLongest:  | Manager readyPre-employmentSoftware engineering, 1 | Meet your buddyPre-employmentBranch, 11 daysLonges | Pulse checkFirst 30 daysBranch, 9 daysLongest: Bra | Developer devicePre-employmentSoftware engineering | Welcome from sponsoring execOnboardingExecutive, 8 | Equipment requestPre-employmentModern Workplace, 8 | Branch inductionOnboardingBranch, 7 daysLongest: B | Cash-handling trainingFirst 30 daysBranch, 7 daysL | Engineering community introOnboardingSoftware engi | Executive devicePre-employmentExecutive, 7 daysLon | Lab environmentOnboardingModern Workplace, 7 daysL | Uniform (Merch distribution)Pre-employmentBranch, 
+7b around: "are engineer\nExecutive\nInfrastructure engineer E\nHow long each Pathway takes\n\nFrom a starter's first Journey to their last, adding up each Stage (all four Stages). The dot is the middle starter; the shaded band is the usual range, the middle half of starters.\n\nSoftware engineer\nSoftware engineering\nusually 45 to 61 days\nInfrastructure engineer E\nModern Workplace\nusually 48 to 62 days\nBranch collea"
+7c drill: "Pre-employment checks usually 21 to 35 days"
+7c all usually: ["usually 45 to 61 days","usually 48 to 62 days","usually 49 to 61 days","usually 44 to 61 days","usually 55 to 67 days","usually 49 to 62 days","usually 47 to 61 days","usually 55 to 67 days","usually 40 to 52 days","usually 50 to 58 days","usually 44 to 67 days","usually 43 to 58 days","usually 48 to 63 days","usually 21 to 35 days"]
+8 view: /portal/pathways person Bob Warwick
+8 reset: clicked
+8 date: Simulated date 10 Nov 2026 | infra E: "Infrastructure engineer E\tVersion 1.0.0\tApplied 0 times\tModern Workplace, Infrastructure engineer, E, Technology"
+8 library: 22 of 22 Journeys step 1 Journey present: false
+8 Bob: {"noPathway":true,"noDelegate":true}
+a apply: clicked
+a heading: "Applied Pathway: Infrastructure engineer E version 1.0.0"
+a demo person before choosing: Alex Morgan
+a demo person: set Bob Warwick
+a complete: clicked
+a result (3005 ms incl. 3 s wait): ["Completed 5 Actions"]
+a joiner next: undefined action required count: 0
+a need help in first viewport: yes top=203 h=813
+a help: clicked
+a chat open: true
+m phone layout at 390: {"sw":390,"iw":390,"layout":"Phone","help":"MISSING","chatOpen":true}
+m layout: set Desktop
+m desktop layout at 390: {"sw":390,"iw":390,"layout":"Desktop","help":"243-287","chatOpen":false}
+m simulate: 200 {"ok":true,"data":{"engineState":{"today":"2026-11-10","stage":"pre-employment","personStatus":"joiner","dayNumber":-27,
+m banner on the open joiner view 2546 ms after ServiceNow reported complete, at 158-304 of 844, scrollY 0
+m after banner: {"sw":390,"iw":390,"layout":"Desktop","help":"413-457","chatOpen":false}
+m2 layout: set Phone
+m2 phone layout at 390: {"sw":390,"iw":390,"banner":"158-304","help":"413-457"}
+z reset: clicked
+z Bob after reset: {"ok":false,"error":"No Applied Pathway for that person"}
+sv try 0: from /portal/people/person-bob switch to Joiner navigated in 250 ms
+sv try 1: from /portal/people/person-bob switch to Joiner navigated in 250 ms

@@ -1,0 +1,21 @@
+import { rc } from './rc.mjs';
+import { toView } from './view.mjs';
+export default async (c) => {
+  const { js, wait, text, shot, log } = c;
+  await toView(c, 'Onboarding Studio', '/portal');
+  log('c journeys: ' + await rc(c, 'Journeys', 'a'));
+  for (let i = 0; i < 40 && (await js('location.pathname')) !== '/portal/journeys'; i++) await wait(250);
+  await wait(2000);
+  log('c count: ' + (await text()).match(/\d+ of \d+ Journeys/)?.[0]);
+  log('c open: ' + await rc(c, 'Equipment request', 'main a'));
+  for (let i = 0; i < 40 && (await js('location.pathname')) === '/portal/journeys'; i++) await wait(250);
+  await wait(3000);
+  log('c url: ' + await js('location.pathname'));
+  const t = await text(); const i = t.indexOf('Integrations');
+  log('c integrations: ' + JSON.stringify(i < 0 ? 'MISSING' : t.slice(i, i + 500)));
+  log('c selects: ' + await js(`[...document.querySelectorAll('main select')].map(s=>(s.closest('label')?.firstChild?.textContent ?? s.getAttribute('aria-label') ?? '').slice(0,20)+'='+s.options[s.selectedIndex]?.text).join(' | ')`));
+  log('c plain words: ' + JSON.stringify(t.match(/[^\n]*When ServiceNow reports[^\n]*/)?.[0] ?? 'MISSING'));
+  log('c trigger word anywhere: ' + /trigger/i.test(t));
+  await js(`(() => { const h = [...document.querySelectorAll('h2,h3,legend,summary')].find(e=>/Integrations/.test(e.textContent)); h?.scrollIntoView({block:'start'}); })()`); await wait(500);
+  await shot('c-integrations');
+};

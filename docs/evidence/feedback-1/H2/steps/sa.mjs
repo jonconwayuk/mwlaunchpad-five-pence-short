@@ -1,0 +1,21 @@
+import { toView } from './view.mjs';
+export default async (c) => {
+  const { js, wait, text, shot, log, click, select } = c;
+  log('a apply: ' + await click('Apply pathway')); await wait(3000);
+  log('a heading: ' + JSON.stringify((await text()).match(/Applied Pathway: [^\n]*/)?.[0]));
+  log('a demo person before choosing: ' + await js(`document.querySelectorAll('select')[3].selectedOptions[0].text`));
+  log('a demo person: ' + await select(3, 'Bob Warwick')); await wait(600);
+  const before = await js(`fetch('/api/state?personId=person-bob').then(r=>r.json()).then(j=>JSON.stringify(j).length)`);
+  const t0 = Date.now();
+  log('a complete: ' + await click("Complete Bob's inputs")); await wait(3000);
+  const t = await text();
+  log(`a result (${Date.now() - t0} ms incl. 3 s wait): ` + JSON.stringify(t.match(/[^\n]*(Completed|completed)[^\n]*/g)));
+  await shot('a-complete-inputs');
+  await toView(c, 'Joiner', '/me');
+  const tj = await text();
+  log('a joiner next: ' + JSON.stringify(tj.match(/Next: [^\n]*/)?.[0]) + ' action required count: ' + (tj.match(/Action required/g) ?? []).length);
+  log('a need help in first viewport: ' + await js(`(() => { const b = [...document.querySelectorAll('button,a')].find(b=>b.offsetParent && /Need help/.test(b.textContent)); if (!b) return 'MISSING'; const r=b.getBoundingClientRect(); return (r.top >= 0 && r.bottom <= innerHeight ? 'yes' : 'no') + ' top=' + Math.round(r.top) + ' h=' + innerHeight; })()`));
+  await shot('a-joiner-after-inputs');
+  log('a help: ' + await click('Need help?')); await wait(1500);
+  log('a chat open: ' + /Simulated: scripted answers/.test(await text()));
+};
