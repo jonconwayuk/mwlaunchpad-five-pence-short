@@ -53,3 +53,10 @@
 10:26 | W2 | DOC | fix implementer | sonnet | Six review fixes: chat wording, glossary, semver words, ADR-0007 prose, ADR-0003 note, CLAUDE.md line
 10:27 | W2 | G5 | reviewer | opus | Re-verify agents-as-code loader/router, /api/agents, friendly catalogue page
 10:29 | W2 | G5 | fix implementer | sonnet | Router scoring threshold, merch examples, journeyIds test, layering, agent version, error path
+10:32 | W2 | F1 | reviewer | opus | Re-verify journeys/connectors as code, sync, grades A-G, Bob story, queries, determinism, no regressions (runs alongside wave G, decision 40)
+10:32 | W2+W1 | G1 | implementer (same agent as S1) | opus | Pathway builder filters Stage/job family/grade/location, semver at publish, grades A-G; carries stretch 1
+10:32 | W2 | G2 | implementer | opus | Friendly Journey library, admin-only builder, Connected repository + sync, View as code, connector picker, publish writes file
+10:32 | W2+W1 | G3 | implementer | opus | People: find Bob, apply in few clicks, Delegate add/change (carries stretch 3), Send a Reminder now
+10:32 | W2+W1 | G4 | implementer | opus | Insights: completion times, by business area/role/grade, Stage filter, Journey drill-down (absorbs insight strip)
+10:32 | W2+W1 | G6 | implementer | opus | Joiner view desktop+phone, empty state, scripted agent chat + simulated Teams handover (absorbs assistant), Acting for banner
+10:32 | W2 | G7 | implementer | opus | Manager and Buddy view desktop+phone, friendly progress, handovers, Send a Reminder now

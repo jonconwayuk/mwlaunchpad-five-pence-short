@@ -348,3 +348,15 @@ Numbered once, in order, never renumbered or deleted. A reversed decision gets a
 - **Decided:** Stretch 1, authoring Timers and Hard Stops on the canvas, is committed on its own, so it can be reverted alone. It is merged into G1 (decision 31) and done by the same agent, and G1's independent reviewer reviews both together. One known limit: the Hard Stop picker lists every Journey on the Pathway, not only those whose Hidden automation sets the Outcome. The PUT route still refuses an invalid save.
 - **Why:** One reviewer reads the whole canvas change once. The stretch commit stays separate, so it can be reverted.
 - **Evidence:** `docs/evidence/launchpad-build/stretch-1/` (25 of 25 drive checks); 102 Vitest tests.
+
+### 40. Wave G starts while F1's review runs
+
+- **Decided:**
+  - The wave F shared gate was green at 10:31 on e21e951: 111 tests, a clean build, section 9 by API, and Reset identical to the seed. Main is pushed under decision 33, and wave G starts.
+  - F1's independent reviewer runs alongside wave G. Any finding goes into a scoped F1 fix in `src/db/**`, which is frozen for wave G tasks (plan, ownership table).
+  - F1's two NEEDS notes are assigned:
+    - The optional `connector` and `operation` fields on `ActionDef` go to G2, which owns `src/engine/types.ts` for that one additive change.
+    - Grades A to G in the canvas lists go to G1, and in the Journey builder lists to G2.
+  - The semver bump values are `patch`, `minor` and `major`, through `publishPathwaySemver`. `publishPathway` still returns the integer.
+- **Why:** The same reasoning as decision 15. Seven tracks shouldn't wait about ten minutes for a review whose fixes land in files they don't own.
+- **Evidence:** `docs/evidence/feedback-1/wave-F-gate.txt`.
