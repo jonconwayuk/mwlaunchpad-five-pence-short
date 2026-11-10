@@ -2,7 +2,7 @@
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import type { ControlsData } from './data';
-import { completeInputs, countMessage, serviceNowCall } from './inputs';
+import { completeInputs, resultMessage, serviceNowCall } from './inputs';
 
 const btn = 'rounded-[4px] border border-hairline bg-paper px-2 py-1 text-[13px] text-ink hover:bg-calm disabled:text-muted disabled:hover:bg-paper';
 
@@ -26,8 +26,7 @@ export function DemoControls({ data, today }: { data: ControlsData; today: strin
   }
   const sn = serviceNowCall(data.waiting, personId);
   async function inputs() {
-    try { const n = await completeInputs(personId); setMsg(countMessage(n)); router.refresh(); }
-    catch (e) { setMsg(e instanceof Error ? e.message : 'Something went wrong'); }
+    try { setMsg(resultMessage(await completeInputs(personId))); } finally { router.refresh(); }
   }
   const setDate_ = (d: string) => post('/api/clock', { set: d });
 

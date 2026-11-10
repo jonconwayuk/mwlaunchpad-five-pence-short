@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 import { demoState } from '@/src/engine/fixtures';
 import type { ActionDef, EngineState, ItemState } from '@/src/engine/types';
-import { MAX_ROUNDS, completeInputs, countMessage, selectInputs, serviceNowCall } from './inputs';
+import { MAX_ROUNDS, completeInputs, countMessage, resultMessage, selectInputs, serviceNowCall } from './inputs';
 
 const act = (o: Partial<ActionDef> & Pick<ActionDef, 'id' | 'type'>): ActionDef => ({ label: o.id, ...o });
 const item = (itemId: string, currentAction?: ActionDef, status: ItemState['status'] = 'action-required'): ItemState =>
@@ -40,6 +40,19 @@ describe('selectInputs', () => {
   });
 });
 
+describe('selectInputs Hard Stops and owners', () => {
+  const read = (id: string) => item(id, act({ id: `a-${id}`, type: 'read' }));
+  const stop = (o: Partial<EngineState['needsDecisions'][number]>) => ({ ...state([]).needsDecisions[0] ?? { hardStopId: 'h', label: 'x', reason: 'r', raisedOn: demoState.today, extendAllowed: false }, stopsItemIds: [], wholePathway: false, ...o });
+  it('skips the items a pending Hard Stop stops, and everything when it stops the whole Pathway', () => {
+    const base = state([read('i1'), read('i2')]);
+    expect(selectInputs({ ...base, needsDecisions: [stop({ stopsItemIds: ['i2'] })] }).map((c) => c.itemId)).toEqual(['i1']);
+    expect(selectInputs({ ...base, needsDecisions: [stop({ wholePathway: true })] })).toEqual([]);
+  });
+  it('treats a Task with no owner as the starter\'s', () => {
+    expect(selectInputs(state([item('i1', act({ id: 'a1', type: 'task' }))]))).toEqual([{ itemId: 'i1', actionId: 'a1' }]);
+  });
+});
+
 describe('countMessage', () => {
   it('says the count in plain words, including none and one', () => {
     expect(countMessage(0)).toBe('Completed 0 Actions');
@@ -56,7 +69,7 @@ describe('completeInputs', () => {
       if (url.startsWith('/api/state')) return new Response(JSON.stringify({ ok: true, data: { engineState: reads++ ? state([]) : s } }));
       return new Response('{}', { status: JSON.parse(String(init?.body)).itemId === 'i2' ? 400 : 200 });
     });
-    expect(await completeInputs('p1', f as unknown as typeof fetch)).toBe(1);
+    expect(await completeInputs('p1', f as unknown as typeof fetch)).toMatchObject({ done: 1, refused: 1 });
     expect(JSON.parse(String(f.mock.calls[1]![1]!.body))).toMatchObject({ itemId: 'i1', actionId: 'a1', actorPersonId: 'p1', personId: 'p1' });
   });
 });
@@ -67,11 +80,27 @@ describe('completeInputs rounds', () => {
     const rounds = [state([item('i1', act({ id: 'a1', type: 'read' }))]), state([item('i1', act({ id: 'a2', type: 'provide' }))]), state([])];
     let n = 0;
     const f = vi.fn(async (url: string) => (url.startsWith('/api/state') ? reply(rounds[n++]!) : new Response('{}')));
-    expect(await completeInputs('p1', f as unknown as typeof fetch)).toBe(2);
+    expect(await completeInputs('p1', f as unknown as typeof fetch)).toMatchObject({ done: 2, refused: 0 });
   });
   it('stops at the round cap when Actions keep appearing', async () => {
     const f = vi.fn(async (url: string) => (url.startsWith('/api/state') ? reply(state([item('i1', act({ id: 'a', type: 'read' }))])) : new Response('{}')));
-    expect(await completeInputs('p1', f as unknown as typeof fetch)).toBe(MAX_ROUNDS);
+    expect((await completeInputs('p1', f as unknown as typeof fetch)).done).toBe(MAX_ROUNDS);
+  });
+});
+
+describe('completeInputs failure part-way', () => {
+  it('keeps the count and reports the error when a later fetch throws', async () => {
+    const s = state([item('i1', act({ id: 'a1', type: 'read' }))]);
+    let reads = 0;
+    const f = vi.fn(async (url: string) => {
+      if (!url.startsWith('/api/state')) return new Response('{}');
+      if (reads++) throw new Error('Network down');
+      return new Response(JSON.stringify({ ok: true, data: { engineState: s } }));
+    });
+    const r = await completeInputs('p1', f as unknown as typeof fetch);
+    expect(r).toEqual({ done: 1, refused: 0, error: 'Network down' });
+    expect(resultMessage(r)).toBe('Completed 1 Action. Network down');
+    expect(resultMessage({ done: 2, refused: 1 })).toBe('Completed 2 Actions. 1 refused');
   });
 });
 
