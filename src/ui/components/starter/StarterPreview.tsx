@@ -12,18 +12,18 @@ import { HelpChat } from '@/src/ui/components/chat/HelpChat';
 // starter, so a waiting item is also recognised by its Usual Range.
 const isWaiting = (i: ItemState) => i.status === 'in-progress' && (i.blockedFlag || i.usualRange !== undefined);
 
-const PAGE = 'mx-auto w-full max-w-[420px] px-5 pt-8 pb-16 text-[17px] leading-[1.55] text-ink lg:max-w-[1080px] lg:px-10';
+const PAGE = 'mx-auto w-full max-w-[420px] px-5 pt-8 pb-16 text-[17px] leading-[1.55] text-ink @5xl:max-w-[1080px] @5xl:px-10';
 
 /** Before HR applies a Pathway, /api/state answers 404: a calm welcome, never an endless Loading. */
 export function NoPlan({ firstName, personId }: { firstName: string; personId: string }) {
   return (
     <main className={PAGE}>
-      <div className="lg:grid lg:grid-cols-[minmax(0,1fr)_360px] lg:gap-12">
+      <div className="@5xl:grid @5xl:grid-cols-[minmax(0,1fr)_360px] @5xl:gap-12">
         <div>
           <h1 className="font-serif text-[27px] leading-tight text-racing">Welcome, {firstName}.</h1>
           <p className="mt-3 max-w-[52ch]">HR is getting your plan ready. You do not need to do anything yet; it will appear here as soon as it is ready.</p>
         </div>
-        <div className="mt-8 lg:mt-0"><HelpChat personId={personId} /></div>
+        <div className="mt-8 @5xl:mt-0"><HelpChat personId={personId} /></div>
       </div>
     </main>
   );
@@ -85,14 +85,14 @@ export function StarterPreview({ query = '?as=starter', personId, firstName = 't
       </header>
 
       {/* Phone: one column in DOM order. Desktop: the plan on the left, waiting card and help on the right. */}
-      <div className="lg:grid lg:grid-cols-[minmax(0,1fr)_360px] lg:grid-rows-[auto_1fr] lg:items-start lg:gap-x-12">
+      <div className="@5xl:grid @5xl:grid-cols-[minmax(0,1fr)_360px] @5xl:grid-rows-[auto_1fr] @5xl:items-start @5xl:gap-x-12">
         {waiting.length > 0 && (
-          <div className="mt-6 flex flex-col gap-4 lg:col-start-2 lg:row-start-1">
+          <div className="mt-6 flex flex-col gap-4 @5xl:col-start-2 @5xl:row-start-1">
             {waiting.map((i) => <WaitingCard key={i.itemId} item={i} />)}
           </div>
         )}
 
-        <div className="lg:col-start-1 lg:row-span-2 lg:row-start-1">
+        <div className="@5xl:col-start-1 @5xl:row-span-2 @5xl:row-start-1">
           {es.nextUp && <p className="mt-6 max-w-[62ch]">{es.nextUp.line}</p>}
 
           {STAGES.map((stage) => {
@@ -123,7 +123,7 @@ export function StarterPreview({ query = '?as=starter', personId, firstName = 't
           })}
         </div>
 
-        <div className="mt-8 flex flex-col gap-8 lg:col-start-2 lg:row-start-2">
+        <div className="mt-8 flex flex-col gap-8 @5xl:col-start-2 @5xl:row-start-2">
           <Reminders notifications={es.notifications} />
           <HelpChat personId={person.id} />
         </div>

@@ -71,3 +71,4 @@
 10:41 | W2 | G-follow | fix implementer | sonnet | G6 chat 404 + handover failure, G5 laptop examples, G2 sync skipped + last sync, G7 Plan stopped + reason hint
 10:44 | W2 | G1 | fix implementer | sonnet | Grade/location/jobFamily tags on Journey files so filters narrow, drive check proves it, plain Hard Stop label
 10:44 | both | H | integration walker + fixer | opus | Bob walk steps 1-8 in one browser window, fix what breaks with a test each, rewrite demo script and README (decision 37)
+11:03 W2 H-fix-phone implementer sonnet: Phone layout squeezes /me two-column grid (lg: media queries vs narrow frame); switch to container queries in Frame + StarterPreview

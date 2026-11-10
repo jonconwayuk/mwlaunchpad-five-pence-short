@@ -54,10 +54,10 @@ export function TopStrip({ initialDate, people, personaId, layout }: {
 /** Phone layout: the joiner, manager and buddy faces sit in a 390px frame. The Studio is a laptop screen, so it stays full width. */
 export function Frame({ layout, children }: { layout: 'phone' | 'desktop'; children: React.ReactNode }) {
   const studio = viewOf(usePathname(), null) === 'studio';
-  if (layout !== 'phone' || studio) return <>{children}</>;
+  if (layout !== 'phone' || studio) return <div className="@container">{children}</div>;
   return (
-    <div className="bg-paper-2 py-6">
-      <div className="mx-auto w-[390px] overflow-x-hidden rounded-[24px] border-[10px] border-charcoal bg-paper">{children}</div>
+    <div className="bg-paper-2 py-6 max-[430px]:py-0">
+      <div className="@container mx-auto w-[390px] overflow-x-hidden rounded-[24px] border-[10px] max-[430px]:w-full max-[430px]:rounded-none max-[430px]:border-0 border-charcoal bg-paper">{children}</div>
     </div>
   );
 }
