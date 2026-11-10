@@ -86,12 +86,18 @@ function buildEdges(s: PathwaySnapshot): Edge[] {
   return [...deps, ...stops];
 }
 
+const filterField = `w-full min-w-0 rounded-[4px] border border-[var(--hairline)] px-1.5 py-1 text-[13px] text-ink ${focus}`;
+
 function Library({ onAdd, onDragStage }: { onAdd: (journeyId: string) => void; onDragStage: (stage: StageId | null) => void }) {
   const [query, setQuery] = useState('');
-  const [tag, setTag] = useState('');
-  const allTags = useMemo(() => [...new Set(LIBRARY.flatMap((j) => Object.values(j.tags)))].sort(), []);
+  const [stage, setStage] = useState('');
+  const [tags, setTags] = useState<Tags>({});
+  const filters = TAG_LISTS.filter((l) => l.key === 'jobFamily' || l.key === 'grade' || l.key === 'location');
   const shown = LIBRARY.filter((j) =>
-    j.title.toLowerCase().includes(query.trim().toLowerCase()) && (!tag || Object.values(j.tags).includes(tag)));
+    j.title.toLowerCase().includes(query.trim().toLowerCase()) && (!stage || j.stage === stage)
+    // A Journey with no tag for a filter is for everyone, so it stays listed.
+    // NEEDS: grade tags on journeys/*.json (F1/G2 own them); no Journey carries a grade yet, so the grade filter narrows nothing.
+    && filters.every((l) => !tags[l.key] || !j.tags[l.key] || j.tags[l.key] === tags[l.key]));
   return (
     <aside className="flex w-[260px] shrink-0 flex-col border-r border-[var(--hairline)] bg-paper">
       <div className="space-y-2 border-b border-[var(--hairline)] p-3">
@@ -100,11 +106,19 @@ function Library({ onAdd, onDragStage }: { onAdd: (journeyId: string) => void; o
           type="search" value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search journeys"
           aria-label="Search journeys" className={`w-full rounded-[4px] border border-[var(--hairline)] px-2 py-1.5 text-[15px] ${focus}`}
         />
-        <select value={tag} onChange={(e) => setTag(e.target.value)} aria-label="Filter by tag"
-          className={`w-full rounded-[4px] border border-[var(--hairline)] px-2 py-1.5 text-[15px] ${focus}`}>
-          <option value="">All tags</option>
-          {allTags.map((t) => <option key={t} value={t}>{t}</option>)}
-        </select>
+        <div className="grid grid-cols-2 gap-1.5">
+          <select value={stage} onChange={(e) => setStage(e.target.value)} aria-label="Stage" className={filterField}>
+            <option value="">Any stage</option>
+            {STAGES.map((s) => <option key={s.id} value={s.id}>{s.label}</option>)}
+          </select>
+          {filters.map((l) => (
+            <select key={l.key} value={tags[l.key] ?? ''} aria-label={l.label} className={filterField}
+              onChange={(e) => setTags({ ...tags, [l.key]: e.target.value || undefined })}>
+              <option value="">{l.key === 'grade' ? 'Any grade' : `Any ${l.label.toLowerCase()}`}</option>
+              {l.values.map((v) => <option key={v} value={v}>{l.key === 'grade' ? `Grade ${v}` : v}</option>)}
+            </select>
+          ))}
+        </div>
         <p className="text-[13px] text-[var(--muted)]">Drag a journey onto its lane. Then drag from the dot on its right edge to the journey that waits for it.</p>
       </div>
       <ul className="flex-1 space-y-2 overflow-y-auto p-3">
@@ -222,7 +236,7 @@ async function call<T>(url: string, method: 'PUT' | 'POST', body?: unknown): Pro
   return json.data;
 }
 
-function Builder({ draft }: { draft: PathwaySnapshot }) {
+function Builder({ draft, liveSemver }: { draft: PathwaySnapshot; liveSemver: string | null }) {
   // The whole Pathway lives in this one PathwaySnapshot, PUT as-is to save the draft.
   const [snapshot, dispatch] = useReducer(canvasReducer, draft, fitToLanes);
   const [nodes, setNodes] = useState<Node[]>(() => buildNodes(snapshot, []));
@@ -250,13 +264,17 @@ function Builder({ draft }: { draft: PathwaySnapshot }) {
     if (s === published.current) return; // publish already saved it; keep "Published as version N" until the next edit
     try { await call(url, 'PUT', s); setSaved('Draft saved'); } catch (e) { setSaved(e instanceof Error ? e.message : 'Could not save.'); }
   }, [url]);
-  const publish = async () => {
+  const [semver, setSemver] = useState(liveSemver);
+  const [asking, setAsking] = useState(false);
+  const publish = async (bump: 'patch' | 'minor' | 'major') => {
+    setAsking(false);
     try {
       await call(url, 'PUT', snapshot);
-      const { version } = await call<{ version: number }>(`${url}/publish`, 'POST');
+      const { version, semver } = await call<{ version: number; semver: string }>(`${url}/publish`, 'POST', { bump });
       setVersion(version + 1); // the draft is now the next version
+      setSemver(semver);
       published.current = snapshot;
-      setSaved(`Published as version ${version}`);
+      setSaved(`Published as version ${semver}`);
     } catch (e) { setSaved(e instanceof Error ? e.message : 'Could not publish.'); }
   };
   // Autosave the draft one second after the last change; the loaded draft itself is not re-saved.
@@ -339,7 +357,7 @@ function Builder({ draft }: { draft: PathwaySnapshot }) {
     <div className="flex h-[calc(100vh-27px)] flex-col bg-paper text-[15px] leading-[1.45] text-ink">
       <header className="flex items-center gap-4 border-b border-[var(--hairline)] px-4 py-3">
         <h1 className="min-w-0 truncate text-[21.6px] font-semibold text-racing">Pathway: {snapshot.title}</h1>
-        <span className="shrink-0 text-[13px] text-[var(--muted)]">{version > 1 ? `Live version ${version - 1}` : 'Not published yet'}</span>
+        <span className="shrink-0 text-[13px] text-[var(--muted)]">{semver ? `Live version ${semver}` : version > 1 ? `Live version ${version - 1}` : 'Not published yet'}</span>
         {saved && <span role="status" className="min-w-0 truncate text-[13px] text-[var(--muted)]" title={saved}>{saved}</span>}
         <div className="flex-1" />
         <details className="relative shrink-0">
@@ -365,8 +383,23 @@ function Builder({ draft }: { draft: PathwaySnapshot }) {
           className={`shrink-0 rounded-[4px] border border-[var(--hairline)] px-3 py-1.5 text-[13px] ${focus}`}>Add a Hard Stop</button>
         <button type="button" onClick={() => void saveDraft(snapshot)}
           className={`shrink-0 rounded-[4px] border border-heritage px-3 py-1.5 text-heritage ${focus}`}>Save draft</button>
-        <button type="button" onClick={() => void publish()}
-          className={`shrink-0 rounded-[4px] bg-heritage px-3 py-1.5 text-paper ${focus}`}>Publish</button>
+        <div className="relative shrink-0">
+          <button type="button" onClick={() => setAsking(!asking)} aria-expanded={asking}
+            className={`rounded-[4px] bg-heritage px-3 py-1.5 text-paper ${focus}`}>Publish</button>
+          {asking && (
+            <div role="dialog" aria-label="What kind of change is this?"
+              className="absolute right-0 top-full z-20 mt-1 grid w-[260px] gap-1 rounded-[6px] border border-[var(--hairline)] bg-paper p-3">
+              <p className="mb-1 text-[15px] font-medium text-ink">What kind of change is this?</p>
+              {([['patch', 'Fix', 'Corrects something small'], ['minor', 'New content', 'Adds or changes Journeys'], ['major', 'Breaking change', 'Changes how the Pathway works']] as const).map(([bump, label, hint]) => (
+                <button key={bump} type="button" onClick={() => void publish(bump)}
+                  className={`rounded-[4px] border border-[var(--hairline)] px-2 py-1.5 text-left hover:border-heritage ${focus}`}>
+                  <span className="block text-[15px] text-ink">{label}</span>
+                  <span className="block text-[13px] text-[var(--muted)]">{hint}</span>
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
       </header>
       <div className="relative flex min-h-0 flex-1">
         <Library onAdd={addToLane} onDragStage={setDragStage} />
@@ -451,7 +484,7 @@ function Builder({ draft }: { draft: PathwaySnapshot }) {
   );
 }
 
-export function PathwayCanvas({ draft, library }: { draft: PathwaySnapshot; library: LibraryJourney[] }) {
+export function PathwayCanvas({ draft, library, liveSemver = null }: { draft: PathwaySnapshot; library: LibraryJourney[]; liveSemver?: string | null }) {
   setLibrary(library);
-  return <ReactFlowProvider><Builder draft={draft} /></ReactFlowProvider>;
+  return <ReactFlowProvider><Builder draft={draft} liveSemver={liveSemver} /></ReactFlowProvider>;
 }

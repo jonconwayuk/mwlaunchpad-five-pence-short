@@ -9,9 +9,9 @@ export const STAGES: { id: StageId; label: string }[] = [
 
 /** Fixed tag lists, SEED-DATA.md section 1. */
 export const TAG_LISTS: { key: keyof Tags; label: string; values: string[] }[] = [
-  { key: 'jobFamily', label: 'Job family', values: ['Branch', 'Software engineering', 'Executive', 'HR', 'IT'] },
-  { key: 'role', label: 'Role', values: ['Customer service colleague', 'Software engineer', 'Managing director', 'Executive assistant', 'Line manager'] },
-  { key: 'grade', label: 'Grade', values: ['Colleague', 'Manager', 'Senior manager', 'Executive'] },
+  { key: 'jobFamily', label: 'Job family', values: ['Branch', 'Software engineering', 'Executive', 'Modern Workplace', 'HR', 'IT'] },
+  { key: 'role', label: 'Role', values: ['Customer service colleague', 'Software engineer', 'Infrastructure engineer', 'Managing director', 'Executive assistant', 'Line manager'] },
+  { key: 'grade', label: 'Grade', values: ['A', 'B', 'C', 'D', 'E', 'F', 'G'] },
   { key: 'platform', label: 'Platform', values: ['Retail', 'Technology', 'Group Functions'] },
   { key: 'location', label: 'Location', values: ['Cardiff', 'Leeds', 'London', 'Edinburgh'] },
 ];

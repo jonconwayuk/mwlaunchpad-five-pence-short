@@ -1,4 +1,4 @@
-import { listPathways } from '@/src/db/queries';
+import { getPathwaySemver, listPathways } from '@/src/db/queries';
 import { Library } from '@/src/ui/components/journey-builder/JourneyLibrary';
 
 export const dynamic = 'force-dynamic';
@@ -6,7 +6,7 @@ export const dynamic = 'force-dynamic';
 export default function Page() {
   const rows = listPathways().map((p) => ({
     id: p.id, title: p.title, href: `/portal/pathways/${p.id}`, tags: p.tags,
-    cells: [p.liveVersion ? `v${p.liveVersion}` : 'Draft', `Applied ${p.appliedCount} ${p.appliedCount === 1 ? 'time' : 'times'}`],
+    cells: [p.liveVersion ? `Version ${getPathwaySemver(p.id) ?? p.liveVersion}` : 'Draft', `Applied ${p.appliedCount} ${p.appliedCount === 1 ? 'time' : 'times'}`],
   }));
   return (
     <main className="p-6">

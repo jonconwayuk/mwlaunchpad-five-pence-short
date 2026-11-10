@@ -1,0 +1,3 @@
+G1 (feedback items 2 and 3, plus stretch 1): `drive.mjs` is stretch-1/drive.mjs with check 8 now answering "What kind of change is this?" (New content), plus section 11. Section 11 runs on pw-infra-e: it filters by Stage, grade E and job family, drags a Journey on, draws a Dependency, refuses the loop, publishes 1.0.0 to 1.1.0, reloads, and reads the semantic versions in the Pathway library. Run on a freshly seeded db, port 3101.
+`drive-result.txt`: 32 PASS, 0 FAIL. `g1-infra-1280.png` shows pw-infra-e after the reload. `check.txt`: `npm run check` (tsc, eslint ., vitest, 163 tests) green.
+Untagged Journeys stay listed under any filter value. No Journey carries a grade tag yet, so the grade filter narrows nothing until journeys/*.json gain grade tags.

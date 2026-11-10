@@ -1,0 +1,32 @@
+PASS four lanes fit at 1280: lane labels in view: [true,true,true,true] [[448,654,196],[654,860,196],[860,1066,196],[1066,1272,196]] innerWidth 1280
+PASS drag tints the Journey Stage lane: tinted ["OnboardingDrop here"], dragged card Stage "Onboarding"
+PASS drag from library into its lane: dropped over Pre-contract, card x=516 (Onboarding lane is 500 to 750)
+PASS card cannot leave its Stage lane: dragged 400px right, card x=274 (Pre-employment lane is 250 to 500)
+PASS loop refused with named message: "Payroll already waits for Contracting, so Contracting cannot wait for Payroll.Got it"
+PASS Dependency connects: edges 12 -> 13
+PASS Mandatory toggles and shows a padlock: padlock on Pulse check false -> true
+PASS side panel leaves the Hard Stop visible: Hard Stop right edge 648.4739990234375, panel left 1016
+PASS removing a Dependency drops the edge: edges 13 -> 12
+PASS Container, Timer and Hard Stop render: ["Cleared to start","7 days before start date","5 days before start date","13 days after start date","29 days after start date","On start date","7 days after start date","Hard StopPre-employment checks failedStops the whole pathway","Hard StopPre-employment checks not done in timeStops the work it is connected to"]
+PASS autosave after a change: "Draft saved"
+PASS reload keeps positions: before {"x":266,"y":737.534,"drop":516}, after {"x":266,"y":737.534,"drop":516}
+PASS Publish asks the kind of change and shows the next semantic version: "Live version 1.0.0" -> "Live version 1.1.0", asked "What kind of change is this?"
+PASS negative offset off the start date is refused: "Only a Timer anchored on the start date can count back before it."
+PASS a Timer can be added: timer:t-1: "2 days after start date"
+PASS a Journey can wait for the Timer: edge timer:t-1 -> i-payroll and side panel line: true
+PASS the Timer autosaves: "Draft saved"
+PASS the Timer and its Dependency survive reload: Timer node and edge after reload: true
+PASS removing a Timer something waits for is refused: "Payroll waits for Welcome call. Remove that Dependency first." timer at {"x":753.7040100097656,"y":1042.822021484375}
+PASS pw-branch: no Timer or Hard Stop overlaps a Journey card: []
+PASS pw-branch: no sideways scroll at 1280: scrollWidth 1280
+PASS pw-engineer: no Timer or Hard Stop overlaps a Journey card: []
+PASS pw-engineer: no sideways scroll at 1280: scrollWidth 1280
+PASS pw-executive: no Timer or Hard Stop overlaps a Journey card: []
+PASS pw-executive: no sideways scroll at 1280: scrollWidth 1280
+PASS library filters by Stage, grade E and job family: 4 shown, Stages ["Onboarding"], names ["Branch induction","Retail","Engineering community intro","Technology","In-person events calendar","Welcome from sponsoring exec","Executive"]
+PASS a filtered Journey drags onto pw-infra-e: new card i-j-branch-induction-1
+PASS a Dependency draws on pw-infra-e: i-contracting -> i-j-branch-induction-1: edges 11 -> 12
+PASS the reverse Dependency is refused as a loop: "Branch induction already waits for Contracting, so Contracting cannot wait for Branch induction.Got it"
+PASS pw-infra-e publishes as New content: 1.0.0 -> "Live version 1.1.0"
+PASS reload keeps the version, the card and the Dependency: ["Live version 1.1.0",true,true]
+PASS the Pathway library shows semantic versions: ["Version 1.1.0","Version 1.0.0","Version 1.0.0","Version 1.1.0"]

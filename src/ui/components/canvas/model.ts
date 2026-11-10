@@ -138,7 +138,7 @@ export function snapshotFromFixture(state: EngineState, id: string, title: strin
   });
   return {
     id: `${id}-draft`, pathwayId: id, version: 1, title,
-    tags: { jobFamily: 'Branch', platform: 'Retail', grade: 'Colleague' },
+    tags: { jobFamily: 'Branch', platform: 'Retail', grade: 'B' },
     items,
     containers: state.containers.map((c) => ({ id: c.containerId, label: c.label, itemIds: c.remainingItemIds })),
     timers: [

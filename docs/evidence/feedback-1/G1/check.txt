@@ -1,0 +1,27 @@
+
+> mwlaunchpad@0.1.0 check
+> tsc --noEmit && eslint . && vitest run
+
+
+ RUN  v5.1.0 <repo>
+
+{"level":"info","msg":"seeded"}
+{"level":"info","msg":"seeded"}
+{"level":"info","msg":"seeded"}
+{"level":"info","msg":"seeded"}
+{"level":"info","msg":"seeded"}
+{"level":"info","msg":"seeded"}
+{"level":"info","msg":"seeded"}
+{"level":"info","msg":"seeded"}
+{"level":"info","msg":"seeded"}
+{"level":"info","msg":"seeded"}
+{"level":"info","msg":"seeded"}
+{"level":"info","msg":"seeded"}
+{"level":"info","msg":"seeded"}
+{"level":"info","msg":"seeded"}
+
+ Test Files  18 passed (18)
+      Tests  163 passed (163)
+   Start at  10:39:33
+   Duration  653ms (tests 74%, import 18%, transform 5%, worker 2%)
+
