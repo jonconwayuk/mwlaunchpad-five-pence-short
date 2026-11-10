@@ -73,3 +73,4 @@
 10:44 | both | H | integration walker + fixer | opus | Bob walk steps 1-8 in one browser window, fix what breaks with a test each, rewrite demo script and README (decision 37)
 11:03 W2 H-fix-phone implementer sonnet: Phone layout squeezes /me two-column grid (lg: media queries vs narrow frame); switch to container queries in Frame + StarterPreview
 11:06 W2 H-fix-migrate implementer sonnet: make the column migration in src/db/client.ts race-safe (duplicate column flake at build)
+11:12 W2 H-review reviewer opus: independent review of d1ea8be 7455ca2 4d14ae3 1f05018 ac41693 (wave H fixes, phone fix, db race, script+README)
