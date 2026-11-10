@@ -1,7 +1,9 @@
 import type { Metadata } from 'next';
 import localFont from 'next/font/local';
-import { SimulatedDateStrip } from '@/src/ui/components/SimulatedDateStrip';
-import { getDemoClock } from '@/src/db/queries';
+import { cookies } from 'next/headers';
+import { Frame, TopStrip } from '@/src/ui/components/shell/TopStrip';
+import { getDemoClock, getPerson } from '@/src/db/queries';
+import { PERSONAS, getPersona } from '@/src/lib/persona';
 import './globals.css';
 
 // Local files: a build must never need the network (decision 28). Sans is one variable font.
@@ -19,12 +21,18 @@ export const metadata: Metadata = { title: 'MW Launchpad' };
 // Reads the Demo clock per request so the strip's first paint has the real date.
 export const dynamic = 'force-dynamic';
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const layout = (await cookies()).get('layout')?.value === 'phone' ? 'phone' : 'desktop';
+  // A persona not seeded yet still appears; its Manager and Buddy views fall back to /team's default viewer.
+  const people = PERSONAS.map((p) => {
+    const row = getPerson(p.personId);
+    return { id: p.id, name: row?.name ?? p.name, lineManagerId: row?.lineManagerId ?? undefined, buddyId: row?.buddyId ?? undefined };
+  });
   return (
     <html lang="en" className={`${sans.variable} ${serif.variable}`}>
       <body className="w-fit min-w-full font-sans">
-        <SimulatedDateStrip initial={getDemoClock()} />
-        {children}
+        <TopStrip initialDate={getDemoClock()} people={people} personaId={await getPersona()} layout={layout} />
+        <Frame layout={layout}>{children}</Frame>
       </body>
     </html>
   );

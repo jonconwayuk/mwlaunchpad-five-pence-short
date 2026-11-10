@@ -1,0 +1,49 @@
+width 1280 scrollWidth 1280
+Simulated date 10 Nov 2026
+View
+Onboarding Studio
+Joiner
+Manager
+Buddy
+Person
+Bob Warwick
+Alex Morgan
+Sam Okafor
+Dana Whitfield
+Layout
+Phone
+Desktop
+Viewing as
+Priya Shah, Line Manager
+Tom Evans, Buddy
+Chris Lee, Line Manager
+Jo Patel, Buddy
+Ruth King, Line Manager
+Mark Allen, Buddy
+Your starters
+
+10 Nov
+
+Needs decision
+
+Sam Okafor: Pre-employment checks not done in time
+
+Pre-employment checks is not done by 5 days before Start date
+
+Reason
+Confirm
+Extend 7 days
+Dismiss
+To-do
+
+Nothing to do right now.
+
+Sam Okafor
+
+Your offer
+
+0 of 1 Containers complete. Next: Cleared to start
+
+Add a journey
+Note to Sam Okafor
+Send note

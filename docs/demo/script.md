@@ -7,11 +7,11 @@ This is for whoever runs the demo on stage. It needs three people: **HR** on the
 1. On the laptop, in the repo, run `npm run seed && npm run build && npm start`.
 2. Put both phones on the same wifi as the laptop. Use the laptop's address wherever this says `<laptop-ip>`.
 3. Open these:
-   - Laptop: `http://<laptop-ip>:3000/portal` (the Admin Portal)
+   - Laptop: `http://<laptop-ip>:3000/portal` (the Onboarding Studio)
    - Phone A: `http://<laptop-ip>:3000/persona/A` (Alex Morgan, branch colleague)
    - Phone B: `http://<laptop-ip>:3000/persona/B` (Sam Okafor, software engineer)
    - Line Manager: `/team?viewer=lm-chris` (Chris Lee, Sam's manager) or `/team?viewer=lm-priya` (Priya Shah, Alex's manager)
-4. Click **Reset demo** in the Admin Portal header just before you go on.
+4. Click **Reset demo** in the Onboarding Studio just before you go on.
 
 **If anything goes wrong:** click Reset demo, refresh both phones and carry on from the beat you were on.
 

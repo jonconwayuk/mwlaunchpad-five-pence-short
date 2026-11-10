@@ -6,7 +6,7 @@ Built for LaunchPad '26 (Modern Workplace Engineering hackathon, Edition 02).
 
 ## What it does
 
-HR builds Journeys in the Journey builder and groups them into a Pathway on a drag-and-drop canvas in the Admin Portal. They apply a Pathway to a Person, and the Applied Pathway is built live from the back end on that person's phone. A Line Manager or Buddy sees what is left and can act on it, and changes made in the portal show up on the phones within a few seconds.
+HR builds Journeys in the Journey builder and groups them into a Pathway on a drag-and-drop canvas in the Onboarding Studio. They apply a Pathway to a Person, and the Applied Pathway is built live from the back end on that person's phone. A Line Manager or Buddy sees what is left and can act on it, and changes made in the portal show up on the phones within a few seconds.
 
 ## Which part of the challenge it tackles
 
@@ -28,7 +28,7 @@ Open `http://localhost:3000/portal` on the laptop. For a phone on the same wifi,
 
 | Face | Route | Device |
 | --- | --- | --- |
-| Admin Portal (Journey library and builder, Pathway builder, people, Demo controls) | `/portal` | Laptop |
+| Onboarding Studio (Journey library and builder, Pathway builder, people, Demo controls) | `/portal` | Laptop |
 | Starter Preview | `/me` | Phone |
 | Manager and Buddy view | `/team` | Phone |
 

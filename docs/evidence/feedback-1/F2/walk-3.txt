@@ -1,0 +1,47 @@
+width 1280 scrollWidth 1280
+Simulated date 10 Nov 2026
+View
+Onboarding Studio
+Joiner
+Manager
+Buddy
+Person
+Bob Warwick
+Alex Morgan
+Sam Okafor
+Dana Whitfield
+Layout
+Phone
+Desktop
+Your offer
+
+Next: Read your offer
+
+Your offer
+Contracting
+Action required
+
+Read your offer
+
+Got it
+Getting ready
+Payroll
+Not started
+Pre-employment checks
+Not started
+ID creation (photo)
+Not started
+Developer device
+Not started
+Manager ready
+Not started
+Meet your buddy
+Not started
+Your first week
+Engineering community intro
+Not started
+Your first month
+Pulse check
+Not started
+Pulse check
+Not started
