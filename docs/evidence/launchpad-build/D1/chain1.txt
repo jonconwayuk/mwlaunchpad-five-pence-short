@@ -1,0 +1,12 @@
+# Chain 1: Manager ready (Persona B, from Reset)
+{"ok":true}
+> POST /api/actions {"personId":"person-b","itemId":"i-contracting","actionId":"j-contracting-a1","actorPersonId":"person-b"}
+{"ok":true,"error":null}
+> POST /api/actions {"personId":"person-b","itemId":"i-contracting","actionId":"j-contracting-a2","actorPersonId":"person-b"}
+{"ok":false,"error":"Provide a value of up to 2000 characters"}
+## state as line-manager
+{"mr":[{"id":"i-manager-ready","s":"not-started","ca":null}],"tasks":[]}
+> POST /api/actions {"personId":"person-b","itemId":"i-manager-ready","actionId":"j-manager-ready-a1","actorPersonId":"lm-chris"}
+{"ok":false,"error":"That Action is not the current Action for this Journey"}
+## state as starter
+{"mr":[{"id":"i-manager-ready","s":"not-started","ca":null}],"notes":[{"to":"starter","message":"A quick reminder to add your bank details so we can set up your pay."}]}

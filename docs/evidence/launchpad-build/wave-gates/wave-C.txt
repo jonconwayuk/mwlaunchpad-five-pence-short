@@ -1,0 +1,11 @@
+4aa227d Add the Manager and Buddy view, Additions and Needs decision
+
+ Test Files  5 passed (5)
+      Tests  60 passed (60)
+   Start at  09:34:11
+   Duration  91ms (transform 53%, import 27%, tests 15%, worker 6%)
+
+---BUILD
+ ✓ Compiled successfully in 2.6s
+   Generating static pages (0/3) ...
+ ✓ Generating static pages (3/3)

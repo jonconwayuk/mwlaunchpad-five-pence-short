@@ -14,3 +14,18 @@
 09:14 | B3 | fix implementer | sonnet | Scoped fix: in-progress row test, controlled Task tick box, no Not for me on locked items, GLOSSARY status words
 09:15 | B1 | fix implementer | opus | Scoped fix: appliedOn in EngineInput for availability, seed Persona A to match fixture story, overdue Task actionId
 09:16 | B4 | fix implementer | opus | Scoped fix: fit canvas at 1280 with overlay side panel, tidy same-lane edges, remove a Dependency, highlight target lane
+09:18 | C1 | implementer | sonnet | Real /api/state via buildEngineInput+computeState, server-side as filter (roleFilter.ts), POST /api/actions, apiHandler
+09:18 | C2 | implementer | sonnet | People pages, apply a Pathway, Demo controls (clock, simulate, reset), persisted Demo clock, /persona switch
+09:18 | C3 | implementer | opus | /team Manager and Buddy view, Add a Journey (Additions), Needs decision, /api/team
+09:18 | C4 | implementer | sonnet | Journey builder form, Journey and Pathway libraries, /api/journeys
+09:21 | C1 | reviewer | opus | Re-verify C1 Done-when, zod validation, server-side as filter, error handling via curl
+09:21 | C4 | reviewer | opus | Re-verify C4 Done-when in Chrome, filters, per-type fields, zod on POST /api/journeys
+09:22 | C2 | reviewer | opus | Re-verify C2 Done-when, reset, forward-only clock, persona redirect, zod on clock/simulate/reset/apply
+09:23 | C1 | fix implementer | sonnet | Scoped fix: block automation completion, enforce starterOnly, validate actor, actingFor name, value by type, error paths, notifications filter
+09:24 | C4 | fix implementer | sonnet | Scoped fix: discriminated-union Action schema, Choose options min 2, unique Action ids, length limits, tag enums
+09:24 | C3 | reviewer | opus | Re-verify C3 Done-when (Addition live, Buddy filter, Needs decision), zod and viewer filter on team/additions/hard-stops
+09:26 | C2 | fix implementer | sonnet | Scoped fix: real-date and bounded clock validation, Simulate selection by key, date strip width and server-rendered date
+09:28 | D1 | implementer | opus | Chain reactions 1-3 and Hard Stop end to end on the seed, fixes with a Vitest test each
+09:28 | D2 | implementer | opus | PUT/publish Pathway routes, canvas loads draft and library from DB, Save draft/Publish wired, journeys owner fix
+09:28 | E1a | implementer | sonnet | README rewrite per E1 step 5, npm audit, grep sweeps (report only)
+09:33 | C3 | fix implementer | sonnet | Scoped fix: Addition loop guard, After a Container, Buddy filter strips automation detail, Remove matches before-it-starts, JSON/unknown-person 400s, copy

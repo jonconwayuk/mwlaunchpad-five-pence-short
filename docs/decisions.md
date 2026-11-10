@@ -14,14 +14,14 @@ One row per `BUILD-PLAN.md` task (waves A to E), updated as each phase lands. Th
 | B1 Pathway engine and Vitest tests | Accepted | `docs/evidence/launchpad-build/B1/`, decision 16 |
 | B2 Database, seed data and mocked adapters | Accepted | `docs/evidence/launchpad-build/B2/`, decisions 17 and 19 |
 | B3 Starter Preview | Accepted (390px by headless Chrome, not on a device) | `docs/evidence/launchpad-build/B3/`, decision 18 |
-| B4 Pathway builder canvas | Accepted, fix loop for stage polish running | `docs/evidence/launchpad-build/B4/`, decision 21 |
-| C1 Real state API with role filtering | Not started | |
-| C2 People, apply a Pathway, Demo controls | Not started | |
-| C3 Manager and Buddy view, Additions, Needs decision | Not started | |
-| C4 Journey builder and the libraries | Not started | |
-| D1 Chains and the Hard Stop end to end | Not started | |
-| D2 Canvas persistence | Not started | |
-| E1 Freeze preparation | Not started | |
+| B4 Pathway builder canvas | Accepted | `docs/evidence/launchpad-build/B4/`, decision 21 |
+| C1 Real state API with role filtering | Accepted | `docs/evidence/launchpad-build/C1/`, decision 22 |
+| C2 People, apply a Pathway, Demo controls | Accepted | `docs/evidence/launchpad-build/C2/`, decision 22 |
+| C3 Manager and Buddy view, Additions, Needs decision | In progress (fix loop running) | `docs/evidence/launchpad-build/C3/` |
+| C4 Journey builder and the libraries | Accepted, one gap passed to D2 | `docs/evidence/launchpad-build/C4/`, decision 22 |
+| D1 Chains and the Hard Stop end to end | In progress | |
+| D2 Canvas persistence | In progress | |
+| E1 Freeze preparation | In progress (README and sweeps) | |
 | Live updates over server-sent events | Deviation | B1 (polling every 3 s), decision 9 |
 | Deploy once | Deviation | B13 (local network only), decision 9 |
 | Observability page | Deviation | B3 (stretch only), decision 9 |
@@ -203,3 +203,35 @@ Numbered once, in order, never renumbered or deleted. A reversed decision gets a
   - `taste-skill` was not loaded by the B4 implementer. It is loaded by the B4 fix loop.
 - **Why:** These are the fallbacks the B4 brief allowed.
 - **Evidence:** `docs/evidence/launchpad-build/B4/`. The B4 review re-ran the headless Chrome drive at 1280 and 1440 wide, and every Done-when line passed. The library drag is a synthetic DragEvent in that drive, not a real mouse drag.
+
+### 22. Wave C fallbacks, and one gap left after C4's fix loop
+
+- **Decided (C1):**
+  - `/api/state` accepts any person id that has an Applied Pathway. `simulatedDate` comes from the persisted Demo clock.
+  - A Hidden automation can be completed only through Demo controls (403).
+  - `starterOnly` is enforced, and the actor must exist.
+  - `actingFor` carries the starter's name.
+  - A Provide's content is never stored.
+  - Notifications are filtered by their recipient.
+- **Decided (C2):**
+  - Demo controls are read on the server in the portal layout, and each control calls `router.refresh()`.
+  - Simulate accepts only the item's current Hidden automation.
+  - The Apply a pathway filters are checkboxes, one for each of the person's tags. A Pathway with no value for a tag passes that filter (ADR-0004: tags browse and filter, never match).
+  - Phones pick their persona only through `/persona/<id>`.
+- **Decided (C3):**
+  - An Addition can be added or removed only by the starter's Line Manager or by HR.
+  - `/team?viewer=` switches the viewer, with `lm-chris` as the default.
+  - Notes and the Line Manager override share `POST /api/team`. The override has no UI button, as the STOP allowed.
+  - An Addition's item id is `add-<journeyId>`, so the same Journey can't be added to one starter twice.
+  - `extendDays` is limited to 1 to 60. The Hard Stop decision route records no actor, because the contract has no field for one.
+- **Decided (C4):**
+  - The Journey library shows a dash for "Applied N times" and for the skip rate. There is no per-Journey count query, and the STOP allowed this.
+  - A new Journey's id is the slug of its title. Posting `isNew` refuses a duplicate with 409.
+- **Gap, given to D2:** C4's strict schema allows `owner` only on Task and Notification Actions. Seeded Actions carry `owner` on other types too, and the engine reads it on every type (decision 16). So editing 10 of the 18 seeded Journeys is rejected with 400. This was found by the orchestrator, who posted every seeded Journey back through the route. C4's single fix loop is used, so D2 takes ownership of `app/api/journeys/route.ts` for this one fix: an optional `owner` on every Action type.
+- **Evidence:** `docs/evidence/launchpad-build/C1/` to `C4/`.
+
+### 23. Waves D and E run in parallel with the end of wave C, with a compatibility review at the end
+
+- **Decided:** This partly supersedes decision 10's "waves still run in order". From 09:28, wave D (D1, D2) and the first half of E1 (README, `npm audit`, the grep sweeps) start while the C3 review is still running. Exclusive file ownership still applies. Every task still gets a fresh implementer, an independent reviewer and at most one fix loop. After all the waves, one compatibility review runs across the whole build, its bugs are fixed, and then the final E1 half runs (security review and the full demo walkthrough). A push still needs a green `npm run check` and `npm run build` (decisions 11 and 12).
+- **Why:** Owner's instruction, 10 Nov 2026 09:27: "pivot to building waves in parallel and review for compatibility at the end of all waves and fix any bugs, but do not compromise what you are already doing."
+- **Evidence:** This entry; the delegation ledger.
