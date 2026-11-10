@@ -16,8 +16,8 @@ export function filterForViewer(
       ...state,
       // A Buddy never sees check details: Outcomes, waiting times, or an automation as the current Action.
       items: noFlags.map((i) => {
-        const { outcome, waitingDays, usualRange, ...rest } = i;
-        void outcome; void waitingDays; void usualRange;
+        const { outcome, waitingDays, usualRange, actions, ...rest } = i;
+        void outcome; void waitingDays; void usualRange; void actions; // D5: a Buddy sees Stage and Containers only
         return { ...rest, overdue: false, ...(i.currentAction?.type === 'automation' && { currentAction: undefined }) };
       }),
       needsDecisions: [],
@@ -43,7 +43,9 @@ function starterView(state: EngineState, items: ItemState[]): { stopped: boolean
   return {
     stopped: decidedFailure && items.some((i) => i.status === 'cancelled'),
     items: items.map((i) => {
-      const shown = i.currentAction?.type === 'automation' ? { ...i, currentAction: undefined } : i;
+      // Steps: no hidden automations, no notifications for someone else. A masked Failed item's failing step is an automation, so none leaks.
+      const steps = i.actions?.filter((a) => a.type !== 'automation' && (a.type !== 'notification' || a.owner === 'starter'));
+      const shown = { ...i, actions: steps, ...(i.currentAction?.type === 'automation' && { currentAction: undefined }) };
       return pending(i) ? { ...shown, status: 'in-progress', outcome: undefined, doneAt: undefined } : shown;
     }),
   };

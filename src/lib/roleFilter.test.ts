@@ -102,3 +102,31 @@ describe('filterForViewer, D2f.4 masking for the starter', () => {
     expect(filterForViewer({ ...raw, items: raw.items.map((i, n) => (n === 0 ? { ...i, status: 'cancelled' as const } : i)) }, 'starter').stopped).toBe(false);
   });
 });
+
+describe('filterForViewer, Journey steps', () => {
+  const state = computeState(branchInput({ progress: [...contracted, done('i-manager', 'a-goals', T)] }));
+  const steps = (as: Parameters<typeof filterForViewer>[1], id = 'i-manager') =>
+    filterForViewer(state, as).items.find((i) => i.itemId === id)!.actions;
+
+  it('starter steps, when the Journey has an automation, omit it', () => {
+    expect(steps('starter')?.map((a) => a.id)).toEqual(['a-goals', 'a-pack-note']);
+    expect(steps('delegate')?.map((a) => a.type)).not.toContain('automation');
+  });
+  it('starter steps, when a notification is for the buddy, omit it', () => {
+    expect(steps('starter', 'i-buddy')?.map((a) => a.id)).toEqual(['a-hello']);
+  });
+  it('buddy items, whatever the Journey, carry no actions', () => {
+    expect(filterForViewer(state, 'buddy').items.every((i) => !('actions' in i))).toBe(true);
+  });
+  it('line manager and HR steps, when the Journey has an automation, keep every Action', () => {
+    expect(steps('line-manager')).toHaveLength(3);
+    expect(steps('hr')).toHaveLength(3);
+  });
+  it('starter steps, while a Hard Stop is pending, match those before the failure', () => {
+    const w = [...contracted, done('i-checks', 'a-rtw', '2026-10-23')];
+    const failed = [...w, done('i-checks', 'a-vetting', T, { automationResult: 'failed' })];
+    const get = (p: typeof w) => filterForViewer(computeState(branchInput({ progress: p })), 'starter').items.find((i) => i.itemId === 'i-checks')!.actions;
+    expect(get(failed)).toEqual(get(w));
+    expect(JSON.stringify(get(failed))).not.toContain('vetting');
+  });
+});

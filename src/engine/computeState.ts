@@ -1,4 +1,4 @@
-import type { EngineInput, EngineState, ItemState, TaskRef } from './types';
+import type { ActionStep, EngineInput, EngineState, ItemState, TaskRef } from './types';
 import { createEvaluator } from './availability';
 import { addDays, diffDays } from './dates';
 import { dayNumberOf, personStatusOf, stageOf, usualRange } from './duration';
@@ -50,6 +50,14 @@ export function computeState(input: EngineInput): EngineState {
         sentOn: n.on ?? s.availableSince ?? today });
     }
 
+    const actions: ActionStep[] = s.journey.actions.map((a) => {
+      const p = input.progress.find((x) => x.itemId === item.id && x.actionId === a.id && x.state === 'done');
+      const owner = a.type === 'task' || a.type === 'notification' ? ownerOf(a) : undefined;
+      const base = { id: a.id, type: a.type, label: a.label, ...(owner && { owner }) };
+      if (p) return { ...base, state: 'done' as const, ...(p.doneAt && { doneAt: p.doneAt }) };
+      return { ...base, state: open && s.currentAction?.id === a.id ? 'current' as const : 'upcoming' as const };
+    });
+
     return {
       itemId: item.id, journeyId: item.journeyId, title: s.title, stage: s.journey.stage,
       status: s.status, mandatory: item.mandatory, available: s.available,
@@ -59,7 +67,7 @@ export function computeState(input: EngineInput): EngineState {
       unmetDependencies: s.unmetDependencies,
       // D2f.4: a Failed Outcome keeps its waiting message so the Starter Preview does not change while pending.
       whileYouWait: blockedFlag || s.outcome === 'failed' ? s.journey.whileYouWait : undefined,
-      addedBy: item.addedBy,
+      addedBy: item.addedBy, actions,
     };
   });
 
