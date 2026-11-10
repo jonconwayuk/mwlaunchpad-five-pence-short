@@ -1,0 +1,259 @@
+<mxfile host="Electron" agent="Claude">
+  <diagram id="architecture-slide-lbg" name="Architecture (LBG slide)">
+    <mxGraphModel dx="1653" dy="841" grid="1" gridSize="5" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1280" pageHeight="720" background="#FFFFFF" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" parent="1" style="text;html=1;fontSize=30;fontStyle=1;align=left;verticalAlign=middle;fontColor=#006A4D;" value="Onboarding App Architecture" vertex="1">
+          <mxGeometry height="40" width="500" x="40" y="18" as="geometry" />
+        </mxCell>
+        <mxCell id="subtitle" parent="1" style="text;html=1;fontSize=15;align=left;verticalAlign=middle;fontColor=#323233;" value="One Next.js web app on Azure · Modules do the technical work" vertex="1">
+          <mxGeometry height="26" width="500" x="40" y="56" as="geometry" />
+        </mxCell>
+        <mxCell id="titleBar" parent="1" style="rounded=1;arcSize=50;html=1;fillColor=#11B67A;strokeColor=none;" value="" vertex="1">
+          <mxGeometry height="5" width="90" x="40" y="88" as="geometry" />
+        </mxCell>
+        <mxCell id="hPeople" parent="1" style="text;html=1;fontSize=15;fontStyle=1;align=left;verticalAlign=middle;fontColor=#024731;" value="People" vertex="1">
+          <mxGeometry height="26" width="160" x="40" y="112" as="geometry" />
+        </mxCell>
+        <mxCell id="hSignin" parent="1" style="text;html=1;fontSize=15;fontStyle=1;align=left;verticalAlign=middle;fontColor=#024731;" value="Sign-in" vertex="1">
+          <mxGeometry height="26" width="170" x="230" y="112" as="geometry" />
+        </mxCell>
+        <mxCell id="hDelivery" parent="1" style="text;html=1;fontSize=15;fontStyle=1;align=left;verticalAlign=middle;fontColor=#024731;" value="Web app delivery" vertex="1">
+          <mxGeometry height="26" width="160" x="40" y="448" as="geometry" />
+        </mxCell>
+        <mxCell id="zoneAzure" parent="1" style="rounded=1;arcSize=3;whiteSpace=wrap;html=1;fillColor=#F1F1F1;strokeColor=none;" value="" vertex="1">
+          <mxGeometry height="485" width="520" x="430" y="105" as="geometry" />
+        </mxCell>
+        <mxCell id="azIcon" parent="1" style="image;aspect=fixed;html=1;points=[];image=img/lib/azure2/general/Resource_Groups.svg;" value="" vertex="1">
+          <mxGeometry height="20" width="20" x="448" y="115" as="geometry" />
+        </mxCell>
+        <mxCell id="hAzure" parent="1" style="text;html=1;fontSize=15;fontStyle=1;align=left;verticalAlign=middle;fontColor=#024731;" value="Microsoft Azure · UK South" vertex="1">
+          <mxGeometry height="26" width="400" x="474" y="112" as="geometry" />
+        </mxCell>
+        <mxCell id="zoneSystems" parent="1" style="rounded=1;arcSize=3;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#DBDBDB;dashed=1;dashPattern=6 4;strokeWidth=1.5;" value="" vertex="1">
+          <mxGeometry height="485" width="260" x="980" y="105" as="geometry" />
+        </mxCell>
+        <mxCell id="hSystems" parent="1" style="text;html=1;fontSize=15;fontStyle=1;align=left;verticalAlign=middle;fontColor=#024731;" value="Systems of Record" vertex="1">
+          <mxGeometry height="26" width="220" x="1000" y="112" as="geometry" />
+        </mxCell>
+        <mxCell id="joiner" parent="1" style="rounded=1;arcSize=8;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#DBDBDB;strokeWidth=1.5;fontColor=#323233;fontSize=12;verticalAlign=bottom;spacingBottom=10;" value="&lt;b style=&quot;font-size:14px&quot;&gt;Joiner&lt;/b&gt;&lt;br&gt;before Day 1 · phone" vertex="1">
+          <mxGeometry height="110" width="160" x="40" y="160" as="geometry" />
+        </mxCell>
+        <mxCell id="joinerIcon" parent="1" style="image;aspect=fixed;html=1;points=[];image=img/lib/azure2/identity/Users.svg;" value="" vertex="1">
+          <mxGeometry height="36" width="36" x="102" y="172" as="geometry" />
+        </mxCell>
+        <mxCell id="staff" parent="1" style="rounded=1;arcSize=8;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#DBDBDB;strokeWidth=1.5;fontColor=#323233;fontSize=12;verticalAlign=bottom;spacingBottom=8;" value="&lt;b style=&quot;font-size:14px&quot;&gt;Staff&lt;/b&gt;&lt;br&gt;HR, Line Managers,&lt;br&gt;Buddies, Starters" vertex="1">
+          <mxGeometry height="110" width="160" x="40" y="320" as="geometry" />
+        </mxCell>
+        <mxCell id="staffIcon" parent="1" style="image;aspect=fixed;html=1;points=[];image=img/lib/azure2/identity/Users.svg;" value="" vertex="1">
+          <mxGeometry height="32" width="32" x="102" y="328" as="geometry" />
+        </mxCell>
+        <mxCell id="workday" parent="1" style="rounded=1;arcSize=8;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#1467B5;strokeWidth=2;fontColor=#323233;fontSize=12;" value="&lt;b style=&quot;font-size:14px&quot;&gt;Workday&lt;/b&gt;&lt;br&gt;Sign-in for Joiners" vertex="1">
+          <mxGeometry height="110" width="170" x="230" y="160" as="geometry" />
+        </mxCell>
+        <mxCell id="entra" parent="1" style="rounded=1;arcSize=8;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#1467B5;strokeWidth=2;fontColor=#323233;fontSize=12;verticalAlign=bottom;spacingBottom=12;" value="&lt;b style=&quot;font-size:14px&quot;&gt;Microsoft Entra ID&lt;/b&gt;&lt;br&gt;Sign-in for staff · MFA" vertex="1">
+          <mxGeometry height="110" width="170" x="230" y="320" as="geometry" />
+        </mxCell>
+        <mxCell id="entraIcon" parent="1" style="image;aspect=fixed;html=1;points=[];image=img/lib/azure2/identity/Azure_Active_Directory.svg;" value="" vertex="1">
+          <mxGeometry height="36" width="36" x="297" y="332" as="geometry" />
+        </mxCell>
+        <mxCell id="repo" parent="1" style="rounded=1;arcSize=8;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#A19FFF;strokeWidth=2;fontColor=#323233;fontSize=12;" value="&lt;b style=&quot;font-size:14px&quot;&gt;GitHub Repo&lt;/b&gt;&lt;br&gt;web app code" vertex="1">
+          <mxGeometry height="80" width="160" x="40" y="480" as="geometry" />
+        </mxCell>
+        <mxCell id="actions" parent="1" style="rounded=1;arcSize=8;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#A19FFF;strokeWidth=2;fontColor=#323233;fontSize=12;" value="&lt;b style=&quot;font-size:14px&quot;&gt;GitHub Actions&lt;/b&gt;&lt;br&gt;Test, Build, Deploy&lt;br&gt;signed in with OIDC" vertex="1">
+          <mxGeometry height="80" width="170" x="230" y="480" as="geometry" />
+        </mxCell>
+        <mxCell id="modRepo" parent="1" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#A19FFF;strokeWidth=2;fontColor=#323233;fontSize=12;" value="&lt;b style=&quot;font-size:14px&quot;&gt;Module Definition Repos&lt;/b&gt;&lt;br&gt;GitHub" vertex="1">
+          <mxGeometry height="62" width="190" x="525" y="22" as="geometry" />
+        </mxCell>
+        <mxCell id="modPipe" parent="1" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#A19FFF;strokeWidth=2;fontColor=#323233;fontSize=12;" value="&lt;b style=&quot;font-size:14px&quot;&gt;GitHub Actions&lt;/b&gt;&lt;br&gt;Test, Version, Release" vertex="1">
+          <mxGeometry height="62" width="170" x="775" y="22" as="geometry" />
+        </mxCell>
+        <mxCell id="appsvc" parent="1" style="rounded=1;arcSize=5;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#006A4D;strokeWidth=2.5;" value="" vertex="1">
+          <mxGeometry height="290" width="290" x="450" y="150" as="geometry" />
+        </mxCell>
+        <mxCell id="appsvcIcon" parent="1" style="image;aspect=fixed;html=1;points=[];image=img/lib/azure2/app_services/App_Services.svg;" value="" vertex="1">
+          <mxGeometry height="36" width="36" x="466" y="163" as="geometry" />
+        </mxCell>
+        <mxCell id="appsvcText" parent="1" style="text;html=1;fontSize=12;align=left;verticalAlign=middle;fontColor=#323233;whiteSpace=wrap;" value="&lt;b style=&quot;font-size:15px&quot;&gt;Azure App Service&lt;/b&gt;&lt;br&gt;Linux · Node.js 22" vertex="1">
+          <mxGeometry height="44" width="220" x="512" y="160" as="geometry" />
+        </mxCell>
+        <mxCell id="webapp" parent="1" style="rounded=1;arcSize=6;whiteSpace=wrap;html=1;fillColor=#006A4D;strokeColor=none;fontColor=#FFFFFF;fontSize=12;verticalAlign=top;spacingTop=8;" value="&lt;b style=&quot;font-size:15px&quot;&gt;Next.js 15 web app&lt;/b&gt;&lt;br&gt;&lt;font color=&quot;#C7FFC6&quot;&gt;React 19 · TypeScript&lt;/font&gt;" vertex="1">
+          <mxGeometry height="214" width="258" x="466" y="212" as="geometry" />
+        </mxCell>
+        <mxCell id="faceAdmin" parent="1" style="rounded=1;arcSize=30;whiteSpace=wrap;html=1;fillColor=#6CF479;strokeColor=none;fontColor=#024731;fontSize=13;fontStyle=1;" value="Admin Portal · builders" vertex="1">
+          <mxGeometry height="30" width="226" x="482" y="268" as="geometry" />
+        </mxCell>
+        <mxCell id="faceStarter" parent="1" style="rounded=1;arcSize=30;whiteSpace=wrap;html=1;fillColor=#6CF479;strokeColor=none;fontColor=#024731;fontSize=13;fontStyle=1;" value="Starter app" vertex="1">
+          <mxGeometry height="30" width="226" x="482" y="306" as="geometry" />
+        </mxCell>
+        <mxCell id="faceTeam" parent="1" style="rounded=1;arcSize=30;whiteSpace=wrap;html=1;fillColor=#6CF479;strokeColor=none;fontColor=#024731;fontSize=13;fontStyle=1;" value="Manager and Buddy view" vertex="1">
+          <mxGeometry height="30" width="226" x="482" y="344" as="geometry" />
+        </mxCell>
+        <mxCell id="engine" parent="1" style="rounded=1;arcSize=30;whiteSpace=wrap;html=1;fillColor=#C7FFC6;strokeColor=none;fontColor=#024731;fontSize=13;fontStyle=1;" value="Pathway engine" vertex="1">
+          <mxGeometry height="30" width="226" x="482" y="382" as="geometry" />
+        </mxCell>
+        <mxCell id="funcs" parent="1" style="rounded=1;arcSize=6;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#11B67A;strokeWidth=2.5;fontColor=#323233;fontSize=12;verticalAlign=top;spacingTop=66;" value="&lt;b style=&quot;font-size:15px&quot;&gt;Azure Functions&lt;/b&gt;&lt;br&gt;runs released Modules" vertex="1">
+          <mxGeometry height="290" width="140" x="790" y="150" as="geometry" />
+        </mxCell>
+        <mxCell id="funcsIcon" parent="1" style="image;aspect=fixed;html=1;points=[];image=img/lib/azure2/compute/Function_Apps.svg;" value="" vertex="1">
+          <mxGeometry height="40" width="40" x="840" y="166" as="geometry" />
+        </mxCell>
+        <mxCell id="modLaptop" parent="1" style="rounded=1;arcSize=30;whiteSpace=wrap;html=1;fillColor=#F1F1F1;strokeColor=none;fontColor=#323233;fontSize=12;" value="Order a laptop" vertex="1">
+          <mxGeometry height="30" width="116" x="802" y="268" as="geometry" />
+        </mxCell>
+        <mxCell id="modChecks" parent="1" style="rounded=1;arcSize=30;whiteSpace=wrap;html=1;fillColor=#F1F1F1;strokeColor=none;fontColor=#323233;fontSize=12;" value="Run checks" vertex="1">
+          <mxGeometry height="30" width="116" x="802" y="306" as="geometry" />
+        </mxCell>
+        <mxCell id="modTeams" parent="1" style="rounded=1;arcSize=30;whiteSpace=wrap;html=1;fillColor=#F1F1F1;strokeColor=none;fontColor=#323233;fontSize=12;" value="Teams message" vertex="1">
+          <mxGeometry height="30" width="116" x="802" y="344" as="geometry" />
+        </mxCell>
+        <mxCell id="modMore" parent="1" style="text;html=1;align=center;verticalAlign=middle;fontColor=#323233;fontSize=12;" value="etc." vertex="1">
+          <mxGeometry height="30" width="116" x="802" y="382" as="geometry" />
+        </mxCell>
+        <mxCell id="pg" parent="1" style="rounded=1;arcSize=8;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#006A4D;strokeWidth=2;fontColor=#323233;fontSize=12;verticalAlign=bottom;spacingBottom=6;" value="&lt;b style=&quot;font-size:14px&quot;&gt;PostgreSQL&lt;/b&gt;&lt;br&gt;Flexible Server&lt;br&gt;&lt;font color=&quot;#006A4D&quot;&gt;via Drizzle ORM&lt;/font&gt;" vertex="1">
+          <mxGeometry height="95" width="148" x="450" y="480" as="geometry" />
+        </mxCell>
+        <mxCell id="pgIcon" parent="1" style="image;aspect=fixed;html=1;points=[];image=img/lib/azure2/databases/Azure_Database_PostgreSQL_Server.svg;" value="" vertex="1">
+          <mxGeometry height="26" width="26" x="511" y="487" as="geometry" />
+        </mxCell>
+        <mxCell id="kv" parent="1" style="rounded=1;arcSize=8;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#006A4D;strokeWidth=2;fontColor=#323233;fontSize=12;verticalAlign=bottom;spacingBottom=12;" value="&lt;b style=&quot;font-size:14px&quot;&gt;Azure Key Vault&lt;/b&gt;&lt;br&gt;Secrets" vertex="1">
+          <mxGeometry height="95" width="148" x="616" y="480" as="geometry" />
+        </mxCell>
+        <mxCell id="kvIcon" parent="1" style="image;aspect=fixed;html=1;points=[];image=img/lib/azure2/security/Key_Vaults.svg;" value="" vertex="1">
+          <mxGeometry height="32" width="32" x="674" y="490" as="geometry" />
+        </mxCell>
+        <mxCell id="ai" parent="1" style="rounded=1;arcSize=8;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#006A4D;strokeWidth=2;fontColor=#323233;fontSize=12;verticalAlign=bottom;spacingBottom=12;" value="&lt;b style=&quot;font-size:14px&quot;&gt;Application Insights&lt;/b&gt;&lt;br&gt;Log Analytics monitoring" vertex="1">
+          <mxGeometry height="95" width="148" x="782" y="480" as="geometry" />
+        </mxCell>
+        <mxCell id="aiIcon" parent="1" style="image;aspect=fixed;html=1;points=[];image=img/lib/azure2/devops/Application_Insights.svg;" value="" vertex="1">
+          <mxGeometry height="32" width="28" x="842" y="490" as="geometry" />
+        </mxCell>
+        <mxCell id="sysWorkday" parent="1" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#FFB16A;strokeWidth=2;fontColor=#323233;fontSize=12;" value="&lt;b style=&quot;font-size:14px&quot;&gt;Workday&lt;/b&gt;&lt;br&gt;Worker Record" vertex="1">
+          <mxGeometry height="60" width="220" x="1000" y="150" as="geometry" />
+        </mxCell>
+        <mxCell id="sysVetting" parent="1" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#FFB16A;strokeWidth=2;fontColor=#323233;fontSize=12;" value="&lt;b style=&quot;font-size:14px&quot;&gt;Vetting Provider&lt;/b&gt;&lt;br&gt;Right to Work" vertex="1">
+          <mxGeometry height="60" width="220" x="1000" y="226" as="geometry" />
+        </mxCell>
+        <mxCell id="sysSnow" parent="1" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#FFB16A;strokeWidth=2;fontColor=#323233;fontSize=12;" value="&lt;b style=&quot;font-size:14px&quot;&gt;ServiceNow&lt;/b&gt;&lt;br&gt;Devices &amp;amp; Access" vertex="1">
+          <mxGeometry height="60" width="220" x="1000" y="302" as="geometry" />
+        </mxCell>
+        <mxCell id="sysMerch" parent="1" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#FFB16A;strokeWidth=2;fontColor=#323233;fontSize=12;" value="&lt;b style=&quot;font-size:14px&quot;&gt;Merch Supplier&lt;/b&gt;&lt;br&gt;Welcome Pack" vertex="1">
+          <mxGeometry height="60" width="220" x="1000" y="378" as="geometry" />
+        </mxCell>
+        <mxCell id="sysM365" parent="1" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#FFB16A;strokeWidth=2;fontColor=#323233;fontSize=12;" value="&lt;b style=&quot;font-size:14px&quot;&gt;Microsoft 365&lt;/b&gt;&lt;br&gt;Teams via Microsoft Graph" vertex="1">
+          <mxGeometry height="60" width="220" x="1000" y="454" as="geometry" />
+        </mxCell>
+        <mxCell id="sysNote" parent="1" style="text;html=1;align=center;verticalAlign=middle;fontColor=#323233;fontSize=12;fontStyle=2;whiteSpace=wrap;" value="Only Modules talk to these systems" vertex="1">
+          <mxGeometry height="40" width="220" x="1000" y="530" as="geometry" />
+        </mxCell>
+        <mxCell id="eJoinerWd" edge="1" parent="1" source="joiner" style="endArrow=block;endFill=1;endSize=5;html=1;strokeColor=#11B67A;strokeWidth=3;flowAnimation=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" target="workday">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="eStaffEntra" edge="1" parent="1" source="staff" style="endArrow=block;endFill=1;endSize=5;html=1;strokeColor=#11B67A;strokeWidth=3;flowAnimation=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" target="entra">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="eWdApp" edge="1" parent="1" source="workday" style="endArrow=block;endFill=1;endSize=5;html=1;strokeColor=#11B67A;strokeWidth=3;flowAnimation=1;exitX=1;exitY=0.5;entryX=0;entryY=0.224;entryDx=0;entryDy=0;" target="appsvc">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="eEntraApp" edge="1" parent="1" source="entra" style="endArrow=block;endFill=1;endSize=5;html=1;strokeColor=#11B67A;strokeWidth=3;flowAnimation=1;exitX=1;exitY=0.5;entryX=0;entryY=0.776;entryDx=0;entryDy=0;" target="appsvc">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="eAppPg" edge="1" parent="1" source="appsvc" style="endArrow=block;endFill=1;endSize=5;startArrow=block;startFill=1;startSize=5;html=1;strokeColor=#006A4D;strokeWidth=2.5;flowAnimation=1;exitX=0.255;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;" target="pg">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="eAppKv" edge="1" parent="1" source="appsvc" style="endArrow=block;endFill=1;endSize=5;html=1;strokeColor=#006A4D;strokeWidth=2.5;flowAnimation=1;exitX=0.828;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;" target="kv">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="eAppFunc" edge="1" parent="1" source="appsvc" style="endArrow=block;endFill=1;endSize=5;html=1;strokeColor=#006A4D;strokeWidth=3;flowAnimation=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;startArrow=block;startFill=1;" target="funcs">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="eFuncWd" edge="1" parent="1" source="funcs" style="endArrow=block;endFill=1;endSize=5;html=1;strokeColor=#006A4D;strokeWidth=2;flowAnimation=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" target="sysWorkday">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="eFuncVet" edge="1" parent="1" source="funcs" style="endArrow=block;endFill=1;endSize=5;html=1;strokeColor=#006A4D;strokeWidth=2;flowAnimation=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" target="sysVetting">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="eFuncSnow" edge="1" parent="1" source="funcs" style="endArrow=block;endFill=1;endSize=5;html=1;strokeColor=#006A4D;strokeWidth=2;flowAnimation=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" target="sysSnow">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="eFuncMerch" edge="1" parent="1" source="funcs" style="endArrow=block;endFill=1;endSize=5;html=1;strokeColor=#006A4D;strokeWidth=2;flowAnimation=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" target="sysMerch">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="eFuncM365" edge="1" parent="1" source="funcs" style="endArrow=block;endFill=1;endSize=5;html=1;strokeColor=#006A4D;strokeWidth=2;flowAnimation=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" target="sysM365">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="eFuncAi" edge="1" parent="1" source="funcs" style="endArrow=block;endFill=1;endSize=4;html=1;strokeColor=#9E9E9E;strokeWidth=1.5;dashed=1;flowAnimation=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" target="ai">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="eAppAi" edge="1" parent="1" source="appsvc" style="edgeStyle=orthogonalEdgeStyle;rounded=1;endArrow=block;endFill=1;endSize=4;html=1;strokeColor=#9E9E9E;strokeWidth=1.5;dashed=1;flowAnimation=1;exitX=0.966;exitY=1;exitDx=0;exitDy=0;entryX=0.25;entryY=0;entryDx=0;entryDy=0;" target="ai">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="730" y="460" />
+              <mxPoint x="819" y="460" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="eRepoActions" edge="1" parent="1" source="repo" style="endArrow=block;endFill=1;endSize=5;html=1;strokeColor=#6B41EA;strokeWidth=2.5;flowAnimation=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" target="actions">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="eActionsApp" edge="1" parent="1" source="actions" style="edgeStyle=orthogonalEdgeStyle;rounded=1;endArrow=block;endFill=1;endSize=5;html=1;strokeColor=#6B41EA;strokeWidth=2.5;flowAnimation=1;exitX=1;exitY=0.5;entryX=0;entryY=0.95;entryDx=0;entryDy=0;" target="appsvc">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="418" y="520" />
+              <mxPoint x="418" y="426" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="eModRepoPipe" edge="1" parent="1" source="modRepo" style="endArrow=block;endFill=1;endSize=5;html=1;strokeColor=#6B41EA;strokeWidth=2.5;flowAnimation=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" target="modPipe">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="eModPipeFunc" edge="1" parent="1" source="modPipe" style="endArrow=block;endFill=1;endSize=5;html=1;strokeColor=#6B41EA;strokeWidth=2.5;flowAnimation=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;fontSize=12;fontColor=#6B41EA;fontStyle=1;labelBackgroundColor=#F1F1F1;" target="funcs" value="Deploy Modules">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint y="6" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="lgLine1" edge="1" parent="1" style="endArrow=block;endFill=1;endSize=4;html=1;strokeColor=#11B67A;strokeWidth=3;flowAnimation=1;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="40" y="635" as="sourcePoint" />
+            <mxPoint x="85" y="635" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="lgText1" parent="1" style="text;html=1;align=left;verticalAlign=middle;fontColor=#323233;fontSize=13;" value="People signing in" vertex="1">
+          <mxGeometry height="26" width="170" x="95" y="622" as="geometry" />
+        </mxCell>
+        <mxCell id="lgLine2" edge="1" parent="1" style="endArrow=block;endFill=1;endSize=4;html=1;strokeColor=#006A4D;strokeWidth=2.5;flowAnimation=1;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="280" y="635" as="sourcePoint" />
+            <mxPoint x="325" y="635" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="lgText2" parent="1" style="text;html=1;align=left;verticalAlign=middle;fontColor=#323233;fontSize=13;" value="Data, secrets and Module calls" vertex="1">
+          <mxGeometry height="26" width="220" x="335" y="622" as="geometry" />
+        </mxCell>
+        <mxCell id="lgLine3" edge="1" parent="1" style="endArrow=block;endFill=1;endSize=4;html=1;strokeColor=#9E9E9E;strokeWidth=1.5;dashed=1;flowAnimation=1;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="575" y="635" as="sourcePoint" />
+            <mxPoint x="620" y="635" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="lgText3" parent="1" style="text;html=1;align=left;verticalAlign=middle;fontColor=#323233;fontSize=13;" value="Monitoring" vertex="1">
+          <mxGeometry height="26" width="120" x="630" y="622" as="geometry" />
+        </mxCell>
+        <mxCell id="lgLine4" edge="1" parent="1" style="endArrow=block;endFill=1;endSize=4;html=1;strokeColor=#6B41EA;strokeWidth=2.5;flowAnimation=1;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="760" y="635" as="sourcePoint" />
+            <mxPoint x="805" y="635" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="lgText4" parent="1" style="text;html=1;align=left;verticalAlign=middle;fontColor=#323233;fontSize=13;" value="Build and release" vertex="1">
+          <mxGeometry height="26" width="160" x="815" y="622" as="geometry" />
+        </mxCell>
+        <mxCell id="footer" parent="1" style="text;html=1;align=right;verticalAlign=middle;fontColor=#323233;fontSize=11;" value="Production design · synthetic data only" vertex="1">
+          <mxGeometry height="22" width="360" x="880" y="680" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
