@@ -1,0 +1,5 @@
+build: passed in clean worktree (next/font/local)
+grep googleapis/gstatic in .next/server,static:
+(end, empty = none)
+next/font/google count in layout: 0
+eslint clean

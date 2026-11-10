@@ -1,11 +1,18 @@
 import type { Metadata } from 'next';
-import { IBM_Plex_Sans, IBM_Plex_Serif } from 'next/font/google';
+import localFont from 'next/font/local';
 import { SimulatedDateStrip } from '@/src/ui/components/SimulatedDateStrip';
 import { getDemoClock } from '@/src/db/queries';
 import './globals.css';
 
-const sans = IBM_Plex_Sans({ subsets: ['latin'], weight: ['400', '500', '600'], variable: '--font-sans-plex' });
-const serif = IBM_Plex_Serif({ subsets: ['latin'], weight: ['400', '600'], variable: '--font-serif-plex' });
+// Local files: a build must never need the network (decision 28). Sans is one variable font.
+const sans = localFont({ src: '../src/ui/fonts/plex-sans-latin.woff2', weight: '400 600', variable: '--font-sans-plex' });
+const serif = localFont({
+  src: [
+    { path: '../src/ui/fonts/plex-serif-400.woff2', weight: '400' },
+    { path: '../src/ui/fonts/plex-serif-600.woff2', weight: '600' },
+  ],
+  variable: '--font-serif-plex',
+});
 
 export const metadata: Metadata = { title: 'MW Launchpad' };
 
