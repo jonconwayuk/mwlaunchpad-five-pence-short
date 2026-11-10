@@ -7,16 +7,18 @@ export const dynamic = 'force-dynamic';
 
 const role = z.enum(['starter', 'line-manager', 'buddy', 'hr']);
 const tag = (k: keyof typeof TAG_LISTS) => z.enum(TAG_LISTS[k] as [string, ...string[]]).optional();
+// Every Action may name an owner (decision 22): seeded Journeys set one on read, choose, provide and automation too.
+const owner = role.optional();
 const base = { id: z.string().min(1).max(60), label: z.string().trim().min(1).max(200) };
 const Action = z.discriminatedUnion('type', [
-  z.strictObject({ ...base, type: z.literal('read') }),
-  z.strictObject({ ...base, type: z.enum(['notification', 'task']), owner: role.optional() }),
+  z.strictObject({ ...base, type: z.literal('read'), owner }),
+  z.strictObject({ ...base, type: z.enum(['notification', 'task']), owner }),
   z.strictObject({
     ...base, type: z.literal('choose'), options: z.array(z.string().trim().min(1).max(200)).min(2),
-    flagAtOrBelow: z.number().int().min(1).max(5).optional(), starterOnly: z.boolean().optional(),
+    flagAtOrBelow: z.number().int().min(1).max(5).optional(), owner, starterOnly: z.boolean().optional(),
   }),
-  z.strictObject({ ...base, type: z.literal('provide'), starterOnly: z.boolean().optional() }),
-  z.strictObject({ ...base, type: z.literal('automation'), setsOutcome: z.boolean().optional() }),
+  z.strictObject({ ...base, type: z.literal('provide'), owner, starterOnly: z.boolean().optional() }),
+  z.strictObject({ ...base, type: z.literal('automation'), owner, setsOutcome: z.boolean().optional() }),
 ]);
 const Draft = z.object({
   id: z.string().regex(/^[a-z0-9]+(-[a-z0-9]+)*$/, 'id must be a lowercase slug').max(100),

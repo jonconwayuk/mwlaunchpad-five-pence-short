@@ -1,13 +1,12 @@
+import { getPathwayDraft, listJourneys } from '@/src/db/queries';
 import { PathwayCanvas } from '@/src/ui/components/canvas/PathwayCanvas';
 
-// shortcut: titles for the three seeded templates only, wave D2 reads the Pathway from the database
-const TITLES: Record<string, string> = {
-  'branch-colleague': 'Branch colleague',
-  'software-engineer': 'Software engineer',
-  executive: 'Executive',
-};
+export const dynamic = 'force-dynamic';
 
 export default async function Page({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  return <PathwayCanvas pathwayId={id} title={TITLES[id] ?? id} />;
+  const draft = getPathwayDraft(id);
+  if (!draft) return <main className="p-8 text-ink">That Pathway was not found.</main>;
+  const library = listJourneys().map((j) => ({ id: j.id, version: j.version, title: j.title, stage: j.stage, tags: j.tags }));
+  return <PathwayCanvas draft={draft} library={library} />;
 }

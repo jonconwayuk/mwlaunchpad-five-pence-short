@@ -5,12 +5,11 @@ import {
   type Connection, type Edge, type Node, type NodeChange,
 } from '@xyflow/react';
 import { useCallback, useEffect, useMemo, useReducer, useRef, useState, type DragEvent } from 'react';
-import { demoState } from '@/src/engine/fixtures';
 import type { DependencyRef, PathwaySnapshot, StageId, Tags } from '@/src/engine/types';
-import { LIBRARY, STAGES, TAG_LISTS } from './library';
+import { LIBRARY, STAGES, TAG_LISTS, setLibrary, type LibraryJourney } from './library';
 import {
-  CARD_H, CARD_W, LANE_W, canvasReducer, dependencyKey, laneExtent, laneX, loopMessage,
-  snapToLane, snapshotFromFixture, timerLabel, titleOfJourney,
+  CARD_H, CARD_W, LANE_W, canvasReducer, dependencyKey, fitToLanes, laneExtent, laneX, loopMessage,
+  snapToLane, timerLabel, titleOfJourney,
 } from './model';
 import { nodeTypes } from './nodes';
 
@@ -22,8 +21,8 @@ const stageLabel = (id: string) => STAGES.find((s) => s.id === id)?.label ?? id;
 // Timers and Hard Stops have no canvas position in PathwaySnapshot, so their first spot is fixed here.
 const blockStart = (kind: 'timer' | 'hardStop', index: number) =>
   kind === 'timer'
-    ? index === 0 ? { x: laneX('pre-employment') + 24, y: 620 } : { x: laneX('onboarding') + 24, y: 72 }
-    : { x: laneX('onboarding') + 16, y: 480 + index * 110 };
+    ? { x: laneX('onboarding') + 24, y: 200 + index * 90 }
+    : { x: laneX('pre-contract') + 16, y: 200 + index * 110 }; // far left, clear of the side panel
 
 function buildNodes(s: PathwaySnapshot, prev: Node[]): Node[] {
   const before = new Map(prev.map((n) => [n.id, n]));
@@ -136,10 +135,19 @@ function Library({ onAdd, onDragStage }: { onAdd: (journeyId: string) => void; o
   );
 }
 
-function Builder({ pathwayId, title }: { pathwayId: string; title: string }) {
-  // The whole Pathway lives in this one PathwaySnapshot so wave D2 can PUT it as-is.
-  const [snapshot, dispatch] = useReducer(canvasReducer, undefined, () => snapshotFromFixture(demoState, pathwayId, title));
+/** Sends the draft or publishes it; returns the API's data or throws its plain-English error. */
+async function call<T>(url: string, method: 'PUT' | 'POST', body?: unknown): Promise<T> {
+  const res = await fetch(url, { method, headers: { 'content-type': 'application/json' }, body: body === undefined ? undefined : JSON.stringify(body) });
+  const json = (await res.json().catch(() => ({ ok: false, error: 'The server did not answer.' }))) as { ok: boolean; data: T; error?: string };
+  if (!json.ok) throw new Error(json.error ?? 'Could not save.');
+  return json.data;
+}
+
+function Builder({ draft }: { draft: PathwaySnapshot }) {
+  // The whole Pathway lives in this one PathwaySnapshot, PUT as-is to save the draft.
+  const [snapshot, dispatch] = useReducer(canvasReducer, draft, fitToLanes);
   const [nodes, setNodes] = useState<Node[]>(() => buildNodes(snapshot, []));
+  const [version, setVersion] = useState(draft.version); // outside the snapshot, so publishing does not trigger an autosave
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
   const [saved, setSaved] = useState<string | null>(null);
@@ -148,6 +156,26 @@ function Builder({ pathwayId, title }: { pathwayId: string; title: string }) {
   const paneRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => setNodes((prev) => buildNodes(snapshot, prev)), [snapshot]);
+  const url = `/api/pathways/${snapshot.pathwayId}`;
+  const saveDraft = useCallback(async (s: PathwaySnapshot) => {
+    try { await call(url, 'PUT', s); setSaved('Draft saved'); } catch (e) { setSaved(e instanceof Error ? e.message : 'Could not save.'); }
+  }, [url]);
+  const publish = async () => {
+    try {
+      await call(url, 'PUT', snapshot);
+      const { version } = await call<{ version: number }>(`${url}/publish`, 'POST');
+      setVersion(version + 1); // the draft is now the next version
+      setSaved(`Published as version ${version}`);
+    } catch (e) { setSaved(e instanceof Error ? e.message : 'Could not publish.'); }
+  };
+  // Autosave the draft one second after the last change; the loaded draft itself is not re-saved.
+  const loaded = useRef(snapshot);
+  useEffect(() => {
+    if (snapshot === loaded.current) return;
+    setSaved(null);
+    const t = setTimeout(() => void saveDraft(snapshot), 1000);
+    return () => clearTimeout(t);
+  }, [snapshot, saveDraft]);
   // While a library card is dragged, its own Stage lane is tinted so HR sees where it will land.
   const shownNodes = useMemo(() => dragStage
     ? nodes.map((n) => (n.id === `lane:${dragStage}` ? { ...n, data: { ...n.data, dropHere: true } } : n))
@@ -201,10 +229,10 @@ function Builder({ pathwayId, title }: { pathwayId: string; title: string }) {
   };
 
   return (
-    <div className="flex h-[calc(100vh-27px)] min-w-[1280px] flex-col bg-paper text-[15px] leading-[1.45] text-ink">
+    <div className="flex h-[calc(100vh-27px)] flex-col bg-paper text-[15px] leading-[1.45] text-ink">
       <header className="flex items-center gap-4 border-b border-[var(--hairline)] px-4 py-3">
         <h1 className="text-[21.6px] font-semibold text-racing">Pathway: {snapshot.title}</h1>
-        <span className="text-[13px] text-[var(--muted)]">v{snapshot.version}</span>
+        <span className="text-[13px] text-[var(--muted)]">Draft v{version}</span>
         <div className="flex flex-1 flex-wrap items-center gap-2">
           {TAG_LISTS.map((list) => (
             <select key={list.key} value={snapshot.tags[list.key] ?? ''} onChange={(e) => setTag(list.key, e.target.value)}
@@ -215,10 +243,9 @@ function Builder({ pathwayId, title }: { pathwayId: string; title: string }) {
           ))}
         </div>
         {saved && <span role="status" className="text-[13px] text-[var(--muted)]">{saved}</span>}
-        {/* NEEDS: wave D2 wires Save draft and Publish to the API; local state only this wave */}
-        <button type="button" onClick={() => setSaved('Draft saved')}
+        <button type="button" onClick={() => void saveDraft(snapshot)}
           className={`rounded-[4px] border border-heritage px-3 py-1.5 text-heritage ${focus}`}>Save draft</button>
-        <button type="button" onClick={() => { dispatch({ type: 'publish' }); setSaved(`Published as version ${snapshot.version + 1}`); }}
+        <button type="button" onClick={() => void publish()}
           className={`rounded-[4px] bg-heritage px-3 py-1.5 text-paper ${focus}`}>Publish</button>
       </header>
       <div className="relative flex min-h-0 flex-1">
@@ -276,6 +303,7 @@ function Builder({ pathwayId, title }: { pathwayId: string; title: string }) {
   );
 }
 
-export function PathwayCanvas(props: { pathwayId: string; title: string }) {
-  return <ReactFlowProvider><Builder {...props} /></ReactFlowProvider>;
+export function PathwayCanvas({ draft, library }: { draft: PathwaySnapshot; library: LibraryJourney[] }) {
+  setLibrary(library);
+  return <ReactFlowProvider><Builder draft={draft} /></ReactFlowProvider>;
 }

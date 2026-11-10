@@ -1,0 +1,3 @@
+1. `DATABASE_URL=file:/tmp/d2.db npm run seed`, then `DATABASE_URL=file:/tmp/d2.db NEXT_DIST_DIR=.next-d2 npx next dev -p 3072`.
+2. `node docs/evidence/launchpad-build/D2/api.mjs` writes the API proof (`api-result.txt`: 18 seeded Journeys re-POSTed with 0 rejected, PUT and reload keep positions and a Dependency, a loop is a plain-English 400, publish gives version 2, a newly applied person-b gets the change and person-a's Applied Pathway does not).
+3. Reseed, then `node docs/evidence/launchpad-build/D2/drive.mjs http://localhost:3072/portal/pathways/pw-branch` drives headless Chrome at 1280x800 and writes `drive-result.txt` (13 PASS lines: the B4 checks plus autosave, reload keeps positions, Publish shows the version), `canvas-1280.png` and `after-drive-1280.png`.

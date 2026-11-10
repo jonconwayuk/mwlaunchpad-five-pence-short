@@ -33,6 +33,12 @@ export function titleOfItem(items: PathwayItem[], itemId: string): string {
   return item ? titleOfJourney(item.journeyId) : itemId;
 }
 
+/** Seeded positions use a wider grid than the lanes; a card outside its lane moves into it, keeping its row. Saved canvas positions are already inside. */
+export function fitToLanes(s: PathwaySnapshot): PathwaySnapshot {
+  const inside = (i: PathwayItem) => { const [[x0, y0], [x1]] = laneExtent(i.lane); return i.x >= x0 && i.x + CARD_W <= x1 && i.y >= y0; };
+  return { ...s, items: s.items.map((i) => (inside(i) ? i : { ...i, ...snapToLane(i.lane, laneX(i.lane) + PAD, i.y + TOP) })) };
+}
+
 /** Plain-English refusal for a Dependency that would loop; null when it is fine. */
 export function loopMessage(items: PathwayItem[], sourceId: string, targetId: string): string | null {
   const result = wouldCreateLoop(items, sourceId, targetId, (id) => titleOfItem(items, id));
@@ -103,8 +109,7 @@ export type CanvasAction =
   | { type: 'toggleMandatory'; itemId: string }
   | { type: 'remove'; itemId: string }
   | { type: 'removeDependency'; itemId: string; dependency: DependencyRef }
-  | { type: 'tags'; tags: Tags }
-  | { type: 'publish' };
+  | { type: 'tags'; tags: Tags };
 
 export function canvasReducer(s: PathwaySnapshot, a: CanvasAction): PathwaySnapshot {
   const update = (itemId: string, fn: (i: PathwayItem) => PathwayItem) =>
@@ -116,7 +121,7 @@ export function canvasReducer(s: PathwaySnapshot, a: CanvasAction): PathwaySnaps
       let n = 1;
       while (s.items.some((i) => i.id === `i-${journey.id}-${n}`)) n += 1;
       const item: PathwayItem = {
-        id: `i-${journey.id}-${n}`, journeyId: journey.id, journeyVersion: 1, mandatory: true, dependsOn: [],
+        id: `i-${journey.id}-${n}`, journeyId: journey.id, journeyVersion: journey.version, mandatory: true, dependsOn: [],
         lane: journey.stage, ...snapToLane(journey.stage, a.x, a.y),
       };
       return { ...s, items: [...s.items, item] };
@@ -145,7 +150,5 @@ export function canvasReducer(s: PathwaySnapshot, a: CanvasAction): PathwaySnaps
       return update(a.itemId, (i) => ({ ...i, dependsOn: i.dependsOn.filter((d) => dependencyKey(d) !== dependencyKey(a.dependency)) }));
     case 'tags':
       return { ...s, tags: a.tags };
-    case 'publish':
-      return { ...s, version: s.version + 1 };
   }
 }

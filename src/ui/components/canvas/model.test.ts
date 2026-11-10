@@ -1,7 +1,13 @@
 import { describe, expect, it } from 'vitest';
 import { demoState } from '@/src/engine/fixtures';
-import { canvasReducer, laneX, LANE_W, loopMessage, snapshotFromFixture, snapToLane, timerLabel } from './model';
+import { setLibrary } from './library';
+import { fitToLanes, canvasReducer, laneX, LANE_W, loopMessage, snapshotFromFixture, snapToLane, timerLabel } from './model';
 
+setLibrary([
+  { id: 'j-contracting', version: 1, title: 'Contracting', stage: 'pre-contract', tags: {} },
+  { id: 'j-payroll', version: 1, title: 'Payroll', stage: 'pre-employment', tags: {} },
+  { id: 'j-branch-induction', version: 2, title: 'Branch induction', stage: 'onboarding', tags: {} },
+]);
 const snap = () => snapshotFromFixture(demoState, 'branch-colleague', 'Branch colleague');
 
 describe('canvas model', () => {
@@ -31,6 +37,7 @@ describe('canvas model', () => {
     const item = s.items.at(-1);
     expect(item?.lane).toBe('onboarding');
     expect(item?.x).toBeGreaterThanOrEqual(laneX('onboarding'));
+    expect(item?.journeyVersion).toBe(2);
   });
 
   it('removeDependency, when a Dependency is removed, drops only that Dependency', () => {
@@ -47,5 +54,13 @@ describe('canvas model', () => {
     expect(s.containers[0]?.itemIds).toEqual(['i-payroll', 'i-checks', 'i-id']);
     expect(s.hardStops[0]?.label).toBe('Pre-employment checks failed');
     expect(timerLabel(s.timers[0]!)).toBe('7 days before start date');
+  });
+
+  it('fitToLanes, when a card sits outside its lane, moves it in and leaves in-lane cards alone', () => {
+    const s = snap();
+    const out = { ...s, items: [{ ...s.items[0]!, lane: 'onboarding' as const, x: 640, y: 120 }, s.items[1]!] };
+    const fitted = fitToLanes(out).items;
+    expect(fitted[0]).toMatchObject({ x: laneX('onboarding') + 16, y: 192 });
+    expect(fitted[1]).toBe(s.items[1]);
   });
 });

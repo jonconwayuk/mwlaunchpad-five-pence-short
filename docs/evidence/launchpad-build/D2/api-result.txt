@@ -1,0 +1,10 @@
+PASS re-POST 18 seeded Journeys, 0 rejected 
+PASS PUT a moved card and an added Journey with a Dependency
+PASS reload GET keeps positions and the Dependency
+PASS PUT with a Dependency loop is refused: 400 "Contracting already waits for Payroll, so Payroll cannot wait for Contracting."
+PASS PUT with a dangling Dependency is refused: 400 "A Dependency points at something that is not on this Pathway."
+PASS PUT to an unknown Pathway is 404
+PASS publish returns version 2
+PASS apply pw-branch to person-b
+PASS newly applied person-b gets the published Journey
+PASS person-a existing Applied Pathway is unchanged (ADR-0002)
