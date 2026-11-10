@@ -6,21 +6,21 @@ Open items waiting on the owner carry the pending marker. The grep command in th
 
 ## Acceptance against the spec
 
-One row per `Design.MD` P0 and P1 item (D15), updated as each phase lands. Status is one of: Not started, In progress, Accepted (with evidence path), or Deviation (with decision number).
+One row per `BUILD-PLAN.md` P0 and P1 item, updated as each phase lands. The items are built to the spec in `Design.MD`. Status is one of: Not started, In progress, Accepted (with evidence path), or Deviation (with decision number).
 
-| Spec item | Status | Evidence or decision |
+| Build plan item | Status | Evidence or decision |
 | --- | --- | --- |
-| D15 P0.1 Pathway engine and Vitest tests | Not started | |
-| D15 P0.2 Seed data | Not started | |
-| D15 P0.3 Pathway builder canvas | Not started | |
-| D15 P0.4 Journey builder UI | Not started | |
-| D15 P0.5 Apply a Pathway; Starter Preview | Not started | |
-| D15 P0.6 Demo controls | Not started | |
-| D15 P0.7 Deploy once | Not started | |
-| D15 P1 Manager and Buddy view | Not started | |
-| D15 P1 Hard Stop end to end; Timer and Hard Stop blocks | Not started | |
-| D15 P1 Live updates over server-sent events | Not started | |
-| D15 P1 Chains 1 to 3 | Not started | |
+| P0.1 Pathway engine and Vitest tests (Dependencies, Containers, Timers, Additions, Journey Status and Outcomes) | Not started | |
+| P0.2 Seed data (`SEED-DATA.md`) | Not started | |
+| P0.3 Pathway builder canvas | Not started | |
+| P0.4 Journey builder UI | Not started | |
+| P0.5 Pathway library with tag filters; apply a Pathway; Starter Preview | Not started | |
+| P0.6 Demo controls | Not started | |
+| P0.7 Deploy once | Not started | |
+| P1 Manager and Buddy view | Not started | |
+| P1 Hard Stop end to end; Timer and Hard Stop blocks | Not started | |
+| P1 Live updates over server-sent events | Not started | |
+| P1 Chains 1 to 3 | Not started | |
 
 ## Decision log
 
@@ -74,3 +74,10 @@ Numbered once, in order, never renumbered or deleted. A reversed decision gets a
 - **Decided:** Push local `main`, which is one commit ahead of `origin/main` (1dd1081, the owner's CLAUDE.md update).
 - **Why:** Owner's instruction, 9 Nov 2026. The push rule (decision 3) is followed by hand until the hooks are wired.
 - **Evidence:** This entry; `origin/main` at 1dd1081.
+
+### 8. Design.MD version 1.1 records the team's third pass
+
+- **Decided:** The team's third pass on the spec (commit ba12e57, merged into this branch in a67c4c7) is recorded as amendment 1.1 in the `Design.MD` amendment log. `CLAUDE.md` and the acceptance table above now follow it: build order from `BUILD-PLAN.md`, Container instead of Milestone, no Conditions (ADR-0004 replaced), Additions, and `SEED-DATA.md` as the seed data.
+- **Why:** The third pass landed on `main` without an amendment entry, and the onboarding written against version 1.0 contradicted the new glossary. Bringing the branch up to date was the owner's instruction, 10 Nov 2026.
+- **Evidence:** Merge commit a67c4c7; `grep -n "Milestone\|Condition" CLAUDE.md` returns only the line telling agents not to use them.
+- **Note:** `BUILD-PLAN.md` is still a draft and its open proposals are not agreed. When the team agrees them, update the acceptance table in the same change.

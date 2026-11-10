@@ -31,25 +31,27 @@ One Next.js web app with three faces (`Design.MD` D1, D14):
 | **Manager and Buddy view** | `/team` | Phone | Light. What's left and acting on it. |
 
 - A **persona switcher** replaces login, so we can flip between the three synthetic personas (branch colleague, software engineer, executive) and between faces during the demo.
-- Changes made in the Admin Portal must show up live in the mobile faces. That is the key demo move: apply the same Pathway to two personas and flip between their previews.
+- Changes made in the Admin Portal must show up live in the mobile faces. That is the key demo move (`Design.MD` D2): HR filters the Pathway library and applies "Branch colleague" to Persona A and "Software engineer" to Persona B, we flip phones to show two different packs, then B's Line Manager adds a Journey and it appears live on B's phone.
 - The mobile faces stay light: read the Applied Pathway, complete Actions, tick Tasks. Don't build anything there that the demo doesn't need.
 
 ### Build priorities
 
-Work in the order set in `Design.MD` D15. Don't pick up a lower tier while a higher one is unfinished.
+Work in the order set in `BUILD-PLAN.md`. Don't pick up a lower tier while a higher one is unfinished. BUILD-PLAN.md is still a team draft, and its "Open proposals" section is not agreed, so don't act on those proposals until the team agrees them and updates the plan.
 
-1. **P0 (no demo without these):** Pathway engine with Vitest tests; seed data; Pathway builder canvas; Journey builder form; apply a Pathway and see the Starter Preview; Demo controls; one early deploy.
+1. **P0 (no demo without these):** Pathway engine with Vitest tests; seed data (`SEED-DATA.md`); Pathway builder canvas; Journey builder form; Pathway library with tag filters, applying a Pathway and the Starter Preview; Demo controls; one early deploy.
 2. **P1:** Manager and Buddy view, Hard Stop end to end, Timer and Hard Stop blocks on the canvas, live updates over server-sent events, chain reactions 1 to 3.
-3. **P2 (only if ahead):** observability page, "Preview as…", Delegate, scripted assistant, manager "Add a Journey".
+3. **P2 (only if ahead):** observability page, Delegate, scripted assistant, "Add a Journey" (Additions) by HR and Line Manager.
 
-The out-of-scope list in D15 is deliberate. Don't build login, a real LLM, chat, Teams integration or real system-of-record integrations; use labelled mock-ups or mocked adapters instead.
+The deliberate omissions in `Design.MD` D15 are out of scope. Don't build login, a real LLM, chat, Teams integration or real system-of-record integrations; use labelled mock-ups or mocked adapters instead.
 
 ### Source of truth
 
-- `Design.MD`: the agreed spec, version 1.0. Follow it; don't redesign it. It changes only by explicit amendment: bump its version, add a line to its amendment log, record a decision in `docs/decisions.md`, and update `GLOSSARY.md` and any ADR it names in the same change. Where the spec and the code disagree, record it as a finding; never quietly change either to match.
-- `GLOSSARY.md`: use its terms exactly in code, UI copy and docs (Journey, Action, Pathway, Pathway Item, Dependency, Milestone, Timer, Condition and so on). Don't use the words it lists under "Avoid".
+- `Design.MD`: the agreed spec, version 1.1. Follow it; don't redesign it. It changes only by explicit amendment: bump its version, add a line to its amendment log, record a decision in `docs/decisions.md`, and update `GLOSSARY.md` and any ADR it names in the same change. Where the spec and the code disagree, record it as a finding; never quietly change either to match.
+- `GLOSSARY.md`: use its terms exactly in code, UI copy and docs (Journey, Action, Pathway, Pathway Item, Dependency, Container, Timer, Addition and so on). Don't use the words it lists under "Avoid": for example, it's Container, not Milestone. Nothing matches Journeys or Pathways to a Person automatically (ADR-0004), so there are no Conditions; tags are only for browsing and filtering.
+- `BUILD-PLAN.md`: phasing and build tasks (draft, for team review).
+- `SEED-DATA.md`: the synthetic data the demo and the engine tests use (draft, for team review). Reset demo reseeds exactly this.
 - `docs/adr/`: decisions with lasting trade-offs. Add a new ADR for any new one.
-- `Ideas.MD` holds raw ideas and `launchpadnotes.MD` holds brief and judging notes. Neither is a spec.
+- `Ideas.MD` is an early raw log, superseded by Design.MD, and `launchpadnotes.MD` holds brief and judging notes. Neither is a spec.
 
 ## How we work: the phase workflow
 
@@ -104,7 +106,7 @@ The stack is TypeScript on Node.js (`Design.MD` D14), so [Node.js Best Practices
 - **Handle errors properly.** Use `async`/`await`, throw `Error` objects (never strings), handle errors in one central place, and validate all input at the API boundary.
 - **Configuration.** Read config from environment variables, validate it at startup, and keep secrets out of code (see Secrets below).
 - **Code style.** Use TypeScript strict mode, ESLint and Prettier. Use `const` by default, `===`, and clear names (camelCase for functions and variables, PascalCase for types and components). No `any` unless justified in a comment.
-- **Testing.** Write Vitest unit tests for every engine rule: Conditions, Dependencies, Milestones, Timers, Journey Status and Outcomes, Hard Stops. Name tests as "what, when, expected". All date logic uses the Demo clock, never the real clock, so tests are deterministic.
+- **Testing.** Write Vitest unit tests for every engine rule: Dependencies, Containers, Timers, Additions, Journey Status and Outcomes, Hard Stops. Name tests as "what, when, expected". All date logic uses the Demo clock, never the real clock, so tests are deterministic.
 - **Dependencies.** Pin versions with a lockfile, keep the dependency list small, and run `npm audit` before deploying.
 - **Logging.** Use a proper logger, not stray `console.log`. Never log personal data or secrets.
 
