@@ -28,11 +28,18 @@ describe('insights aggregates', () => {
     expect(withStarters(ROWS).map((r) => r.starter)).toEqual(['pw-a#0', 'pw-a#0', 'pw-a#1', 'pw-a#1', 'pw-b#0']);
   });
 
-  it('pathway completion, with no Stage filter, is each starter\'s longest Journey', () => {
+  it('pathway completion, with no Stage filter, is each starter\'s longest Journey per Stage, summed', () => {
     const r = insights(ROWS, { by: 'grade' });
     expect(r.starterCount).toBe(3);
-    expect(r.pathways.map((p) => [p.id, p.median])).toEqual([['pw-b', 50], ['pw-a', 25]]);
+    expect(r.pathways.map((p) => [p.id, p.median])).toEqual([['pw-b', 50], ['pw-a', 32]]);
     expect(r.slowest).toBe('Engineer starters in Engineering take longest: usually 50 to 50 days.');
+  });
+
+  it('All Stages total, for the same Pathway, exceeds the Pre-employment total because Stages run in turn', () => {
+    const all = insights(ROWS, { by: 'grade' }).pathways.find((p) => p.id === 'pw-a')!;
+    const pre = insights(ROWS, { stage: 'pre-employment', by: 'grade' }).pathways.find((p) => p.id === 'pw-a')!;
+    expect(pre.median).toBe(25);
+    expect(all.median).toBeGreaterThan(pre.median);
   });
 
   it('Stage filter, when set to onboarding, keeps only that Stage\'s Journeys', () => {

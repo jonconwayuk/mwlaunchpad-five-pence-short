@@ -55,8 +55,11 @@ const label = (v: string | null) => v ?? 'Not recorded';
 /** Everything the Insights page shows, for one Stage, Pathway, Journey and dimension. */
 export function insights(all: InsightRow[], q: Query) {
   const rows = withStarters(all).filter((r) => !q.stage || r.stage === q.stage);
-  // A starter's Journeys run side by side, so their Pathway (or Stage) took as long as their longest Journey.
-  const starters = [...groupBy(rows, (r) => r.starter).values()].map((rs) => ({ ...rs[0]!, days: Math.max(...rs.map((r) => r.days)) }));
+  // Journeys in a Stage run side by side (longest counts); Stages run one after another (they add up).
+  const starters = [...groupBy(rows, (r) => r.starter).values()].map((rs) => ({
+    ...rs[0]!,
+    days: [...groupBy(rs, (r) => r.stage).values()].reduce((sum, st) => sum + Math.max(...st.map((r) => r.days)), 0),
+  }));
 
   const pathways: RangeLine[] = [...groupBy(starters, (s) => s.pathwayId).values()]
     .map((ss) => ({ id: ss[0]!.pathwayId, label: ss[0]!.pathwayTitle, note: label(ss[0]!.businessArea), ...spread(ss.map((s) => s.days))! }))

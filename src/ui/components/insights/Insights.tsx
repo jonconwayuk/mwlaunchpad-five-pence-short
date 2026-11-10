@@ -145,7 +145,7 @@ export function Insights() {
       </div>
 
       <Card title="How long each Pathway takes"
-        lead={`From a starter's first Journey to their last in ${stageText}. The dot is the middle starter; the shaded band is the usual range, the middle half of starters.`}>
+        lead={`From a starter's first Journey to their last, adding up each Stage (${stageText}). The dot is the middle starter; the shaded band is the usual range, the middle half of starters.`}>
         {data.pathways.length ? <RangeChart lines={data.pathways} highlight={pathway} /> : <p className="text-[var(--muted)]">No Journeys in this Stage yet.</p>}
       </Card>
 
@@ -167,13 +167,25 @@ export function Insights() {
                   <span className="block truncate font-medium text-heritage">{j.label}</span>
                   <span className="block text-[13px] text-[var(--muted)]">{stageLabel(j.stage)}</span>
                 </span>
-                <span role="img" aria-label={j.groups.map((g) => `${g.label} ${g.median} days`).join(', ')} className="relative h-6 flex-1">
+                <span role="img" aria-label={j.groups.map((g) => `${g.label} ${g.median} days`).join(', ')} className="relative h-12 flex-1">
                   <span className="absolute inset-x-0 top-1/2 h-px bg-[var(--hairline)]" />
-                  {j.groups.map((g) => (
-                    <span key={g.label} title={`${g.label}: middle ${g.median} days, from ${g.n} starters`}
-                      className={`absolute top-1/2 h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full ring-2 ring-paper ${g.label === j.longest.label ? 'bg-racing' : 'bg-everyday'}`}
-                      style={{ left: pct(g.median, dashMax) }} />
-                  ))}
+                  {j.groups.map((g, i) => {
+                    const isLongest = g.label === j.longest.label;
+                    const left = pct(g.median, dashMax);
+                    // Vertical jitter by group index keeps dots with near-equal medians from hiding each other.
+                    const top = `calc(50% + ${((i % 3) - 1) * 7}px)`;
+                    return (
+                      <span key={g.label} title={`${g.label}: middle ${g.median} days, from ${g.n} starters`}>
+                        <span aria-hidden className={`absolute h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full ring-2 ring-paper ${isLongest ? 'z-10 bg-racing' : 'bg-everyday'}`} style={{ left, top }} />
+                        {isLongest && (
+                          <span aria-hidden className={`absolute whitespace-nowrap text-[12px] font-medium text-racing ${g.median / dashMax > 0.6 ? '-translate-x-full pr-3' : 'pl-3'}`}
+                            style={{ left, top: 0 }}>
+                            {g.label}, {g.median} days
+                          </span>
+                        )}
+                      </span>
+                    );
+                  })}
                 </span>
                 <span className="w-[170px] shrink-0 pl-4 text-[13px] text-charcoal">
                   Longest: {by === 'grade' ? 'grade ' : ''}{j.longest.label}, {j.longest.median} days
