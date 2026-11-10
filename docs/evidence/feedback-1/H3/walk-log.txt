@@ -1,0 +1,5 @@
+A people: 
+click clicked
+A Maya appears after ms: 205
+open Bob ok
+open Bob NF
