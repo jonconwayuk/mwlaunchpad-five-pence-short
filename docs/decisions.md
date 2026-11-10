@@ -416,3 +416,23 @@ Numbered once, in order, never renumbered or deleted. A reversed decision gets a
   - Not to H2, which was already running on opus when this arrived. It isn't restarted, because nothing stops or restarts mid-run.
 - **Gap:** the instruction refers to briefs for P1 to P4 that weren't included in the message. They are not started. They will run under this table when their briefs arrive. Building stops at 12:30.
 - **Evidence:** the delegation ledger.
+
+### 46. Feedback 1 additions 20 to 24 accepted; Design.MD 1.4
+
+- **Decided:**
+  - Items 20 to 23 (P1 to P4) and item 24 (I1) are accepted as owner instruction and recorded in the feedback file. They run as five concurrent tasks, with briefs and ownership in the plan ("Additions 20 to 23").
+  - Models follow decision 45:
+    - P1, P3 and I1 use a sonnet implementer and a sonnet reviewer.
+    - P2 and P4 use a sonnet implementer and an opus reviewer.
+- **Fallbacks:**
+  - The People pages are split by component. P2 and P4 get mounted placeholders (ddef0a2).
+  - P3's component is the existing `ApplyPathway.tsx` picker, so it needs no new file.
+  - P2 writes its own `src/db/newStarters.ts`, so it doesn't share `queries.ts` with P4.
+  - I1 builds a shareable search, because P3 hasn't committed yet.
+- **Spec:**
+  - Design.MD goes to 1.4: grade X after G, named supporting Pathways, the Workday add, search when applying, and "Edit this pathway".
+  - `GLOSSARY.md` adds grade X.
+  - ADR-0002 gets a note: "Edit this pathway" is Additions on the snapshot, template Journeys stay unremovable, and the "Based on" line reads the snapshot's title and version, never the live one. So the ADR's decision is unchanged.
+- **Why:** owner instruction.
+- **Risk:** building stops at 12:30. Any task not through review and gate by then is parked and not merged. The report will list it.
+- **Evidence:** `docs/evidence/feedback-1/{P1,P2,P3,P4,I1}/`.

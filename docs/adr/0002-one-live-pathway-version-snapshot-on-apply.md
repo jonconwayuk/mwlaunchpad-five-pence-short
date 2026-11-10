@@ -9,3 +9,7 @@ The only per-starter change is an Addition: a Journey added to that starter's Ap
 We rejected live links, because the owner's later changes would alter a starter's journey part-way through and break ADR-0001. We rejected saving a starter's changed Pathway as a new library Pathway (a fork), because forks would multiply near-identical Pathways that no one owns. When a different kind of starter needs a different Pathway, HR builds and publishes one deliberately (ADR-0004).
 
 The cost is that a useful Addition does not spread on its own. When many starters get the same Addition, observability flags it to the Pathway owner, who can publish it in the live version.
+
+## Note (Design.MD 1.4, decision 46)
+
+"Edit this pathway" in People doesn't change this decision. It adds Journeys to one Applied Pathway through Additions, which were already the only per-starter change. The template's own Journeys still can't be removed, and the server refuses it. The Applied Pathway is shown as "Based on {title} {semver}, modified: N Journeys added". The title and version come from the snapshot taken at apply time, never from the live version. The template and other starters are unchanged.

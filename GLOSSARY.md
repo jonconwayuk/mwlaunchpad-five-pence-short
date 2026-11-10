@@ -197,7 +197,7 @@ The major.minor.patch label shown on a Journey or Pathway beside its integer ver
 _Avoid_: Release number, build number
 
 **Grade**:
-A tag on Journeys, Pathways and Persons, from A to G.
+A tag on Journeys, Pathways and Persons, from A to G, plus X for the executive grade (Design.MD 1.4).
 _Avoid_: Level, band, seniority
 
 **Insights**:

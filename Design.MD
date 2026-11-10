@@ -6,7 +6,7 @@ The agreed spec for the LaunchPad '26 build. `Ideas.MD` is an early raw log, sup
 
 Agreed by the team on 9 Nov 2026 (Day 1). Every design question is settled except the demo script, which is parked. Later changes to an agreed decision should update this file, the glossary and any ADR it names.
 
-**Version 1.3** (10 Nov 2026). This is the project's spec under the phase workflow (`docs/workflow/phase-workflow.md`). It changes only by explicit amendment: each amendment bumps the version, adds a line to the amendment log below, and gets an entry in `docs/decisions.md`.
+**Version 1.4** (10 Nov 2026). This is the project's spec under the phase workflow (`docs/workflow/phase-workflow.md`). It changes only by explicit amendment: each amendment bumps the version, adds a line to the amendment log below, and gets an entry in `docs/decisions.md`.
 
 | Version | Date | Amendment | Decision |
 | --- | --- | --- | --- |
@@ -14,6 +14,7 @@ Agreed by the team on 9 Nov 2026 (Day 1). Every design question is settled excep
 | 1.1 | 10 Nov 2026 | Third pass (ba12e57): Pathways are templates HR chooses and applies, with no automatic matching (ADR-0004 replaced); Milestone renamed Container; Additions; phasing moved to `BUILD-PLAN.md`; seed data drafted in `SEED-DATA.md` | 8 |
 | 1.2 | 10 Nov 2026 | Mentor feedback 1: Onboarding Studio replaces Admin Portal as the visible name; grades A to G; Journeys and connectors as config as code (ADR-0007); Agent library; scripted help chat with simulated Teams handover; Insights; Delegate management in People; Send a Reminder now; semantic versions; single-window view and switchers; Bob Warwick as protagonist; D15 omissions narrowed | 31 to 37 |
 | 1.3 | 10 Nov 2026 | Feedback 1 additions 17 to 19: an Integrations section on Hidden automations in the Journey builder, with a ServiceNow request-complete Notification to the joiner; Demo controls gain "ServiceNow: request complete" and "Complete {name}'s inputs" (D13); the help chat is always reachable from the joiner's first screen, and its handover names the Line Manager, Microsoft Teams, the agent and a summary, labelled as simulated (D11) | 44 |
+| 1.4 | 10 Nov 2026 | Feedback 1 additions 20 to 23: grade X for the executive, after G; supporting Pathways named with their grade; "Add new starter from Workday" on People (mocked, ADR-0005); search and filters when applying a Pathway; "Edit this pathway" adds Journeys to an Applied Pathway through Additions, template Journeys can never be removed, and the Applied Pathway shows "Based on {title} {semver}, modified" from its snapshot (ADR-0002 note) | 46 |
 
 ## Decisions
 
@@ -47,7 +48,7 @@ _Named "Admin Portal" before version 1.2; the route `/portal` is unchanged._
 - A **Journey** is a discrete, self-contained set of instructions. It holds no dependencies and never refers to another Journey. It is built once and reused in many Pathways.
 - A **Pathway** is a template built by HR from library Journeys. It holds all the logic between them, on Pathway Items: **Dependencies** (which Pathway Items, Containers or Timers must be met first) and whether each Journey is **mandatory**.
 - Sequence and parallel work both come from Dependencies: anything with no unmet Dependencies is available.
-- **Nothing is matched automatically.** There are no rules that pick Journeys or Pathways for a Person. Journeys and Pathways are tagged with job family, role, grade, platform and location (fixed lists maintained by HR; grades run A to G) only so that people can browse and filter the library.
+- **Nothing is matched automatically.** There are no rules that pick Journeys or Pathways for a Person. Journeys and Pathways are tagged with job family, role, grade, platform and location (fixed lists maintained by HR; grades run A to G, plus X for the executive grade (1.4)) only so that people can browse and filter the library.
 - **How a starter gets their pack:**
   1. HR builds and publishes Pathway templates for the kinds of starter they see, such as "Branch colleague" or "Software engineer".
   2. When a new starter is selected, HR filters the Pathway library by the starter's job family, role, grade, platform and location, and applies the right template. This creates the starter's Applied Pathway.
@@ -71,7 +72,7 @@ _Named "Admin Portal" before version 1.2; the route `/portal` is unchanged._
 5. **Cues on cards**: a lock icon for mandatory.
 6. **Pathway tags**: HR tags the Pathway itself with job family, role, grade, platform and location from the fixed lists, so it can be found in the Pathway library.
 7. **Save Draft and Publish**: edits save as a draft automatically; Publish creates a new Pathway version. Nothing reaches starters until published.
-8. **Journey filters** (1.2): the canvas's Journey library panel filters by Stage, job family, grade (A to G) and location.
+8. **Journey filters** (1.2): the canvas's Journey library panel filters by Stage, job family, grade (A to G, plus X) and location.
 
 ### D2a-ii. Three more canvas building blocks
 
