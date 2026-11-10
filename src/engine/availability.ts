@@ -26,7 +26,8 @@ export function createEvaluator(input: EngineInput): Evaluator {
   const items = new Map<string, EvaluatedItem>();
   const visiting = new Set<string>();
 
-  const isMet = (s: EvaluatedItem): boolean => s.status === 'done' || s.status === 'skipped';
+  // A Failed Outcome unlocks nothing: its Hard Stop decides what happens next (D2f).
+  const isMet = (s: EvaluatedItem): boolean => (s.status === 'done' && s.outcome !== 'failed') || s.status === 'skipped';
 
   const metOn = (dep: DependencyRef): ISODate | undefined => {
     if (dep.kind === 'item') {
@@ -81,7 +82,7 @@ export function createEvaluator(input: EngineInput): Evaluator {
       const c = pathway.containers.find((x) => x.id === containerId);
       if (!c) throw new Error(`Unknown Container ${containerId}`);
       const mandatory = c.itemIds.map((i) => ev.item(i)).filter((s) => s.item.mandatory);
-      if (!mandatory.every((s) => s.status === 'done')) return undefined;
+      if (!mandatory.every((s) => s.status === 'done' && s.outcome !== 'failed')) return undefined;
       return latest(mandatory.map((s) => s.doneAt as ISODate)) ?? person.offerAcceptedDate;
     },
     timerFiresOn(timerId) {

@@ -1,5 +1,11 @@
 import { describe, expect, it } from 'vitest';
-import { bandScale, shortDate } from './format';
+import type { ItemState } from '@/src/engine/types';
+import { bandScale, shortDate, starterView } from './format';
+
+const it_ = (itemId: string, over: Partial<ItemState>): ItemState => ({
+  itemId, journeyId: 'j-x', title: itemId, stage: 'pre-employment', status: 'not-started', mandatory: true,
+  available: false, blockedFlag: false, overdue: false, unmetDependencies: [], ...over,
+});
 
 describe('starter format', () => {
   it('shortDate, when given an ISO date, reads as day and month', () => {
@@ -20,5 +26,20 @@ describe('starter format', () => {
     expect(s.max).toBe(49);
     expect(s.today).toBeGreaterThan(s.hi);
     expect(s.today).toBeLessThan(100);
+  });
+
+  it('starterView, when a Failed Outcome awaits its Hard Stop decision, still shows the wait', () => {
+    const v = starterView([it_('i-checks', { status: 'done', outcome: 'failed', doneAt: '2026-11-10', usualRange: [21, 35] })]);
+    expect(v.stopped).toBe(false);
+    expect(v.items[0]).toMatchObject({ status: 'in-progress', outcome: undefined, doneAt: undefined });
+  });
+
+  it('starterView, when a Failed Outcome has been confirmed and items are Cancelled, is stopped', () => {
+    const v = starterView([it_('i-checks', { status: 'done', outcome: 'failed' }), it_('i-id', { status: 'cancelled' })]);
+    expect(v.stopped).toBe(true);
+  });
+
+  it('starterView, when a deadline Hard Stop cancelled some items, is not stopped', () => {
+    expect(starterView([it_('i-buddy', { status: 'cancelled' })]).stopped).toBe(false);
   });
 });

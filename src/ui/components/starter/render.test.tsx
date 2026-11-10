@@ -63,4 +63,9 @@ describe('WaitingCard', () => {
     expect(html).toContain('This is taking longer than usual. Your manager knows and will be in touch.');
     expect(html).toContain('bg-charcoal');
   });
+
+  it('an Addition, when rendered, says who added it', () => {
+    const html = row({ id: 'a', type: 'read', label: 'Read this' }, { addedBy: { personId: 'lm-chris', name: 'Chris Lee' } });
+    expect(html).toContain('Added by Chris Lee');
+  });
 });

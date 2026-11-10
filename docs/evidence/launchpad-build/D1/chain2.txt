@@ -1,0 +1,18 @@
+# Chain 2: Cleared to start -> Meet your buddy (Persona A, from Reset)
+{"ok":true}
+> POST /api/actions {"personId":"person-a","itemId":"i-payroll","actionId":"j-payroll-a1","actorPersonId":"person-a","value":"synthetic 00-00-00 12345678"}
+{"ok":true,"error":null}
+> POST /api/simulate {"personId":"person-a","itemId":"i-checks","actionId":"j-checks-a2","result":"passed"}
+{"ok":true,"error":null}
+> POST /api/actions {"personId":"person-a","itemId":"i-id","actionId":"j-id-a1","actorPersonId":"person-a","value":"photo.jpg"}
+{"ok":true,"error":null}
+> POST /api/simulate {"personId":"person-a","itemId":"i-id","actionId":"j-id-a2","result":"returned"}
+{"ok":true,"error":null}
+## as hr
+{"b":[{"id":"i-checks","s":"done","ca":null},{"id":"i-id","s":"done","ca":null},{"id":"i-buddy","s":"in-progress","ca":"j-buddy-a2"}]}
+[{"containerId":"c-cleared","label":"Cleared to start","complete":true,"doneCount":3,"mandatoryCount":3,"remainingItemIds":[]}]
+## as buddy
+{"tasks":[{"owner":"buddy","label":"Send a hello note"}],"notes":[{"to":"buddy","message":"You have a new starter to welcome"}]}
+## /api/team buddy-tom
+   3 hello note
+   1 new starter to welcome

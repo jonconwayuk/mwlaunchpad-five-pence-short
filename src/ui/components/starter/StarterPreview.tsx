@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import type { ItemState } from '@/src/engine/types';
 import { useLiveState } from '@/src/lib/useLiveState';
-import { STAGES, STAGE_LABEL, shortDate } from './format';
+import { STAGES, STAGE_LABEL, shortDate, starterView } from './format';
 import { JourneyRow, type Act } from './JourneyRow';
 import { WaitingCard } from './WaitingCard';
 
@@ -35,8 +35,16 @@ export function StarterPreview() {
     }
   };
 
-  const waiting = es.items.filter(isWaiting);
-  const rest = es.items.filter((i) => !isWaiting(i));
+  const view = starterView(es.items);
+  if (view.stopped) {
+    return (
+      <main className="mx-auto max-w-[420px] px-5 py-8 text-[17px] leading-[1.55] text-ink">
+        <p className="font-serif text-[21px] text-racing">Your recruiter will be in touch.</p>
+      </main>
+    );
+  }
+  const waiting = view.items.filter(isWaiting);
+  const rest = view.items.filter((i) => !isWaiting(i));
 
   return (
     <main className="mx-auto max-w-[420px] px-5 pt-8 pb-16 text-[17px] leading-[1.55] text-ink">

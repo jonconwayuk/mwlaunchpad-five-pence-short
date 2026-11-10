@@ -1,0 +1,43 @@
+# Hard Stop: Simulate Failed on Persona A's Pre-employment checks (from Reset). Screenshots: 390px headless, not a device.
+{"ok":true}
+viewport 390px, scrollWidth 390px, height 2014px, /api/state fetches in 6 s: 4
+> POST /api/simulate {"personId":"person-a","itemId":"i-checks","actionId":"j-checks-a2","result":"failed"}
+{"ok":true,"error":null}
+## as hr: needsDecisions
+[{"hardStopId":"hs-failed","reason":"Pre-employment checks failed"}]
+## as line-manager: needsDecisions
+[{"hardStopId":"hs-failed","reason":"Pre-employment checks failed"}]
+## as buddy: needsDecisions
+[]
+## as starter: needsDecisions
+[]
+## /api/team buddy-tom mentions hs-failed:
+0
+## /api/team lm-priya mentions hs-failed:
+1
+## starter state diff before vs pending (engine, as starter):
+1c1
+< [{"itemId":"i-contracting","status":"done","available":true},{"itemId":"i-payroll","status":"action-required","available":true},{"itemId":"i-checks","status":"in-progress","available":true},{"itemId":"i-id","status":"not-started","available":false},{"itemId":"i-device","status":"done","available":true},{"itemId":"i-manager-ready","status":"done","available":true},{"itemId":"i-buddy","status":"not-started","available":false},{"itemId":"i-pulse-14","status":"not-started","available":false},{"itemId":"i-pulse-30","status":"not-started","available":false},{"itemId":"i-uniform","status":"skipped","available":true},{"itemId":"i-induction","status":"not-started","available":false},{"itemId":"i-cash","status":"not-started","available":false},{"itemId":"i-start-delay","status":"not-started","available":false},{"itemId":"i-events","status":"not-started","available":false}]
+---
+> [{"itemId":"i-contracting","status":"done","available":true},{"itemId":"i-payroll","status":"action-required","available":true},{"itemId":"i-checks","status":"done","available":true},{"itemId":"i-id","status":"not-started","available":false},{"itemId":"i-device","status":"done","available":true},{"itemId":"i-manager-ready","status":"done","available":true},{"itemId":"i-buddy","status":"not-started","available":false},{"itemId":"i-pulse-14","status":"not-started","available":false},{"itemId":"i-pulse-30","status":"not-started","available":false},{"itemId":"i-uniform","status":"skipped","available":true},{"itemId":"i-induction","status":"not-started","available":false},{"itemId":"i-cash","status":"not-started","available":false},{"itemId":"i-start-delay","status":"not-started","available":false},{"itemId":"i-events","status":"not-started","available":false}]
+3c3
+< {"itemId":"i-checks","status":"in-progress","available":true}
+---
+> {"itemId":"i-checks","status":"done","available":true}
+viewport 390px, scrollWidth 390px, height 1961px, /api/state fetches in 6 s: 4
+viewport 390px, scrollWidth 390px, height 1167px, /api/state fetches in 6 s: 2
+> POST /api/hard-stops/hs-failed/decision confirm
+{"ok":true,"error":null}
+## after Confirm as hr
+{"items":[{"id":"i-contracting","s":"done"},{"id":"i-payroll","s":"cancelled"},{"id":"i-checks","s":"done"},{"id":"i-id","s":"cancelled"},{"id":"i-device","s":"done"},{"id":"i-manager-ready","s":"done"},{"id":"i-buddy","s":"cancelled"},{"id":"i-pulse-14","s":"cancelled"},{"id":"i-pulse-30","s":"cancelled"},{"id":"i-uniform","s":"skipped"},{"id":"i-induction","s":"cancelled"},{"id":"i-cash","s":"cancelled"},{"id":"i-start-delay","s":"cancelled"},{"id":"i-events","s":"cancelled"}],"nd":[]}
+viewport 390px, scrollWidth 390px, height 844px, /api/state fetches in 6 s: 4
+
+# Re-run after the whileYouWait fix
+{"ok":true}
+"Your checks are with our vetting partner. Most take three to five weeks, so there is nothing you need to do right now."
+{"ok":true}
+"Your checks are with our vetting partner. Most take three to five weeks, so there is nothing you need to do right now."
+viewport 390px, scrollWidth 390px, height 2014px, /api/state fetches in 6 s: 4
+viewport 390px, scrollWidth 390px, height 1167px, /api/state fetches in 6 s: 2
+{"ok":true}
+viewport 390px, scrollWidth 390px, height 844px, /api/state fetches in 6 s: 4

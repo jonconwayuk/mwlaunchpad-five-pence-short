@@ -1,0 +1,14 @@
+# Chain 3: low Pulse check (Persona B, from Reset)
+{"ok":true}
+> POST /api/clock advanceDays 18 (Day 14)
+{"ok":true,"error":null}
+{"today":"2026-11-28","p":[{"id":"i-pulse-14","s":"action-required","ca":"j-pulse-a1"}]}
+> POST /api/actions {"personId":"person-b","itemId":"i-pulse-14","actionId":"j-pulse-a1","actorPersonId":"person-b"}
+{"ok":true,"error":null}
+> POST /api/actions {"personId":"person-b","itemId":"i-pulse-14","actionId":"j-pulse-a2","actorPersonId":"person-b","value":"2"}
+{"ok":true,"error":null}
+## state as line-manager
+{"tasks":[{"owner":"line-manager","label":"Check in with Sam: Contracting is taking longer than usual"},{"owner":"line-manager","label":"Sam scored 2 for \"How connected do you feel? (1 to 5)\". Have a chat."},{"owner":"line-manager","label":"Check in with Sam: Engineering community intro is taking longer than usual"}]}
+## Manager and Buddy view as lm-chris
+scored 2 for \
+scored 2 for \

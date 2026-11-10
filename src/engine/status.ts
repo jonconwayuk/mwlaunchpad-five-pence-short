@@ -6,9 +6,6 @@ export function ownerOf(action: ActionDef): ActorRole | undefined {
   return action.owner ?? 'starter';
 }
 
-const isStarterAction = (a: ActionDef): boolean =>
-  a.type !== 'notification' && ownerOf(a) === 'starter';
-
 export interface ActionWalk {
   done: boolean;
   doneAt?: ISODate;
@@ -20,21 +17,17 @@ export interface ActionWalk {
   sent: { action: ActionDef; on?: ISODate }[];
 }
 
-/** Walks a Journey's Actions in order for one Pathway Item. Notifications are delivered, not waited on. */
+/** Walks a Journey's Actions in order for one Pathway Item. Notifications are delivered, not waited on.
+ * Design D3: a Returned automation is finished with no pass/fail, so it counts as done like any other. */
 export function walkActions(itemId: string, journey: JourneyDef, input: EngineInput): ActionWalk {
   const sent: ActionWalk['sent'] = [];
   let lastDone: ISODate | undefined;
   let passed = false;
-  for (const [i, action] of journey.actions.entries()) {
+  for (const action of journey.actions) {
     const p = input.progress.find((x) => x.itemId === itemId && x.actionId === action.id);
     if (action.type === 'automation' && p?.automationResult === 'failed' && action.setsOutcome) {
       // Rule 1: a Failed Outcome ends the Journey and counts as done.
       return { done: true, doneAt: p.doneAt ?? lastDone, outcome: 'failed', sent };
-    }
-    if (action.type === 'automation' && p?.automationResult === 'returned') {
-      // Returned: back to the starter's most recent Action before the automation.
-      const back = journey.actions.slice(0, i).reverse().find(isStarterAction);
-      return { done: false, currentAction: back ?? action, currentSince: p.doneAt ?? lastDone, sent };
     }
     if (p?.state === 'done') {
       lastDone = p.doneAt ?? lastDone;

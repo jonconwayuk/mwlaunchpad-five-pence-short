@@ -57,7 +57,8 @@ export function computeState(input: EngineInput): EngineState {
       currentAction: open ? s.currentAction : undefined,
       blockedFlag, waitingDays, usualRange: range, overdue,
       unmetDependencies: s.unmetDependencies,
-      whileYouWait: blockedFlag ? s.journey.whileYouWait : undefined,
+      // D2f.4: a Failed Outcome keeps its waiting message so the Starter Preview does not change while pending.
+      whileYouWait: blockedFlag || s.outcome === 'failed' ? s.journey.whileYouWait : undefined,
       addedBy: item.addedBy,
     };
   });

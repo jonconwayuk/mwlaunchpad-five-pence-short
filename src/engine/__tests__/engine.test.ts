@@ -48,12 +48,20 @@ describe('availability and Journey Status (rules 1 and 2)', () => {
     expect(contracting).toMatchObject({ status: 'done', doneAt: '2026-10-22', outcome: 'done' });
   });
 
-  it('Pathway Item, when a Hidden automation returns it, goes back to the starter as action-required', () => {
+  it('Hidden automation without an Outcome, when Returned, is finished and the Journey moves on (D3)', () => {
     const progress = [...contracted, done('i-checks', 'a-rtw', '2026-10-23'),
-      { itemId: 'i-checks', actionId: 'a-vetting', state: 'pending' as const, automationResult: 'returned' as const }];
-    const checks = itemOf(branchInput({ progress }), 'i-checks');
-    expect(checks.status).toBe('action-required');
-    expect(checks.currentAction?.id).toBe('a-rtw');
+      done('i-checks', 'a-vetting', '2026-11-01', { automationResult: 'passed' }),
+      done('i-id', 'a-photo', '2026-11-02'), done('i-id', 'a-badge', '2026-11-04', { automationResult: 'returned' })];
+    expect(itemOf(branchInput({ progress }), 'i-id')).toMatchObject({ status: 'done', doneAt: '2026-11-04', outcome: 'done' });
+  });
+
+  it('Pathway Item, when its Dependency ended with a Failed Outcome, stays not-started (Hard Stop pending)', () => {
+    const progress = [...contracted, done('i-checks', 'a-rtw', '2026-10-23'),
+      done('i-checks', 'a-vetting', '2026-11-03', { automationResult: 'failed' })];
+    const state = computeState(branchInput({ progress }));
+    expect(state.items.find((i) => i.itemId === 'i-id')?.status).toBe('not-started');
+    expect(state.containers[0]?.complete).toBe(false);
+    expect(state.items.find((i) => i.itemId === 'i-checks')?.whileYouWait).toBeDefined();
   });
 
   it('Pathway Item, when overridden as skipped, is skipped and holds nothing up', () => {
@@ -123,11 +131,10 @@ describe('Timers and Reminders (rule 4)', () => {
 });
 
 describe('Hard Stops (rule 5)', () => {
-  it('Failed Outcome, for Journey Duration and Dependencies, counts as done', () => {
+  it('Failed Outcome, for Journey Duration, counts as done', () => {
     const state = computeState(branchInput({ progress: checksFailed }));
     const checks = state.items.find((i) => i.itemId === 'i-checks');
     expect(checks).toMatchObject({ status: 'done', outcome: 'failed', doneAt: '2026-11-03', waitingDays: 12, overdue: false });
-    expect(state.items.find((i) => i.itemId === 'i-id')?.available).toBe(true);
   });
 
   it('Hard Stop, when unconfirmed, raises a Needs decision and changes nothing', () => {

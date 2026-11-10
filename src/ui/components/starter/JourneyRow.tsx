@@ -35,6 +35,7 @@ export function JourneyRow({ item, act, receipt, onReceipt }: {
         </span>
         <span className={`shrink-0 text-[15px] ${wordColour}`}>{look.word}</span>
       </div>
+      {item.addedBy && <p className="text-[14px] text-[var(--muted)]">Added by {item.addedBy.name}</p>}
       {action && action.type !== 'provide' && <p className="mt-1">{action.label}</p>}
       {action && <ActionControl item={item} act={act} onReceipt={onReceipt} />}
       {receipt && <p className="mt-1 text-[15px] text-[var(--muted)]">Submitted {receipt}</p>}
