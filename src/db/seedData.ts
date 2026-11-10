@@ -96,8 +96,15 @@ const TEMPLATES: Template[] = [
       ['i-priv-access', 'j-priv-access', true, []],
       ['i-lab', 'j-lab-env', true, [dep.item('i-priv-access'), dep.timer('t-day-1')]],
       ['i-equipment', 'j-equipment-request', true, []],
+      // Onboarding Journeys wait on Day 1, first-month ones on Day 8 or Day 30: a Stage never holds work back (D8.4).
+      ['i-day-one', 'j-day-one', true, [dep.timer('t-day-1')]],
+      ['i-training', 'j-mandatory-training', true, [dep.timer('t-day-1')]],
+      ['i-meet-team', 'j-meet-team', false, [dep.timer('t-day-1')]],
+      ['i-community', 'j-eng-community', false, [dep.timer('t-day-1')]],
+      ['i-oncall', 'j-change-oncall', false, [dep.timer('t-day-8')]],
+      ['i-check-in-30', 'j-check-in-30', true, [dep.timer('t-pulse-30')]],
     ],
-    extraTimers: [startTimer('t-day-1', 'Day 1', 0)], stops: ['i-lab'] },
+    extraTimers: [startTimer('t-day-1', 'Day 1', 0), startTimer('t-day-8', 'Day 8', 7)], stops: ['i-lab'] },
 ];
 
 export function buildTemplate(tpl: Template): Omit<PathwaySnapshot, 'id' | 'version'> {

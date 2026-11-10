@@ -1,0 +1,39 @@
+{
+  "id": "j-check-in-30",
+  "semver": "1.0.0",
+  "title": "30-day check-in",
+  "description": "A conversation with your Line Manager about how the first month went.",
+  "ownerTeam": "Modern Workplace",
+  "stage": "first-30-days",
+  "tags": {
+    "jobFamily": "Modern Workplace",
+    "grade": "E"
+  },
+  "declaresOutcome": false,
+  "actions": [
+    {
+      "id": "j-check-in-30-a1",
+      "type": "task",
+      "label": "Hold the 30-day check-in",
+      "owner": "line-manager"
+    },
+    {
+      "id": "j-check-in-30-a2",
+      "type": "choose",
+      "label": "How would you describe your first month?",
+      "owner": "starter",
+      "options": [
+        "Settling in",
+        "Mostly settled",
+        "Still finding my feet"
+      ],
+      "starterOnly": true
+    },
+    {
+      "id": "j-check-in-30-a3",
+      "type": "notification",
+      "label": "Your 30-day check-in is complete",
+      "owner": "starter"
+    }
+  ]
+}

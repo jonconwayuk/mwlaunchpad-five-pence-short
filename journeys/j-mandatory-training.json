@@ -1,0 +1,29 @@
+{
+  "id": "j-mandatory-training",
+  "semver": "1.0.0",
+  "title": "Mandatory training",
+  "description": "The e-learning every colleague completes in the first week.",
+  "ownerTeam": "HR",
+  "stage": "onboarding",
+  "tags": {},
+  "declaresOutcome": false,
+  "actions": [
+    {
+      "id": "j-mandatory-training-a1",
+      "type": "read",
+      "label": "What the mandatory training covers"
+    },
+    {
+      "id": "j-mandatory-training-a2",
+      "type": "task",
+      "label": "Complete the information security e-learning",
+      "owner": "starter"
+    },
+    {
+      "id": "j-mandatory-training-a3",
+      "type": "task",
+      "label": "Complete the data protection e-learning",
+      "owner": "starter"
+    }
+  ]
+}

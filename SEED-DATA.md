@@ -61,6 +61,11 @@ The HR Partner persona is also the Journey owner and Pathway owner in the demo.
 | 19 | Privileged access request | Modern Workplace | Pre-employment | Hidden automation (ServiceNow `createPrivilegedAccessRequest`). "While you wait" message. | — |
 | 20 | Lab environment | Modern Workplace | Onboarding | Hidden automation (Oracle `assignCostCentre`) → Hidden automation (ServiceNow `provisionLabEnvironment`) → Task, Starter (sign in) | — |
 | 21 | Modern Workplace team access package | Modern Workplace | Pre-employment | Hidden automation (ServiceNow `requestAccessPackage`) → Notification to Starter | — |
+| 22 | Your first day | HR | Onboarding | Read (where to go on Day 1) → Task, Line Manager (meet the new starter at reception) → Task, Starter (collect badge and laptop) | — |
+| 23 | Mandatory training | HR | Onboarding | Read → Task, Starter (information security e-learning) → Task, Starter (data protection e-learning) | — |
+| 24 | Meet the team | Modern Workplace | Onboarding | Read (who is who) → Task, Line Manager (book a team lunch) → Notification to Starter | — |
+| 25 | Change and on-call process | Modern Workplace | First 30 days | Read → Task, Starter (shadow a change review) → Task, Buddy (on-call handover) | — |
+| 26 | 30-day check-in | Modern Workplace | First 30 days | Task, Line Manager (hold the check-in) → Choose (first month, Starter only) → Notification to Starter | — |
 
 Every Journey is a file in `journeys/` (one per Journey, with a `semver`); the seed reads that folder in file-name order. Connector manifests for Workday, ServiceNow and Oracle are in `connectors/`, backed by the mocked adapters in `src/adapters/`.
 
@@ -93,7 +98,7 @@ Template-specific items:
 | **Branch colleague B** | Branch / Retail / B | Branch device | Uniform (optional, after Contracting); Branch induction (mandatory, Timer Day 1); Cash-handling training (mandatory, Timer Day 8) |
 | **Software engineer D** | Software engineering / Technology / D | Developer device | Engineering community intro (optional, Timer Day 1) |
 | **Executive X** | Executive / Group Functions / X | Executive device | Welcome from sponsoring exec (mandatory, after "Cleared to start") |
-| **Infrastructure engineer E** (`pw-infra-e`) | Modern Workplace / Infrastructure engineer / Technology / E | Developer device | Privileged access request (mandatory, no Dependency, so it waits on ServiceNow from the day it is applied); Lab environment (mandatory, after Privileged access request and Timer Day 1); Equipment request (mandatory, no Dependency, so it waits on ServiceNow, synthetic reference REQ0041207, and a Notification tells the starter when ServiceNow reports it complete, simulated). Hard Stop deadline also stops Lab environment |
+| **Infrastructure engineer E** (`pw-infra-e`) | Modern Workplace / Infrastructure engineer / Technology / E | Developer device | Privileged access request (mandatory, no Dependency, so it waits on ServiceNow from the day it is applied); Lab environment (mandatory, after Privileged access request and Timer Day 1); Equipment request (mandatory, no Dependency, so it waits on ServiceNow, synthetic reference REQ0041207, and a Notification tells the starter when ServiceNow reports it complete, simulated). Day 1 Timer gates: Your first day (mandatory), Mandatory training (mandatory), Meet the team (optional), Engineering community intro (optional); Day 8 Timer gates Change and on-call process (optional); the Day 30 Timer gates 30-day check-in (mandatory). Hard Stop deadline also stops Lab environment |
 
 Bob after HR applies `pw-infra-e` at T and the Demo clock moves 21 days: Privileged access request waiting 21 days, Usual Range 19 to 28, not overdue; "Cleared to start" Container incomplete; Pulse check (Day 14) held by its Timer; the On failed Hard Stop on Pre-employment checks is armed; Modern Workplace team access package is in the library for Hannah to add. Checked by `src/db/files.test.ts`.
 
