@@ -1,6 +1,6 @@
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
-import type { ActionDef, ItemState } from '@/src/engine/types';
+import type { ActionDef, ActionStep, ItemState } from '@/src/engine/types';
 import { JourneyRow } from './JourneyRow';
 import { WaitingCard } from './WaitingCard';
 
@@ -45,6 +45,37 @@ describe('Starter Preview rows', () => {
     const html = renderToStaticMarkup(<JourneyRow item={item({ status: 'in-progress' })} act={async () => true} onReceipt={() => undefined} />);
     expect(html).toContain('border-l-[3px] border-l-heritage');
     expect(html).toContain('In progress');
+  });
+});
+
+describe('Journey row steps', () => {
+  const steps: ActionStep[] = [
+    { id: 's1', type: 'read', label: 'Read the note', state: 'done' },
+    { id: 's2', type: 'task', label: 'Order a laptop', owner: 'line-manager', state: 'current' },
+    { id: 's3', type: 'task', label: 'Collect a pass', owner: 'hr', state: 'upcoming' },
+  ];
+  const html = (actions?: ActionStep[]) =>
+    renderToStaticMarkup(<JourneyRow item={item({ status: 'in-progress', actions })} act={async () => true} onReceipt={() => undefined} />);
+
+  it('when actions exist, shows a collapsed toggle with the count', () => {
+    const h = html(steps);
+    expect(h).toContain('aria-expanded="false"');
+    expect(h).toContain('Show steps (3)');
+    expect(h).toContain('hidden=""');
+  });
+
+  it('when actions are missing or empty, shows no toggle', () => {
+    expect(html(undefined)).not.toContain('aria-expanded');
+    expect(html([])).not.toContain('aria-expanded');
+  });
+
+  it('renders done, current and upcoming markers in order with owners', () => {
+    const h = html(steps);
+    expect(h).toMatch(/data-state="done".*data-state="current".*data-state="upcoming"/);
+    expect(h).toContain('aria-current="step"');
+    expect(h).toContain('(Your Line Manager)');
+    expect(h).toContain('(HR)');
+    expect(h).not.toContain('(Starter)');
   });
 });
 
