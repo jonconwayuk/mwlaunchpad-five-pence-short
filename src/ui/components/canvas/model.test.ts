@@ -33,6 +33,15 @@ describe('canvas model', () => {
     expect(item?.x).toBeGreaterThanOrEqual(laneX('onboarding'));
   });
 
+  it('removeDependency, when a Dependency is removed, drops only that Dependency', () => {
+    const s = canvasReducer(snap(), { type: 'connect', sourceId: 'i-payroll', targetId: 'i-uniform' });
+    const before = s.items.find((i) => i.id === 'i-uniform')!.dependsOn;
+    const after = canvasReducer(s, { type: 'removeDependency', itemId: 'i-uniform', dependency: { kind: 'item', itemId: 'i-payroll' } })
+      .items.find((i) => i.id === 'i-uniform')!.dependsOn;
+    expect(before.some((d) => d.kind === 'item' && d.itemId === 'i-payroll')).toBe(true);
+    expect(after).toEqual(before.filter((d) => !(d.kind === 'item' && d.itemId === 'i-payroll')));
+  });
+
   it('snapshotFromFixture, when built, has the Container, Timer and Hard Stop', () => {
     const s = snap();
     expect(s.containers[0]?.itemIds).toEqual(['i-payroll', 'i-checks', 'i-id']);

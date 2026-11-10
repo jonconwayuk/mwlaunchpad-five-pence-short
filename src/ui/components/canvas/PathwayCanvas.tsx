@@ -4,17 +4,18 @@ import {
   MarkerType, ReactFlow, ReactFlowProvider, applyNodeChanges, useReactFlow,
   type Connection, type Edge, type Node, type NodeChange,
 } from '@xyflow/react';
-import { useCallback, useEffect, useMemo, useReducer, useState, type DragEvent } from 'react';
+import { useCallback, useEffect, useMemo, useReducer, useRef, useState, type DragEvent } from 'react';
 import { demoState } from '@/src/engine/fixtures';
-import type { PathwaySnapshot, Tags } from '@/src/engine/types';
+import type { DependencyRef, PathwaySnapshot, StageId, Tags } from '@/src/engine/types';
 import { LIBRARY, STAGES, TAG_LISTS } from './library';
 import {
-  CARD_H, CARD_W, LANE_W, canvasReducer, laneExtent, laneX, loopMessage,
-  snapshotFromFixture, timerLabel, titleOfJourney,
+  CARD_H, CARD_W, LANE_W, canvasReducer, dependencyKey, laneExtent, laneX, loopMessage,
+  snapToLane, snapshotFromFixture, timerLabel, titleOfJourney,
 } from './model';
 import { nodeTypes } from './nodes';
 
 const DRAG_TYPE = 'application/x-launchpad-journey';
+const STAGE_TYPE = 'application/x-launchpad-stage';
 const focus = 'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-vibrant';
 const stageLabel = (id: string) => STAGES.find((s) => s.id === id)?.label ?? id;
 
@@ -22,7 +23,7 @@ const stageLabel = (id: string) => STAGES.find((s) => s.id === id)?.label ?? id;
 const blockStart = (kind: 'timer' | 'hardStop', index: number) =>
   kind === 'timer'
     ? index === 0 ? { x: laneX('pre-employment') + 24, y: 620 } : { x: laneX('onboarding') + 24, y: 72 }
-    : { x: laneX('onboarding') + 24, y: 480 + index * 110 };
+    : { x: laneX('onboarding') + 16, y: 480 + index * 110 };
 
 function buildNodes(s: PathwaySnapshot, prev: Node[]): Node[] {
   const before = new Map(prev.map((n) => [n.id, n]));
@@ -59,21 +60,35 @@ function buildNodes(s: PathwaySnapshot, prev: Node[]): Node[] {
   return [...lanes, ...containers, ...items, ...timers, ...hardStops];
 }
 
+const dependencyTitle = (s: PathwaySnapshot, d: DependencyRef) =>
+  d.kind === 'item'
+    ? titleOfJourney(s.items.find((i) => i.id === d.itemId)?.journeyId ?? d.itemId)
+    : d.kind === 'container'
+      ? s.containers.find((c) => c.id === d.containerId)?.label ?? d.containerId
+      : ((t) => (t ? timerLabel(t) : d.timerId))(s.timers.find((t) => t.id === d.timerId));
+
 function buildEdges(s: PathwaySnapshot): Edge[] {
   const arrow = { type: MarkerType.ArrowClosed, color: 'var(--everyday)' };
   const style = { stroke: 'var(--everyday)', strokeWidth: 2 };
+  const laneOf = new Map(s.items.map((i) => [i.id, i.lane]));
   const deps: Edge[] = s.items.flatMap((i) => i.dependsOn.map((d) => {
     const source = d.kind === 'item' ? d.itemId : d.kind === 'container' ? `container:${d.containerId}` : `timer:${d.timerId}`;
-    return { id: `${source}->${i.id}`, source, target: i.id, markerEnd: arrow, style, selectable: false };
+    // Same-lane cards stack, so the edge runs from the bottom of one to the top of the next instead of looping round.
+    const sameLane = d.kind === 'item' && laneOf.get(d.itemId) === i.lane;
+    return {
+      id: `${source}->${i.id}`, source, target: i.id, type: 'smoothstep', markerEnd: arrow, style, selectable: false,
+      sourceHandle: d.kind === 'item' ? (sameLane ? 'bottom' : 'right') : undefined,
+      targetHandle: sameLane ? 'top' : 'left',
+    };
   }));
   const stops: Edge[] = s.hardStops.flatMap((h) => h.trigger.kind === 'on-failed'
-    ? [{ id: `${h.trigger.itemId}->hardStop:${h.id}`, source: h.trigger.itemId, target: `hardStop:${h.id}`, label: 'If Failed',
+    ? [{ id: `${h.trigger.itemId}->hardStop:${h.id}`, source: h.trigger.itemId, sourceHandle: 'right', target: `hardStop:${h.id}`, type: 'smoothstep', label: 'If Failed',
         style: { stroke: 'var(--charcoal)', strokeWidth: 1.5, strokeDasharray: '4 4' }, selectable: false }]
     : []);
   return [...deps, ...stops];
 }
 
-function Library({ onAdd }: { onAdd: (journeyId: string) => void }) {
+function Library({ onAdd, onDragStage }: { onAdd: (journeyId: string) => void; onDragStage: (stage: StageId | null) => void }) {
   const [query, setQuery] = useState('');
   const [tag, setTag] = useState('');
   const allTags = useMemo(() => [...new Set(LIBRARY.flatMap((j) => Object.values(j.tags)))].sort(), []);
@@ -96,7 +111,11 @@ function Library({ onAdd }: { onAdd: (journeyId: string) => void }) {
       </div>
       <ul className="flex-1 space-y-2 overflow-y-auto p-3">
         {shown.map((j) => (
-          <li key={j.id} draggable onDragStart={(e) => { e.dataTransfer.setData(DRAG_TYPE, j.id); e.dataTransfer.effectAllowed = 'move'; }}
+          <li key={j.id} draggable onDragEnd={() => onDragStage(null)}
+            onDragStart={(e) => {
+              e.dataTransfer.setData(DRAG_TYPE, j.id); e.dataTransfer.setData(STAGE_TYPE, j.stage);
+              e.dataTransfer.effectAllowed = 'move'; onDragStage(j.stage);
+            }}
             className="cursor-grab rounded-[6px] border border-[var(--hairline)] bg-paper p-2.5 active:cursor-grabbing">
             <div className="flex items-start justify-between gap-2">
               <span className="text-[15px] font-medium text-ink">{j.title}</span>
@@ -124,9 +143,28 @@ function Builder({ pathwayId, title }: { pathwayId: string; title: string }) {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
   const [saved, setSaved] = useState<string | null>(null);
-  const { screenToFlowPosition } = useReactFlow();
+  const [dragStage, setDragStage] = useState<StageId | null>(null);
+  const { screenToFlowPosition, getViewport, setViewport } = useReactFlow();
+  const paneRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => setNodes((prev) => buildNodes(snapshot, prev)), [snapshot]);
+  // While a library card is dragged, its own Stage lane is tinted so HR sees where it will land.
+  const shownNodes = useMemo(() => dragStage
+    ? nodes.map((n) => (n.id === `lane:${dragStage}` ? { ...n, data: { ...n.data, dropHere: true } } : n))
+    : nodes, [nodes, dragStage]);
+  // Fit all four lanes across the pane's width, lanes top-aligned; the height pans.
+  const fitLanes = useCallback(() => {
+    const width = paneRef.current?.clientWidth ?? LANE_W * STAGES.length;
+    setViewport({ x: 8, y: 0, zoom: Math.min(1.2, (width - 16) / (LANE_W * STAGES.length)) });
+  }, [setViewport]);
+  // When a new card lands off screen, pan to it so the snap into its lane is visible; the zoom and lanes stay put.
+  const showCard = (y: number) => {
+    const v = getViewport();
+    const top = y * v.zoom + v.y;
+    const height = paneRef.current?.clientHeight ?? 0;
+    if (top >= 0 && top + CARD_H * v.zoom <= height) return;
+    setViewport({ ...v, y: Math.min(0, 160 - y * v.zoom) }, { duration: 400 });
+  };
   const edges = useMemo(() => buildEdges(snapshot), [snapshot]);
   const itemIds = useMemo(() => new Set(snapshot.items.map((i) => i.id)), [snapshot]);
   const selected = snapshot.items.find((i) => i.id === selectedId);
@@ -141,16 +179,20 @@ function Builder({ pathwayId, title }: { pathwayId: string; title: string }) {
 
   const onDrop = (e: DragEvent) => {
     e.preventDefault();
+    setDragStage(null);
     const journeyId = e.dataTransfer.getData(DRAG_TYPE);
-    if (!journeyId) return;
+    const stage = LIBRARY.find((j) => j.id === journeyId)?.stage;
+    if (!stage) return;
     const p = screenToFlowPosition({ x: e.clientX, y: e.clientY });
     dispatch({ type: 'add', journeyId, x: p.x - CARD_W / 2, y: p.y - CARD_H / 2 });
+    showCard(snapToLane(stage, p.x - CARD_W / 2, p.y - CARD_H / 2).y);
   };
   const addToLane = (journeyId: string) => {
     const stage = LIBRARY.find((j) => j.id === journeyId)?.stage;
     if (!stage) return;
     const lowest = Math.max(0, ...snapshot.items.filter((i) => i.lane === stage).map((i) => i.y + CARD_H + 32));
     dispatch({ type: 'add', journeyId, x: laneX(stage), y: lowest });
+    showCard(snapToLane(stage, laneX(stage), lowest).y);
   };
   const setTag = (key: keyof Tags, value: string) => {
     const tags: Tags = { ...snapshot.tags };
@@ -179,9 +221,9 @@ function Builder({ pathwayId, title }: { pathwayId: string; title: string }) {
         <button type="button" onClick={() => { dispatch({ type: 'publish' }); setSaved(`Published as version ${snapshot.version + 1}`); }}
           className={`rounded-[4px] bg-heritage px-3 py-1.5 text-paper ${focus}`}>Publish</button>
       </header>
-      <div className="flex min-h-0 flex-1">
-        <Library onAdd={addToLane} />
-        <div className="relative flex-1 bg-[var(--paper-2)]" onDragOver={(e) => { e.preventDefault(); e.dataTransfer.dropEffect = 'move'; }} onDrop={onDrop}>
+      <div className="relative flex min-h-0 flex-1">
+        <Library onAdd={addToLane} onDragStage={setDragStage} />
+        <div ref={paneRef} className="relative flex-1 bg-[var(--paper-2)]" onDragOver={(e) => { e.preventDefault(); e.dataTransfer.dropEffect = 'move'; }} onDrop={onDrop}>
           {notice && (
             <div role="alert" className="absolute left-1/2 top-4 z-10 flex max-w-[560px] -translate-x-1/2 items-center gap-4 rounded-[6px] bg-ink px-4 py-3 text-paper">
               <span>{notice}</span>
@@ -189,17 +231,18 @@ function Builder({ pathwayId, title }: { pathwayId: string; title: string }) {
             </div>
           )}
           <ReactFlow
-            nodes={nodes} edges={edges} nodeTypes={nodeTypes}
+            nodes={shownNodes} edges={edges} nodeTypes={nodeTypes} onInit={fitLanes}
             onNodesChange={onNodesChange} onConnect={onConnect} isValidConnection={isValidConnection}
             onNodeDragStop={(_, n) => { if (itemIds.has(n.id)) dispatch({ type: 'move', itemId: n.id, x: n.position.x, y: n.position.y }); }}
             onSelectionChange={({ nodes: sel }) => setSelectedId(sel.length === 1 && sel[0] && itemIds.has(sel[0].id) ? sel[0].id : null)}
             deleteKeyCode={null} connectionLineStyle={{ stroke: 'var(--everyday)', strokeWidth: 2 }}
             translateExtent={[[-200, -200], [LANE_W * STAGES.length + 200, 1600]]}
-            defaultViewport={{ x: 16, y: 0, zoom: 1 }} minZoom={0.4} maxZoom={1.5}
+            minZoom={0.4} maxZoom={1.5}
           />
         </div>
         {selected && (
-          <aside className="w-[280px] shrink-0 space-y-4 border-l border-[var(--hairline)] bg-paper p-4" aria-label="Pathway Item">
+          // An overlay, so opening it never squeezes the lanes off the screen.
+          <aside className="absolute inset-y-0 right-0 z-10 w-[264px] space-y-4 overflow-y-auto border-l border-[var(--hairline)] bg-paper p-4" aria-label="Pathway Item">
             <div>
               <h2 className="text-[18px] font-semibold text-racing">{titleOfJourney(selected.journeyId)}</h2>
               <p className="text-[13px] text-[var(--muted)]">{stageLabel(selected.lane)}</p>
@@ -210,6 +253,20 @@ function Builder({ pathwayId, title }: { pathwayId: string; title: string }) {
                 onChange={() => dispatch({ type: 'toggleMandatory', itemId: selected.id })}
                 className={`h-5 w-5 accent-[var(--heritage)] ${focus}`} />
             </label>
+            <div>
+              <h3 className="text-[15px] font-medium text-ink">Dependencies</h3>
+              {selected.dependsOn.length === 0 && <p className="text-[13px] text-[var(--muted)]">Waits for nothing.</p>}
+              <ul className="space-y-1">
+                {selected.dependsOn.map((d) => (
+                  <li key={dependencyKey(d)} className="flex items-center justify-between gap-2 text-[13px]">
+                    <span>Waits for {dependencyTitle(snapshot, d)}</span>
+                    <button type="button" onClick={() => dispatch({ type: 'removeDependency', itemId: selected.id, dependency: d })}
+                      aria-label={`Remove the Dependency on ${dependencyTitle(snapshot, d)}`}
+                      className={`shrink-0 rounded-[4px] px-1.5 text-heritage hover:underline ${focus}`}>Remove</button>
+                  </li>
+                ))}
+              </ul>
+            </div>
             <button type="button" onClick={() => { dispatch({ type: 'remove', itemId: selected.id }); setSelectedId(null); }}
               className={`w-full rounded-[4px] border border-charcoal px-3 py-1.5 text-charcoal ${focus}`}>Remove from pathway</button>
           </aside>

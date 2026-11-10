@@ -1,6 +1,10 @@
-PASS drag from library into its lane: dropped over Pre-contract, card x=584 (Onboarding lane is 560 to 840)
-PASS card cannot leave its Stage lane: dragged 400px right, card x=316 (Pre-employment lane is 280 to 560)
+PASS four lanes fit at 1280: lane labels in view: [true,true,true,true]
+PASS drag tints the Journey Stage lane: tinted ["Pre-contractDrop here"], dragged card Stage "Pre-contract"
+PASS drag from library into its lane: dropped over Pre-contract, card x=516 (Onboarding lane is 500 to 750)
+PASS card cannot leave its Stage lane: dragged 400px right, card x=274 (Pre-employment lane is 250 to 500)
 PASS loop refused with named message: "Payroll already waits for Contracting, so Contracting cannot wait for Payroll.Got it"
 PASS Dependency connects: edges 7 -> 8
 PASS Mandatory toggles and shows a padlock: padlock on Uniform false -> true
+PASS side panel leaves the Hard Stop visible: Hard Stop right edge 1014.9039916992188, panel left 1016
+PASS removing a Dependency drops the edge: edges 8 -> 7
 PASS Container, Timer and Hard Stop render: ["Cleared to start","7 days before start date","14 days after start date","Hard StopPre-employment checks failedStops the whole pathway"]

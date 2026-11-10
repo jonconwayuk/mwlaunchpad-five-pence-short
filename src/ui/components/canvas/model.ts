@@ -2,11 +2,12 @@ import { wouldCreateLoop } from '@/src/engine/loops';
 import type { DependencyRef, EngineState, PathwayItem, PathwaySnapshot, StageId, Tags, TimerDef } from '@/src/engine/types';
 import { LIBRARY, STAGES } from './library';
 
-export const LANE_W = 280;
+// Four lanes of 250 fit the 1020px left beside the library on a 1280px laptop at zoom 1.
+export const LANE_W = 250;
 export const LANE_H = 1000;
-export const CARD_W = 220;
+export const CARD_W = 210;
 export const CARD_H = 72;
-const PAD = 24;
+const PAD = 16;
 const TOP = 72; // clears the lane label and a Container label above the first card
 
 export const laneX = (stage: StageId) => STAGES.findIndex((s) => s.id === stage) * LANE_W;
@@ -91,12 +92,17 @@ export function snapshotFromFixture(state: EngineState, id: string, title: strin
   };
 }
 
+/** One string per Dependency, so two refs to the same item, Container or Timer compare equal. */
+export const dependencyKey = (d: DependencyRef) =>
+  d.kind === 'item' ? `item:${d.itemId}` : d.kind === 'container' ? `container:${d.containerId}` : `timer:${d.timerId}`;
+
 export type CanvasAction =
   | { type: 'add'; journeyId: string; x: number; y: number }
   | { type: 'move'; itemId: string; x: number; y: number }
   | { type: 'connect'; sourceId: string; targetId: string }
   | { type: 'toggleMandatory'; itemId: string }
   | { type: 'remove'; itemId: string }
+  | { type: 'removeDependency'; itemId: string; dependency: DependencyRef }
   | { type: 'tags'; tags: Tags }
   | { type: 'publish' };
 
@@ -135,6 +141,8 @@ export function canvasReducer(s: PathwaySnapshot, a: CanvasAction): PathwaySnaps
         timers: s.timers.filter((t) => t.reminder?.aboutItemId !== a.itemId),
         hardStops: s.hardStops.filter((h) => h.trigger.kind !== 'on-failed' || h.trigger.itemId !== a.itemId),
       };
+    case 'removeDependency':
+      return update(a.itemId, (i) => ({ ...i, dependsOn: i.dependsOn.filter((d) => dependencyKey(d) !== dependencyKey(a.dependency)) }));
     case 'tags':
       return { ...s, tags: a.tags };
     case 'publish':

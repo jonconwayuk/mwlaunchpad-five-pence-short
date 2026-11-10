@@ -4,6 +4,8 @@ import { CARD_H, CARD_W, LANE_H, LANE_W } from './model';
 
 const dot = '!h-3 !w-3 !border-2 !border-paper !bg-everyday';
 const fixedDot = '!h-2 !w-2 !border-0 !bg-[var(--hairline)]';
+// Anchors for same-lane Dependencies (bottom of one card to the top of the next); not dragged from.
+const anchor = '!h-1 !w-1 !min-h-0 !min-w-0 !border-0 !bg-transparent';
 
 function Padlock() {
   return (
@@ -15,13 +17,14 @@ function Padlock() {
 }
 
 export function LaneNode({ data }: NodeProps) {
-  const { label, index } = data as { label: string; index: number };
+  const { label, index, dropHere } = data as { label: string; index: number; dropHere?: boolean };
+  const fill = dropHere ? 'bg-calm' : index % 2 ? 'bg-[var(--paper-2)]' : 'bg-paper';
   return (
     <div
       style={{ width: LANE_W, height: LANE_H }}
-      className={`border-r border-[var(--hairline)] px-4 pt-3 text-[13px] text-[var(--muted)] ${index % 2 ? 'bg-[var(--paper-2)]' : 'bg-paper'}`}
+      className={`border-r border-[var(--hairline)] px-4 pt-3 text-[13px] ${dropHere ? 'text-racing' : 'text-[var(--muted)]'} ${fill}`}
     >
-      {label}
+      {label}{dropHere && <span className="ml-2 font-medium">Drop here</span>}
     </div>
   );
 }
@@ -35,13 +38,15 @@ export function JourneyNode({ data, selected, dragging }: NodeProps) {
         selected ? 'border-vibrant ring-2 ring-vibrant' : 'border-[var(--hairline)]'
       } ${dragging ? 'shadow-lg' : ''}`}
     >
-      <Handle type="target" position={Position.Left} className={dot} />
+      <Handle id="left" type="target" position={Position.Left} className={dot} />
+      <Handle id="top" type="target" position={Position.Top} isConnectable={false} className={anchor} />
       <div className="flex items-center justify-between gap-2">
         <span className="truncate text-[15px] font-medium text-ink">{title}</span>
         {mandatory && <span className="text-racing"><Padlock /></span>}
       </div>
       <span className="text-[13px] text-[var(--muted)]">{stage}</span>
-      <Handle type="source" position={Position.Right} className={dot} title="Drag to the Journey that waits for this one" />
+      <Handle id="right" type="source" position={Position.Right} className={dot} title="Drag to the Journey that waits for this one" />
+      <Handle id="bottom" type="source" position={Position.Bottom} isConnectable={false} className={anchor} />
     </div>
   );
 }
@@ -73,7 +78,7 @@ export function TimerNode({ data, dragging }: NodeProps) {
 export function HardStopNode({ data, dragging }: NodeProps) {
   const { label, detail } = data as { label: string; detail: string };
   return (
-    <div className={`w-[220px] rounded-[6px] bg-charcoal px-3 py-2 text-paper ${dragging ? 'shadow-lg' : ''}`}>
+    <div className={`w-[210px] rounded-[6px] bg-charcoal px-3 py-2 text-paper ${dragging ? 'shadow-lg' : ''}`}>
       <Handle type="target" position={Position.Left} isConnectable={false} className={fixedDot} />
       <div className="text-[13px]">Hard Stop</div>
       <div className="text-[15px] font-medium">{label}</div>
