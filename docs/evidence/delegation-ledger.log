@@ -41,3 +41,8 @@
 09:53 | INT2 | final compatibility reviewer | opus | Walk all nine section 9 items through the UI on a private c76b8c4 instance; re-check fixes; update demo script
 09:53 | E1 | auditor | opus | ponytail-audit and ponytail-debt over app/ and src/ at HEAD, report only
 10:03 | FINAL | fix implementer | opus | Final fix loop: canvas Day labels, Hard Stop edge label, reset reload, Publish message, date picker, re-apply decisions, JSON guards, duplicate labels
+10:13 | S1 | implementer | opus | Stretch 1: Timer and Hard Stop authoring on the canvas, hard stop 10:42
+10:24 | W2 | F1 | implementer | opus | Config as code (journeys/, connectors/), runtime sync, grades A-G, Bob + pw-infra-e, history, new queries
+10:24 | W2 | F2 | implementer | opus | Onboarding Studio rename, single-window view/person/layout switcher, Studio nav placeholders
+10:24 | W2 | DOC | implementer | sonnet | Design.MD 1.2 amendment, GLOSSARY, CLAUDE.md, ADR-0007
+10:24 | W1 | W1-A | implementer | opus | NeedsDecision.triggerItemId, roleFilter matches on it (decision 30), audit residue check

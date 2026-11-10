@@ -2,7 +2,7 @@
 
 This file tracks acceptance against the spec (`Design.MD`) and carries the decision log, as the phase workflow requires (`docs/workflow/phase-workflow.md`).
 
-Open items waiting on the owner carry the pending marker. The grep command in the `CLAUDE.md` orientation table gives the authoritative list (this paragraph deliberately doesn't spell the token, so it never counts as an item). **Open count: 3.** This is the only place the count is kept. When an item resolves, rewrite its marker to the resolved form, "was" followed by the token.
+Open items waiting on the owner carry the pending marker. The grep command in the `CLAUDE.md` orientation table gives the authoritative list (this paragraph deliberately doesn't spell the token, so it never counts as an item). **Open count: 1.** This is the only place the count is kept. When an item resolves, rewrite its marker to the resolved form, "was" followed by the token.
 
 ## Acceptance against the spec
 
@@ -173,7 +173,7 @@ Numbered once, in order, never renumbered or deleted. A reversed decision gets a
 - **Why:** These are the fallbacks the B3 brief allowed.
 - **Evidence:** `docs/evidence/launchpad-build/B3/`.
 
-### 19. Persona B starts with a Needs decision already raised - `OWNER-PENDING`
+### 19. Persona B starts with a Needs decision already raised - was `OWNER-PENDING` (resolved in 36)
 
 - **Finding (spec against seed data, not reconciled):** Persona B starts at T+5 (`SEED-DATA.md` section 2). The On-deadline Timer `t-deadline` fires at Start date minus 5, which is T itself. So straight after Reset demo the engine raises the `hs-deadline` Needs decision on Persona B, stopping Meet your buddy, and B's Payroll Reminder has already fired. This follows `Design.MD` D2f and B5 correctly. It just isn't a scripted demo moment.
 - **Fallback until the owner rules:** Leave the spec and the seed as they are, per `CLAUDE.md`. The demo script avoids opening Persona B's Needs decision.
@@ -258,7 +258,7 @@ Numbered once, in order, never renumbered or deleted. A reversed decision gets a
 - **Why:** D1 ran the three chains and the Hard Stop end to end, and each of these blocked one of them. The spec decides; the earlier fallbacks were guesses.
 - **Evidence:** `docs/evidence/launchpad-build/D1/`, plus tests in `src/engine/__tests__/engine.test.ts` and `src/ui/components/starter/format.test.ts`.
 
-### 27. "Recruiter" in the stopped copy contradicts the glossary - `OWNER-PENDING`
+### 27. "Recruiter" in the stopped copy contradicts the glossary - was `OWNER-PENDING` (resolved in 36)
 
 - **Finding (spec against glossary, not reconciled):** `Design.MD` D2f.4 says that after a confirmed Hard Stop the starter sees that "their recruiter will be in touch". `GLOSSARY.md` lists "recruiter" under Avoid as a name for the HR Partner.
 - **Fallback until the team rules:** Keep the `Design.MD` wording, "Your recruiter will be in touch."
@@ -288,3 +288,51 @@ Numbered once, in order, never renumbered or deleted. A reversed decision gets a
   - `StarterPreview` reads the server's `stopped` flag through a cast, because `useLiveState`'s type does not declare it.
 - **Why:** These are the smallest changes that keep the engine contract. Matching on a reason string is fragile: the compatibility pass checks it, and the clean fix is a `triggerItemId` on `NeedsDecision`, an additive change to `src/engine/types.ts`.
 - **Evidence:** `docs/evidence/launchpad-build/D1/fix-curl.txt`; 75 Vitest tests.
+
+### 31. Mentor feedback 1 is accepted and runs alongside the original build
+
+- **Decided:**
+  - The sixteen items in `docs/feedback/2026-11-10-feedback-1.md` are owner instruction, as workstream 2. The original build carries on, unchanged, as workstream 1. One orchestrator runs both, under one combined file-ownership table, in `docs/plans/2026-11-10-feedback-1.md`.
+  - The freeze moves to 13:00. Building stops at 12:30, and everything stops at 12:58.
+  - Where the two workstreams disagree, the feedback wins for anything a user sees. The original contracts win for anything under the surface: engine types, API shapes and routes.
+  - The restore point is the tag `pre-feedback-1` on 1674464, the last commit on the shared gate. The team's demo instance stays on that tag until the owner says otherwise.
+- **Why:** Owner's instruction, 10 Nov 2026 at about 10:15.
+- **Evidence:** This entry; the feedback file; the plan.
+
+### 32. The demo centres on Bob Warwick
+
+- **Decided:** Every headline moment is shown through Bob Warwick, a Modern Workplace infrastructure engineer at grade E, on the "Infrastructure engineer E" Pathway. The existing personas stay seeded as supporting data and must keep working. The demo script is rewritten around Bob.
+- **Why:** Owner's instruction (feedback items 5 and 7).
+
+### 33. Pushes of main at each green shared gate
+
+- **Decided:** `git push origin main` is pre-authorised at every green shared gate, for both workstreams. The shared gate is `npm run check` and `npm run build` in a clean worktree of HEAD, plus Reset demo and `BUILD-PLAN.md` section 9. A red gate blocks pushes from both workstreams. This extends decision 11. Pushing tags is not authorised, so `pre-feedback-1` stays local.
+- **Why:** Owner's instruction, 10 Nov 2026.
+
+### 34. Design.MD is amended to version 1.2
+
+- **Decided:** Version 1.2 records these changes:
+  - Onboarding Studio replaces Admin Portal in everything the user sees. The route stays `/portal`.
+  - Grades run from A to G.
+  - Journeys and connectors are config as code, as files in a repo folder. A new ADR records this.
+  - The Agent library is added.
+  - A scripted chat with a simulated Teams handover moves out of the D15 omissions, and so do the observability pages.
+  - There is still no real LLM, no real Teams and no real system-of-record integration. Those are scripted or mocked, and labelled as simulated.
+- **Why:** Owner's instruction, 10 Nov 2026. Feedback items 4, 6, 8 to 12 and 16.
+
+### 35. "Send a Reminder now" names feedback item 14
+
+- **Decided:** The manual prompt in feedback item 14 is "Send a Reminder now". It reuses the glossary term Reminder, so no new term is needed, and it avoids "trigger", which the glossary lists under Avoid.
+- **Why:** The owner suggested this name in the feedback brief.
+
+### 36. Resolving decisions 19 and 27 without the owner
+
+- **Decided (19 - was `OWNER-PENDING`):** Persona B's Needs decision at reset stays as it is. The demo now centres on Bob (decision 32), so Persona B is supporting data and never on stage. The seed is unchanged.
+- **Decided (27 - was `OWNER-PENDING`):** Keep "Your recruiter will be in touch". The Design.MD 1.2 amendment (decision 34) removes "recruiter" from the glossary's Avoid list for starter-facing copy, which was the recommended option.
+- **Why:** The owner asked for every parked item that can be closed without them to be closed. Decision 3 (the hooks) still needs the owner.
+
+### 37. Reading of the truncated end of the feedback brief
+
+- **Decided:** The owner's brief ends mid-sentence at "Rewrite the", after the wave H list. We read it as "Rewrite the demo script (`docs/demo/script.md`) and the README around Bob", and wave H does that.
+- **Why:** The brief's fallback rule: when something is ambiguous, take the reading closest to the stated aims (aim 1: "the demo script is rewritten around Bob") and record it.
+- **Confirmed 10:23:** The owner sent the missing text. Wave H rewrites the team demo script around the eight Bob steps and updates the README. The README's "What is simulated" section says plainly that the repo connection points at folders in this repo, and that connectors, agents, the chat and the Teams handover are simulated. After each gate, both workstreams are reported side by side. At 12:30 building stops, every commit that is not green is reverted, and the Bob walk runs twice.
