@@ -1,6 +1,6 @@
-import type { AdapterResult, VettingAdapter } from './types';
+import { adapterStore, type VettingAdapter } from './types';
 
-const results = new Map<string, AdapterResult>(); // in memory: Reset demo restarts the story
+const results = adapterStore('vetting');
 
 export const mockVetting: VettingAdapter = {
   async getResult(personId) {

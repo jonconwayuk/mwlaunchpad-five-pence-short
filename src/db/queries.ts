@@ -3,7 +3,7 @@ import { db } from './client';
 import * as s from './schema';
 import type {
   ActionProgress, EngineInput, HardStopDecision, ISODate, ItemOverride, JourneyDef, PathwayItem, PathwaySnapshot,
-  PersonRef, Tags,
+  PersonRef, Tags, TimerDef,
 } from '../engine/types';
 
 export const getDemoClock = (): ISODate => db.select().from(s.demoClock).get()!.today;
@@ -80,14 +80,11 @@ export function getPathwayDraft(id: string): PathwaySnapshot | undefined {
 
 export function savePathwayDraft(id: string, snap: Omit<PathwaySnapshot, 'id' | 'pathwayId' | 'version'> & Partial<PathwaySnapshot>): void {
   db.transaction(() => {
-    const rows = <T extends { id: string }>(table: typeof s.pathwayItems, defs: T[]) => {
-      db.delete(table).where(eq(table.pathwayId, id)).run();
-      defs.forEach((def, position) => db.insert(table).values({ pathwayId: id, id: def.id, position, def: def as never }).run());
-    };
-    rows(s.pathwayItems, snap.items);
-    rows(s.containers as never, snap.containers);
-    rows(s.timers as never, snap.timers);
-    rows(s.hardStops as never, snap.hardStops);
+    for (const t of [s.pathwayItems, s.containers, s.timers, s.hardStops]) db.delete(t).where(eq(t.pathwayId, id)).run();
+    snap.items.forEach((def, position) => db.insert(s.pathwayItems).values({ pathwayId: id, id: def.id, position, def }).run());
+    snap.containers.forEach((def, position) => db.insert(s.containers).values({ pathwayId: id, id: def.id, position, def }).run());
+    snap.timers.forEach((def, position) => db.insert(s.timers).values({ pathwayId: id, id: def.id, position, def }).run());
+    snap.hardStops.forEach((def, position) => db.insert(s.hardStops).values({ pathwayId: id, id: def.id, position, def }).run());
     db.update(s.pathways).set({ title: snap.title, tags: snap.tags as Tags }).where(eq(s.pathways.id, id)).run();
   });
 }
@@ -124,11 +121,38 @@ export function applyPathway(pathwayId: string, personId: string, today: ISODate
 export const getAppliedPathway = (personId: string) =>
   db.select().from(s.appliedPathways).where(eq(s.appliedPathways.personId, personId)).get();
 
-export function addPathwayItemToApplied(personId: string, item: PathwayItem): void {
-  const a = getAppliedPathway(personId);
-  if (!a) throw new Error(`No Applied Pathway for ${personId}`);
-  const snapshot = { ...a.snapshot, items: [...a.snapshot.items, item] };
-  db.update(s.appliedPathways).set({ snapshot }).where(eq(s.appliedPathways.personId, personId)).run();
+export function addAdditionToApplied(personId: string, item: PathwayItem, timers: TimerDef[] = []): void {
+  db.transaction(() => {
+    const a = getAppliedPathway(personId);
+    if (!a) throw new Error(`${personId} has no Applied Pathway to add a Journey to`);
+    const snap = a.snapshot;
+    if (snap.items.some((i) => i.id === item.id)) throw new Error(`Pathway Item ${item.id} is already on this Applied Pathway`);
+    if (!getJourney(item.journeyId, item.journeyVersion)) throw new Error(`Journey ${item.journeyId}@${item.journeyVersion} does not exist`);
+    const allTimers = [...snap.timers, ...timers];
+    const known = (d: PathwayItem['dependsOn'][number]) =>
+      d.kind === 'item' ? snap.items.some((i) => i.id === d.itemId) || d.itemId === item.id
+        : d.kind === 'container' ? snap.containers.some((c) => c.id === d.containerId)
+          : allTimers.some((t) => t.id === d.timerId);
+    const bad = item.dependsOn.find((d) => !known(d));
+    if (bad) throw new Error(`Dependency ${JSON.stringify(bad)} does not match anything on this Applied Pathway`);
+    const snapshot = { ...snap, items: [...snap.items, item], timers: allTimers };
+    db.update(s.appliedPathways).set({ snapshot }).where(eq(s.appliedPathways.personId, personId)).run();
+  });
+}
+
+/** An Addition can be removed by its author until someone has started its Actions. */
+export function removeAdditionFromApplied(personId: string, itemId: string, byPersonId: string): void {
+  db.transaction(() => {
+    const a = getAppliedPathway(personId);
+    const item = a?.snapshot.items.find((i) => i.id === itemId);
+    if (!a || !item) throw new Error(`Pathway Item ${itemId} is not on the Applied Pathway for ${personId}`);
+    if (item.addedBy?.personId !== byPersonId) throw new Error(`Only the person who added ${itemId} can remove it`);
+    const started = db.select().from(s.actionProgress)
+      .where(and(eq(s.actionProgress.personId, personId), eq(s.actionProgress.itemId, itemId))).get();
+    if (started) throw new Error(`${itemId} has already started and can no longer be removed`);
+    const snapshot = { ...a.snapshot, items: a.snapshot.items.filter((i) => i.id !== itemId) };
+    db.update(s.appliedPathways).set({ snapshot }).where(eq(s.appliedPathways.personId, personId)).run();
+  });
 }
 
 // ---- Progress ------------------------------------------------------------------------------

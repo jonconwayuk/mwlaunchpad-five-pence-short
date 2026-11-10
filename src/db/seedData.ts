@@ -37,7 +37,7 @@ export const PERSONS: SeedPerson[] = [
   staff('lm-ruth', 'Ruth King', 'line-manager', t('Executive', 'Managing director', 'Executive', 'Group Functions', 'London')),
   staff('buddy-mark', 'Mark Allen', 'buddy', t('Executive', 'Managing director', 'Executive', 'Group Functions', 'London')),
   staff('delegate-lena', 'Lena Brooks', 'delegate', t('Executive', 'Executive assistant', 'Colleague', 'Group Functions', 'London')),
-  staff('hr-partner', 'HR Partner', 'hr', t('HR', 'Line manager', 'Manager', 'Group Functions', 'Leeds')),
+  staff('hr-partner', 'HR Partner', 'hr', { ...t('HR', '', 'Manager', 'Group Functions', 'Leeds'), role: undefined }),
 ];
 
 type A = Omit<ActionDef, 'id'>;

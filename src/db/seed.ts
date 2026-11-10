@@ -1,10 +1,10 @@
 // Wipes and reseeds the whole database from SEED-DATA.md. Run with `npm run seed`.
 // Deterministic: every date derives from DEMO_T and history comes from a seeded generator.
-import { eq } from 'drizzle-orm';
 import { sqlite, db } from './client';
 import * as s from './schema';
-import { applyPathway, addPathwayItemToApplied, insertJourney, publishPathway, recordActionProgress, savePathwayDraft } from './queries';
+import { applyPathway, addAdditionToApplied, insertJourney, publishPathway, recordActionProgress, savePathwayDraft } from './queries';
 import { buildTemplate, DEMO_T, JOURNEYS, PERSON_A_ADDITIONS, PERSONS, TEMPLATES } from './seedData';
+import { resetAdapters } from '../adapters/types';
 import { log } from '../lib/log';
 import type { ISODate } from '../engine/types';
 
@@ -32,6 +32,7 @@ function checksDays(r: ReturnType<typeof rng>): number[] {
 }
 
 export function seed(): void {
+  resetAdapters();
   sqlite.transaction(() => {
     for (const { name } of sqlite.prepare("SELECT name FROM sqlite_master WHERE type = 'table' AND name NOT LIKE 'sqlite_%'").all() as { name: string }[]) {
       sqlite.exec(`DELETE FROM ${name}`);
@@ -67,10 +68,8 @@ export function seed(): void {
     for (const [personId, pathwayId] of [['person-a', 'pw-branch'], ['person-b', 'pw-engineer'], ['person-c', 'pw-executive']] as const) {
       applyPathway(pathwayId, personId, DEMO_T);
     }
-    PERSON_A_ADDITIONS.items.forEach((i) => addPathwayItemToApplied('person-a', i));
-    const a = db.select().from(s.appliedPathways).all().find((x) => x.personId === 'person-a')!;
-    db.update(s.appliedPathways).set({ snapshot: { ...a.snapshot, timers: [...a.snapshot.timers, ...PERSON_A_ADDITIONS.timers] } })
-      .where(eq(s.appliedPathways.personId, 'person-a')).run();
+    PERSON_A_ADDITIONS.items.forEach((i, n) =>
+      addAdditionToApplied('person-a', i, n === 0 ? PERSON_A_ADDITIONS.timers : []));
 
     // Persona A: Contracting done, Pre-employment checks waiting 18 days on its Hidden automation.
     const done = addDays(DEMO_T, -18);

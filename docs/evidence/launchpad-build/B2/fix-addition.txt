@@ -1,0 +1,7 @@
+duplicate id REJECTED: Pathway Item i-contracting is already on this Applied Pathway
+unknown journey REJECTED: Journey j-nope@1 does not exist
+bad dependency REJECTED: Dependency {"kind":"item","itemId":"nope"} does not match anything on this Applied Pathway
+no applied pathway REJECTED: hr-partner has no Applied Pathway to add a Journey to
+valid OK accepted
+remove by other REJECTED: Only the person who added i-new can remove it
+remove by author OK accepted

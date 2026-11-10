@@ -1,6 +1,6 @@
-import type { AdapterResult, ItProvisioningAdapter } from './types';
+import { adapterStore, type ItProvisioningAdapter } from './types';
 
-const results = new Map<string, AdapterResult>(); // in memory: Reset demo restarts the story
+const results = adapterStore('itProvisioning');
 
 export const mockItProvisioning: ItProvisioningAdapter = {
   async getResult(personId) {
