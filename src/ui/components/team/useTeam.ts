@@ -13,6 +13,8 @@ export interface TeamData {
   viewers: { id: string; name: string; role: string }[];
   simulatedDate: string;
   starters: TeamStarter[];
+  noPlan: { id: string; name: string }[];
+  handovers: { id: number; personId: string; starterName: string; question: string; at: string }[];
   tasks: TaskRef[];
   library?: { id: string; title: string; stage: StageId; tags: Tags }[];
 }

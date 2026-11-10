@@ -5,7 +5,7 @@ import {
 } from '@/src/db/queries';
 import { apiHandler, ApiError } from '@/src/lib/apiHandler';
 import { filterForViewer } from '@/src/lib/roleFilter';
-import { assertLineManager, chooseResults } from './load';
+import { assertLineManager, chooseResults, handoversFor } from './load';
 import { readJson } from './json';
 
 export const dynamic = 'force-dynamic';
@@ -21,7 +21,8 @@ export const GET = apiHandler(async (req: Request) => {
   const all = listPersons();
   const key = as === 'line-manager' ? 'lineManagerId' : 'buddyId';
   // The server filters for the viewer: a Buddy never receives Blocked Flags or Choose results.
-  const starters = all.filter((p) => p[key] === viewerId && getAppliedPathway(p.id)).map((p) => {
+  const mine = all.filter((p) => p[key] === viewerId);
+  const starters = mine.filter((p) => getAppliedPathway(p.id)).map((p) => {
     const input = buildEngineInput(p.id);
     const engineState = filterForViewer(computeState(input), as);
     return {
@@ -35,6 +36,9 @@ export const GET = apiHandler(async (req: Request) => {
     viewers: all.filter((p) => p.role === 'line-manager' || p.role === 'buddy').map((p) => ({ id: p.id, name: p.name, role: p.role })),
     simulatedDate: getDemoClock(),
     starters,
+    // Starters HR has not applied a Pathway to yet: shown as "No plan yet", never as an error.
+    noPlan: mine.filter((p) => !getAppliedPathway(p.id)).map((p) => ({ id: p.id, name: p.name })),
+    handovers: handoversFor(as, viewerId),
     tasks: starters.flatMap((s) => s.engineState.tasks.filter((t) => t.owner === as)),
     ...(as === 'line-manager' && {
       library: listJourneys().map((j) => ({ id: j.id, title: j.title, stage: j.stage, tags: j.tags })),

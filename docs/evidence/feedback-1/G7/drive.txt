@@ -1,0 +1,20 @@
+PASS no plan yet at 390: "Viewing as\nPriya Shah, Line Manager\nTom Evans, Buddy\nChris Lee, Line Manager\nJo Patel, Buddy\nRuth King, Line Manager\nMark Allen, Buddy\nHannah Price, Line Manager\nLeo Grant, Buddy\nYour starters\n\n10 Nov"
+PASS no horizontal scroll no plan 390: scrollWidth 390, innerWidth 390
+PASS no plan yet at 1280: "Viewing as\nPriya Shah, Line Manager\nTom Evans, Buddy\nChris Lee, Line Manager\nJo Patel, Buddy\nRuth King, Line Manager\nMark Allen, Buddy\nHannah Price, Line Manager\nLeo Grant, Buddy\nYour starters\n\n10 Nov"
+PASS no horizontal scroll no plan 1280: scrollWidth 1280, innerWidth 1280
+PASS apply pw-infra-e to Bob: POST /api/apply
+PASS clock +21 days: POST /api/clock
+PASS friendly progress at 390: "Bob is in Pre-contract. 0 of 11 things done. Waiting on privileged access request, usually 19 to 28 days."
+PASS no horizontal scroll Hannah 390: scrollWidth 390, innerWidth 390
+PASS friendly progress at 1280: "Bob is in Pre-contract. 0 of 11 things done. Waiting on privileged access request, usually 19 to 28 days."
+PASS no horizontal scroll Hannah 1280: scrollWidth 1280, innerWidth 1280
+PASS desktop: list beside the selected starter at 1280: {"list":400,"detail":688,"sideBySide":true}
+PASS Add a journey: Modern Workplace team access package: option j-mw-access, on page true
+PASS Send a Reminder now: status "Reminder sent to Bob Warwick" (if this names a 404, /api/reminders from G3 is not merged yet)
+PASS buddy sees no check detail at 390: leaks []
+PASS no horizontal scroll Leo 390: scrollWidth 390, innerWidth 390
+PASS buddy sees no check detail at 1280: leaks []
+PASS no horizontal scroll Leo 1280: scrollWidth 1280, innerWidth 1280
+PASS lm-chris view loads: "Viewing as\nPriya Shah, Line Manager\nTom Evans, Buddy\nChris Lee, Line Manager\nJo Patel, Buddy\nRuth King, Line Manager\nMark Allen, Buddy\nHannah Price, Line Manage"
+PASS no horizontal scroll Chris 390: scrollWidth 390, innerWidth 390
+PASS phone frame at 1280 uses the phone layout: desktop starter list display: none

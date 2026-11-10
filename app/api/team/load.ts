@@ -1,5 +1,5 @@
 import { computeState, type EngineInput } from '@/src/engine';
-import { buildEngineInput, getPerson } from '@/src/db/queries';
+import { buildEngineInput, getPerson, listHandovers } from '@/src/db/queries';
 import { ApiError } from '@/src/lib/apiHandler';
 
 /** The starter's live state, straight from the engine. */
@@ -24,4 +24,12 @@ export function chooseResults(input: EngineInput) {
     const a = j?.actions.find((x) => x.id === pr.actionId);
     return j && a?.type === 'choose' && pr.value !== undefined ? [{ itemId: pr.itemId, title: j.title, label: a.label, value: pr.value }] : [];
   });
+}
+
+/** Help requests from the starters' chat, for the Line Manager only: a Buddy never sees them. */
+export function handoversFor(as: 'line-manager' | 'buddy', viewerId: string) {
+  if (as !== 'line-manager') return [];
+  return listHandovers(viewerId).map((h) => ({
+    id: h.id, personId: h.personId, starterName: getPerson(h.personId)?.name ?? h.personId, question: h.question, at: h.at,
+  }));
 }

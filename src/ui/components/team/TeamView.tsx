@@ -3,11 +3,14 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import type { NeedsDecision } from '@/src/engine/types';
 import { FOCUS } from '@/src/ui/components/starter/JourneyRow';
-import { STAGE_LABEL, shortDate } from '@/src/ui/components/starter/format';
+import { shortDate } from '@/src/ui/components/starter/format';
 import { AddJourney } from './AddJourney';
+import { SendReminder } from './SendReminder';
+import { progressSummary } from './summary';
 import { send, useTeam, type TeamData, type TeamRole, type TeamStarter } from './useTeam';
 
 const BTN = `min-h-[44px] rounded px-4 font-semibold ${FOCUS}`;
+const NO_PLAN = 'No plan yet — HR will apply one';
 
 export function TeamView({ viewerId, as }: { viewerId: string; as: TeamRole }) {
   const router = useRouter();
@@ -15,59 +18,101 @@ export function TeamView({ viewerId, as }: { viewerId: string; as: TeamRole }) {
   const reload = () => void refresh().catch(() => undefined);
 
   return (
-    <main className="mx-auto max-w-[420px] px-5 pt-6 pb-16 text-[17px] leading-[1.55] text-ink">
-      <label className="flex items-center gap-3 text-[15px] text-[var(--muted)]">Viewing as
-        <select className={`min-h-[44px] flex-1 rounded border border-[var(--hairline)] bg-paper px-3 text-ink ${FOCUS}`}
-          value={viewerId} onChange={(e) => router.push(`/team?viewer=${e.target.value}`)}>
-          {(data?.viewers ?? [{ id: viewerId, name: viewerId, role: as }]).map((v) => (
-            <option key={v.id} value={v.id}>{v.name}, {v.role === 'buddy' ? 'Buddy' : 'Line Manager'}</option>
-          ))}
-        </select>
-      </label>
-      {error && <p role="alert" className="mt-6">{error}</p>}
-      {!data ? <p className="mt-8 text-[var(--muted)]">Loading your team</p> : <Team data={data} reload={reload} />}
-    </main>
+    // Container queries, not media queries: the phone frame in the top strip is a 390px box on a wide window.
+    <div className="@container">
+      <main className="mx-auto max-w-[420px] px-5 pt-6 pb-16 text-[17px] leading-[1.55] text-ink @4xl:max-w-[1200px] @4xl:px-8">
+        <label className="flex items-center gap-3 text-[15px] text-[var(--muted)] @4xl:max-w-[420px]">Viewing as
+          <select className={`min-h-[44px] min-w-0 flex-1 rounded border border-[var(--hairline)] bg-paper px-3 text-ink ${FOCUS}`}
+            value={viewerId} onChange={(e) => router.push(`/team?viewer=${e.target.value}`)}>
+            {(data?.viewers ?? [{ id: viewerId, name: viewerId, role: as }]).map((v) => (
+              <option key={v.id} value={v.id}>{v.name}, {v.role === 'buddy' ? 'Buddy' : 'Line Manager'}</option>
+            ))}
+          </select>
+        </label>
+        {error && <p role="alert" className="mt-6">{error}</p>}
+        {!data ? <p className="mt-8 text-[var(--muted)]">Loading your team</p> : <Team data={data} reload={reload} />}
+      </main>
+    </div>
   );
 }
 
 function Team({ data, reload }: { data: TeamData; reload: () => void }) {
-  const { viewer, starters, tasks } = data;
+  const { viewer, starters, tasks, noPlan, handovers } = data;
   const isLm = viewer.role === 'line-manager';
   const [taskError, setTaskError] = useState<string | null>(null);
+  const everyone = [...starters.map((s) => ({ id: s.person.id, name: s.person.name, s })), ...noPlan.map((p) => ({ ...p, s: undefined }))];
+  const [picked, setPicked] = useState<string | null>(null);
+  const selected = everyone.some((e) => e.id === picked) ? picked : everyone[0]?.id;
+  // On a phone every starter is listed in turn; from 896px the list sits beside the selected starter.
+  const shown = (id: string) => (id === selected ? '' : '@4xl:hidden');
   return (
-    <>
-      <h1 className="mt-6 font-serif text-[27px] leading-tight text-racing">Your starters</h1>
-      <p className="text-[15px] text-[var(--muted)]">{shortDate(data.simulatedDate)}</p>
+    <div className="@4xl:mt-2 @4xl:grid @4xl:grid-cols-[minmax(320px,400px)_1fr] @4xl:gap-12">
+      <div>
+        <h1 className="mt-6 font-serif text-[27px] leading-tight text-racing">Your starters</h1>
+        <p className="text-[15px] text-[var(--muted)]">{shortDate(data.simulatedDate)}</p>
 
-      {isLm && starters.flatMap((s) => s.engineState.needsDecisions.map((nd) => (
-        <DecisionCard key={`${s.person.id}-${nd.hardStopId}`} starter={s} nd={nd} reload={reload} />
-      )))}
+        {everyone.length === 0 && <p className="mt-6 text-[var(--muted)]">No starters yet.</p>}
+        <ul className="mt-4 hidden flex-col gap-2 @4xl:flex">
+          {everyone.map((e) => (
+            <li key={e.id}>
+              <button type="button" aria-pressed={e.id === selected} onClick={() => setPicked(e.id)}
+                className={`w-full rounded-[6px] border bg-paper p-4 text-left ${e.id === selected ? 'border-heritage ring-2 ring-vibrant' : 'border-[var(--hairline)]'} ${FOCUS}`}>
+                <span className="block font-semibold text-racing">{e.name}</span>
+                <span className="block text-[15px] text-[var(--muted)]">
+                  {e.s ? progressSummary(e.name, e.s.engineState, isLm).line : NO_PLAN}
+                </span>
+              </button>
+            </li>
+          ))}
+        </ul>
 
-      <section className="mt-8">
-        <h2 className="text-[21px] font-semibold text-racing">To-do</h2>
-        {taskError && <p role="alert" className="mt-2 text-[15px]">{taskError}</p>}
-        {tasks.length === 0 ? <p className="mt-2 text-[var(--muted)]">Nothing to do right now.</p> : (
-          <ul className="mt-2 flex flex-col gap-2">
-            {tasks.map((t) => (
-              <li key={`${t.personId}-${t.itemId}-${t.actionId}`}>
-                <label className="flex min-h-[44px] items-center gap-3 border-l-[3px] border-vibrant bg-paper pl-3">
-                  <input type="checkbox" className={`h-5 w-5 accent-[var(--heritage)] ${FOCUS}`}
-                    onChange={(e) => {
-                      const box = e.currentTarget;
-                      void send('/api/actions', { itemId: t.itemId, actionId: t.actionId, actorPersonId: viewer.id, personId: t.personId }).then((err) => {
-                        if (err) { box.checked = false; setTaskError('That did not save, so it is still on your list. Try again.'); } else { setTaskError(null); reload(); }
-                      });
-                    }} />
-                  <span>{t.label}<span className="block text-[15px] text-[var(--muted)]">{t.starterName}</span></span>
-                </label>
-              </li>
-            ))}
-          </ul>
-        )}
-      </section>
+        {isLm && starters.flatMap((s) => s.engineState.needsDecisions.map((nd) => (
+          <DecisionCard key={`${s.person.id}-${nd.hardStopId}`} starter={s} nd={nd} reload={reload} />
+        )))}
 
-      {starters.map((s) => <StarterCard key={s.person.id} s={s} data={data} reload={reload} />)}
-    </>
+        <section className="mt-8">
+          <h2 className="text-[21px] font-semibold text-racing">To-do</h2>
+          {taskError && <p role="alert" className="mt-2 text-[15px]">{taskError}</p>}
+          {tasks.length === 0 && handovers.length === 0 ? <p className="mt-2 text-[var(--muted)]">Nothing to do right now.</p> : (
+            <ul className="mt-2 flex flex-col gap-2">
+              {handovers.map((h) => (
+                <li key={`h-${h.id}`} className="border-l-[3px] border-heritage bg-paper py-2 pl-3">
+                  {h.starterName} asked for help: {h.question}
+                  <span className="block text-[15px] text-[var(--muted)]">{shortDate(h.at)}, from their help chat</span>
+                </li>
+              ))}
+              {tasks.map((t) => (
+                <li key={`${t.personId}-${t.itemId}-${t.actionId}`}>
+                  <label className="flex min-h-[44px] items-center gap-3 border-l-[3px] border-vibrant bg-paper pl-3">
+                    <input type="checkbox" className={`h-5 w-5 shrink-0 accent-[var(--heritage)] ${FOCUS}`}
+                      onChange={(e) => {
+                        const box = e.currentTarget;
+                        void send('/api/actions', { itemId: t.itemId, actionId: t.actionId, actorPersonId: viewer.id, personId: t.personId }).then((err) => {
+                          if (err) { box.checked = false; setTaskError('That did not save, so it is still on your list. Try again.'); } else { setTaskError(null); reload(); }
+                        });
+                      }} />
+                    <span>{t.label}<span className="block text-[15px] text-[var(--muted)]">{t.starterName}</span></span>
+                  </label>
+                </li>
+              ))}
+            </ul>
+          )}
+        </section>
+      </div>
+
+      <div className="min-w-0">
+        {everyone.map((e) => (
+          <div key={e.id} className={shown(e.id)}>
+            {e.s ? <StarterCard s={e.s} data={data} reload={reload} /> : (
+              <section className="mt-8 border-t border-[var(--hairline)] pt-6 @4xl:border-t-0">
+                <h2 className="text-[21px] font-semibold text-racing">{e.name}</h2>
+                <p className="mt-1">{NO_PLAN}</p>
+              </section>
+            )}
+          </div>
+        ))}
+      </div>
+    </div>
   );
 }
 
@@ -78,8 +123,7 @@ function StarterCard({ s, data, reload }: { s: TeamStarter; data: TeamData; relo
   const [adding, setAdding] = useState(false);
   const [note, setNote] = useState('');
   const [sent, setSent] = useState<string | null>(null);
-  const done = es.containers.filter((c) => c.complete).length;
-  const next = es.containers.find((c) => !c.complete);
+  const summary = progressSummary(s.person.name, es, isLm);
   const blocked = es.items.filter((i) => i.blockedFlag);
   const additions = es.items.filter((i) => i.addedBy);
 
@@ -90,12 +134,28 @@ function StarterCard({ s, data, reload }: { s: TeamStarter; data: TeamData; relo
   };
 
   return (
-    <section className="mt-8 border-t border-[var(--hairline)] pt-6">
-      <h2 className="text-[21px] font-semibold text-racing">{s.person.name}</h2>
-      <p>{STAGE_LABEL[es.stage]}</p>
-      <p className="text-[15px] text-[var(--muted)]">
-        {done} of {es.containers.length} Containers complete{next ? `. Next: ${next.label}` : ''}
-      </p>
+    <section className="mt-8 border-t border-[var(--hairline)] pt-6 @4xl:border-t-0">
+      <h2 className="text-[21px] font-semibold text-racing @4xl:font-serif @4xl:text-[27px]">{s.person.name}</h2>
+      <p className="mt-1">{summary.line}</p>
+      {summary.next && <p className="mt-1">Next: <strong>{summary.next}</strong></p>}
+
+      {es.containers.length > 0 && (
+        <ul className="mt-4 flex flex-col gap-2" aria-label="Containers">
+          {es.containers.map((c) => (
+            <li key={c.containerId} className={`flex flex-wrap items-center justify-between gap-x-4 gap-y-1 rounded-[6px] border border-[var(--hairline)] px-4 py-3 ${c.complete ? 'bg-calm' : 'bg-paper'}`}>
+              <span className="font-semibold">{c.label}</span>
+              <span className="flex items-center gap-2 text-[15px]">
+                <span aria-hidden className="flex gap-1">
+                  {Array.from({ length: Math.min(c.mandatoryCount, 8) }, (_, n) => (
+                    <span key={n} className={`h-2 w-4 rounded-full ${n < c.doneCount ? 'bg-racing' : 'bg-[var(--hairline)]'}`} />
+                  ))}
+                </span>
+                {c.complete ? 'Done' : `${c.doneCount} of ${c.mandatoryCount} done`}
+              </span>
+            </li>
+          ))}
+        </ul>
+      )}
 
       {isLm && blocked.map((i) => (
         <p key={i.itemId} className="mt-3 border-l-[3px] border-dashed border-everyday pl-3">
@@ -112,7 +172,7 @@ function StarterCard({ s, data, reload }: { s: TeamStarter; data: TeamData; relo
         </ul>
       )}
 
-      {additions.length > 0 && (
+      {isLm && additions.length > 0 && (
         <ul className="mt-3 flex flex-col gap-2">
           {additions.map((i) => (
             <li key={i.itemId} className="flex min-h-[44px] items-center justify-between gap-3 border-l-[3px] border-heritage pl-3">
@@ -132,7 +192,9 @@ function StarterCard({ s, data, reload }: { s: TeamStarter; data: TeamData; relo
         ? <AddJourney starter={s} viewerId={viewer.id} library={library} onDone={() => { setAdding(false); reload(); }} />
         : <button type="button" className={`${BTN} mt-4 bg-heritage text-paper`} onClick={() => setAdding(true)}>Add a journey</button>)}
 
-      <label className="mt-4 flex flex-col gap-1 text-[15px]">Note to {s.person.name}
+      {isLm && <SendReminder personId={s.person.id} name={s.person.name} viewerId={viewer.id} />}
+
+      <label className="mt-6 flex flex-col gap-1 text-[15px]">Note to {s.person.name}
         <textarea rows={2} value={note} onChange={(e) => setNote(e.target.value)}
           className={`rounded border border-[var(--hairline)] p-3 text-[17px] ${FOCUS}`} />
       </label>
