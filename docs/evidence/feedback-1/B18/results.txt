@@ -1,0 +1,13 @@
+select: set Bob Warwick
+before /me: Simulated date 10 Nov 2026 | View | Onboarding Studio | Joiner | Manager | Buddy | Person | Bob Warwick | Alex Morgan | Sam Okafor | Dana Whitfield | Layout | Phone | Desktop | Your offer | Day 0 of your wait | Need help? | Privileged access request | Your admin access is with the Security team for approval. It usually takes three to four weeks, so there is nothing you need to do right
+waiting before: i-contracting:read i-priv-access:automation i-equipment:automation
+servicenow disabled? false
+click: clicked
+message: Completed 5 Actions
+waiting after inputs: i-checks:automation i-device:automation i-manager-ready:task i-priv-access:automation i-equipment:automation
+after /me: Simulated date 10 Nov 2026 | View | Onboarding Studio | Joiner | Manager | Buddy | Person | Bob Warwick | Alex Morgan | Sam Okafor | Dana Whitfield | Layout | Phone | Desktop | Getting ready | Day 0 of your wait | Need help? | Pre-employment checks | Your checks are with our vetting partner. Most take three to five weeks, so there is nothing you need to do right now. | Day 0 | 0 | 21 | 
+click servicenow: clicked
+servicenow message: none (ok)
+waiting now: i-checks:automation i-device:automation i-manager-ready:task i-priv-access:automation
+reset: clicked
+state after reset: HTTP 404 {"ok":false,"error":"No Applied Pathway for that person"}

@@ -2,6 +2,7 @@
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import type { ControlsData } from './data';
+import { completeInputs, countMessage, serviceNowCall } from './inputs';
 
 const btn = 'rounded-[4px] border border-hairline bg-paper px-2 py-1 text-[13px] text-ink hover:bg-calm disabled:text-muted disabled:hover:bg-paper';
 
@@ -23,6 +24,11 @@ export function DemoControls({ data, today }: { data: ControlsData; today: strin
     // A full reload after Reset demo, so no stale canvas state autosaves over the reseeded draft.
     if (j.ok) { if (url === '/api/reset') window.location.reload(); else router.refresh(); }
   }
+  const sn = serviceNowCall(data.waiting, personId);
+  async function inputs() {
+    try { const n = await completeInputs(personId); setMsg(countMessage(n)); router.refresh(); }
+    catch (e) { setMsg(e instanceof Error ? e.message : 'Something went wrong'); }
+  }
   const setDate_ = (d: string) => post('/api/clock', { set: d });
 
   return (
@@ -42,6 +48,8 @@ export function DemoControls({ data, today }: { data: ControlsData; today: strin
           {starter.jumps.map((j) => (
             <button key={j.label} className={btn} disabled={j.date < today} title={j.date < today ? 'The Demo clock only moves forward.' : j.date} onClick={() => setDate_(j.date)}>{j.label}</button>
           ))}
+          <button className={btn} onClick={inputs}>Complete {starter.name.split(' ')[0]}&apos;s inputs</button>
+          <button className={btn} disabled={!sn} title={sn ? undefined : 'Nothing is waiting on ServiceNow for this person.'} onClick={() => sn && post('/api/simulate', sn)}>ServiceNow: request complete</button>
         </span>
       )}
       <span className="flex items-center gap-1">
