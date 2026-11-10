@@ -5,6 +5,7 @@ import type { ItemState, StageId } from '@/src/engine';
 import { STAGES, STAGE_LABEL, shortDate } from '@/src/ui/components/starter/format';
 import { ApplyPathway } from '../ApplyPathway';
 import { DelegatePanel } from '../DelegatePanel';
+import { EditAppliedPathway } from '../EditAppliedPathway';
 import { NeedsDecisionPanel } from '../NeedsDecisionPanel';
 import { ReminderPanel } from '../ReminderPanel';
 import { suggestPathway } from '../suggest';
@@ -50,6 +51,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
         pathways={[...(suggested ? [suggested] : []), ...pathways.filter((p) => p !== suggested)]} />
 
       <h2 className={h2}>Applied Pathway{applied && `: ${applied.snapshot.title} version ${getPathwayVersionSemver(applied.snapshot.pathwayId, applied.snapshot.version) ?? applied.snapshot.version}`}</h2>
+      {applied && <EditAppliedPathway personId={id} />}
       {state ? STAGES.map((stage: StageId) => {
         const items = state.items.filter((i) => i.stage === stage);
         return items.length === 0 ? null : (

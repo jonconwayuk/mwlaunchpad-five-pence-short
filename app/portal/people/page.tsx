@@ -2,6 +2,7 @@ import { buildEngineInput, getAppliedPathway, listPersons } from '@/src/db/queri
 import { computeState } from '@/src/engine';
 import { STAGE_LABEL } from '@/src/ui/components/starter/format';
 import { PeopleList } from './PeopleList';
+import { WorkdayStarters } from './WorkdayStarters';
 
 export const dynamic = 'force-dynamic';
 
@@ -18,6 +19,7 @@ export default function Page() {
   return (
     <main className="p-6">
       <h1 className="mb-4 text-[26px] font-semibold">People</h1>
+      <WorkdayStarters />
       <PeopleList people={people} />
     </main>
   );
