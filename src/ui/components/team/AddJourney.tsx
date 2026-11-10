@@ -64,7 +64,7 @@ export function AddJourney({ starter, viewerId, library, onDone }: {
       {error && <p role="alert" className="text-[15px] text-ink">{error}</p>}
       <button type="button" disabled={!journeyId || busy} onClick={() => void confirm()}
         className={`min-h-[44px] rounded bg-heritage px-4 font-semibold text-paper disabled:opacity-50 ${FOCUS}`}>
-        Confirm
+        Add journey
       </button>
     </div>
   );
