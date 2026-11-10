@@ -21,3 +21,12 @@ appsettings.Development.json
 
 # Claude Code local config
 .claude/
+
+# SQLite
+*.db
+
+# Next.js and Node
+.next/
+node_modules/
+*.tsbuildinfo
+next-env.d.ts

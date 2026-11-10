@@ -14,7 +14,7 @@ Optimised for a short critical path, not for a tidy sequence. Four agents run at
 
 1. **Record the start.** The first agent writes the real clock time into the line below. Every offset in this plan is measured from it.
 
-   > **Wave A began at: `__:__`** (fill this in, commit it with wave A)
+   > **Wave A began at: `09:03`**
 
 2. Waves run in order. **Inside a wave, every task runs at the same time**, in its own agent. They never collide because no two tasks own the same file (section 6).
 3. Each brief is self-contained. Hand it over verbatim, with the Global Constraints block in section 2. The agent should not need to read the rest of this file.

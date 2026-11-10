@@ -1,0 +1,29 @@
+/* src/ui/tokens.css */
+:root {
+  --racing:   #024731;  /* premium, refined moments */
+  --heritage: #006A4D;  /* continuity and trust */
+  --everyday: #11B67A;  /* everyday, familiar, pragmatic */
+  --vibrant:  #6CF479;  /* energy, used sparingly */
+  --calm:     #C7FFC6;  /* calm and sensitive */
+  --ink:      #000000;  /* typography */
+  --charcoal: #323233;  /* premium, secondary surfaces */
+  --paper:    #FFFFFF;  /* white space */
+
+  /* derived neutrals, the only values not in the brand palette */
+  --paper-2:  #F6F8F6;  /* canvas and lane fill */
+  --hairline: #E3E7E4;  /* 1px rules and card borders */
+  --muted:    #5B5F5C;  /* secondary text, 6.5:1 on paper */
+}
+
+@theme {
+  --color-racing: #024731;
+  --color-heritage: #006A4D;
+  --color-everyday: #11B67A;
+  --color-vibrant: #6CF479;
+  --color-calm: #C7FFC6;
+  --color-ink: #000000;
+  --color-charcoal: #323233;
+  --color-paper: #FFFFFF;
+  --font-sans: var(--font-sans-plex), system-ui, sans-serif;
+  --font-serif: var(--font-serif-plex), Georgia, serif;
+}
