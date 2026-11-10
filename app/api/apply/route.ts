@@ -5,7 +5,7 @@ import { getToday } from '@/src/lib/clock';
 
 export const dynamic = 'force-dynamic';
 
-const Body = z.object({ pathwayId: z.string().min(1), personId: z.string().min(1) });
+const Body = z.object({ pathwayId: z.string().min(1).max(100), personId: z.string().min(1).max(100) });
 
 export const POST = apiHandler(async (req: Request) => {
   const parsed = Body.safeParse(await req.json().catch(() => null));

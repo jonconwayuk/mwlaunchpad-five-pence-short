@@ -7,7 +7,7 @@ import { getToday } from '@/src/lib/clock';
 export const dynamic = 'force-dynamic';
 
 const Body = z.object({
-  personId: z.string().min(1), itemId: z.string().min(1), actionId: z.string().min(1),
+  personId: z.string().min(1).max(100), itemId: z.string().min(1).max(100), actionId: z.string().min(1).max(100),
   result: z.enum(['passed', 'failed', 'returned']),
 });
 

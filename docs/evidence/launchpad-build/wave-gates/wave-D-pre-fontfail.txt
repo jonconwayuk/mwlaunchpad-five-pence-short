@@ -8,20 +8,20 @@ e269953 Persist and publish Pathways from the canvas
 Failed to compile.
 An error occurred in `next/font`.
 TypeError: Cannot read properties of null (reading '1')
-    at /Users/naz/mwlaunchpad-five-pence-short/node_modules/next/dist/compiled/@next/font/dist/google/loader.js:122:78
-    at async nextFontGoogleFontLoader (/Users/naz/mwlaunchpad-five-pence-short/node_modules/next/dist/compiled/@next/font/dist/google/loader.js:104:33)
+    at <repo>/node_modules/next/dist/compiled/@next/font/dist/google/loader.js:122:78
+    at async nextFontGoogleFontLoader (<repo>/node_modules/next/dist/compiled/@next/font/dist/google/loader.js:104:33)
 An error occurred in `next/font`.
 TypeError: Cannot read properties of null (reading '1')
-    at /Users/naz/mwlaunchpad-five-pence-short/node_modules/next/dist/compiled/@next/font/dist/google/loader.js:122:78
-    at async nextFontGoogleFontLoader (/Users/naz/mwlaunchpad-five-pence-short/node_modules/next/dist/compiled/@next/font/dist/google/loader.js:104:33)
-    at tryRunOrWebpackError (/Users/naz/mwlaunchpad-five-pence-short/node_modules/next/dist/compiled/webpack/bundle5.js:29:316119)
-    at __webpack_require_module__ (/Users/naz/mwlaunchpad-five-pence-short/node_modules/next/dist/compiled/webpack/bundle5.js:29:131532)
-    at __nested_webpack_require_161494__ (/Users/naz/mwlaunchpad-five-pence-short/node_modules/next/dist/compiled/webpack/bundle5.js:29:130967)
-    at /Users/naz/mwlaunchpad-five-pence-short/node_modules/next/dist/compiled/webpack/bundle5.js:29:131824
-    at symbolIterator (/Users/naz/mwlaunchpad-five-pence-short/node_modules/next/dist/compiled/neo-async/async.js:1:14444)
-    at done (/Users/naz/mwlaunchpad-five-pence-short/node_modules/next/dist/compiled/neo-async/async.js:1:14824)
-    at Hook.eval [as callAsync] (eval at create (/Users/naz/mwlaunchpad-five-pence-short/node_modules/next/dist/compiled/webpack/bundle5.js:14:9224), <anonymous>:15:1)
-    at /Users/naz/mwlaunchpad-five-pence-short/node_modules/next/dist/compiled/webpack/bundle5.js:29:130687
-    at symbolIterator (/Users/naz/mwlaunchpad-five-pence-short/node_modules/next/dist/compiled/neo-async/async.js:1:14402)
-    at timesSync (/Users/naz/mwlaunchpad-five-pence-short/node_modules/next/dist/compiled/neo-async/async.js:1:5027)
+    at <repo>/node_modules/next/dist/compiled/@next/font/dist/google/loader.js:122:78
+    at async nextFontGoogleFontLoader (<repo>/node_modules/next/dist/compiled/@next/font/dist/google/loader.js:104:33)
+    at tryRunOrWebpackError (<repo>/node_modules/next/dist/compiled/webpack/bundle5.js:29:316119)
+    at __webpack_require_module__ (<repo>/node_modules/next/dist/compiled/webpack/bundle5.js:29:131532)
+    at __nested_webpack_require_161494__ (<repo>/node_modules/next/dist/compiled/webpack/bundle5.js:29:130967)
+    at <repo>/node_modules/next/dist/compiled/webpack/bundle5.js:29:131824
+    at symbolIterator (<repo>/node_modules/next/dist/compiled/neo-async/async.js:1:14444)
+    at done (<repo>/node_modules/next/dist/compiled/neo-async/async.js:1:14824)
+    at Hook.eval [as callAsync] (eval at create (<repo>/node_modules/next/dist/compiled/webpack/bundle5.js:14:9224), <anonymous>:15:1)
+    at <repo>/node_modules/next/dist/compiled/webpack/bundle5.js:29:130687
+    at symbolIterator (<repo>/node_modules/next/dist/compiled/neo-async/async.js:1:14402)
+    at timesSync (<repo>/node_modules/next/dist/compiled/neo-async/async.js:1:5027)
 -- inner error --

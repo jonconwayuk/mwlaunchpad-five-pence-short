@@ -1,0 +1,23 @@
+# E1 security fixes
+## clock set 9999-12-31
+{"ok":false,"error":"The Demo clock stops at 31 Dec 2100."} [400]
+## clock set 2100-12-31 then advance 1
+{"ok":true,"data":{"simulatedDate":"2100-12-31"}} [200]
+{"ok":false,"error":"The Demo clock stops at 31 Dec 2100."} [400]
+## headers /me
+X-Content-Type-Options: nosniff
+Referrer-Policy: same-origin
+X-Frame-Options: DENY
+(no x-powered-by above = ok)
+## 101-char id on apply
+{"ok":false,"error":"Choose a Pathway and a person."} [400]
+## chain3 as starter, person-b
+{"ok":true,"data":{"simulatedDate":"2026-11-28"}} [200]
+{"ok":true,"data":{"engineState":{"today":"2026-11-28","stage":"pre-contract","personStatus" ...trimmed... [200]
+{"ok":true,"data":{"engineState":{"today":"2026-11-28","stage":"pre-contract","personStatus" ...trimmed... [200]
+lm tasks:
+"tasks":[{"itemId":"i-contracting","actionId":"j-contracting-a1","owner":"line-manager","label":"Check in with Sam: Contracting is taking longer than usual","raisedOn":"2026-11-21","personId":"person-
+starter tasks:
+"tasks":[
+starter mentions line-manager/Have a chat:
+0

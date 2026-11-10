@@ -40,6 +40,9 @@ describe('filterForViewer', () => {
     expect(s.needsDecisions).toEqual([]);
     expect(filterForViewer(raw, 'delegate', { actingFor: 'person-a' }).actingFor).toBe('person-a');
   });
+  it('starter state never contains a Line Manager Task', () => {
+    for (const as of ['starter', 'delegate'] as const) expect(filterForViewer(raw, as).tasks.some((t) => t.owner === 'line-manager')).toBe(false);
+  });
   it('sends each non-managerial viewer only the notifications addressed to them', () => {
     expect(filterForViewer(raw, 'starter').notifications.map((n) => n.to)).toEqual(['starter']);
     expect(filterForViewer(raw, 'delegate').notifications.map((n) => n.to)).toEqual(['starter']);

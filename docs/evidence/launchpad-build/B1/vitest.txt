@@ -1,5 +1,5 @@
 
- RUN  v5.1.0 /Users/naz/mwlaunchpad-five-pence-short
+ RUN  v5.1.0 <repo>
 
 
  Test Files  1 passed (1)

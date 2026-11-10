@@ -10,7 +10,7 @@ import { readJson } from './json';
 
 export const dynamic = 'force-dynamic';
 
-const Query = z.object({ viewerId: z.string().min(1), as: z.enum(['line-manager', 'buddy']) });
+const Query = z.object({ viewerId: z.string().min(1).max(100), as: z.enum(['line-manager', 'buddy']) });
 
 export const GET = apiHandler(async (req: Request) => {
   const q = Query.safeParse(Object.fromEntries(new URL(req.url).searchParams));
@@ -43,8 +43,8 @@ export const GET = apiHandler(async (req: Request) => {
 });
 
 const Body = z.discriminatedUnion('kind', [
-  z.object({ kind: z.literal('note'), personId: z.string(), authorId: z.string(), body: z.string().trim().min(1).max(500) }),
-  z.object({ kind: z.literal('override'), personId: z.string(), itemId: z.string(), byPersonId: z.string(), reason: z.string().trim().min(1).max(500) }),
+  z.object({ kind: z.literal('note'), personId: z.string().min(1).max(100), authorId: z.string().min(1).max(100), body: z.string().trim().min(1).max(500) }),
+  z.object({ kind: z.literal('override'), personId: z.string().min(1).max(100), itemId: z.string().min(1).max(100), byPersonId: z.string().min(1).max(100), reason: z.string().trim().min(1).max(500) }),
 ]);
 
 /** A note to the starter, or a Line Manager override to Done. */

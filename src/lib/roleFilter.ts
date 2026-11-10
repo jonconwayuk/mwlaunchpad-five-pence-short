@@ -26,7 +26,7 @@ export function filterForViewer(
       tasks: state.tasks.filter((t) => t.owner === 'buddy'),
     };
   }
-  const base = { ...state, ...starterView(state, noFlags), needsDecisions: [], notifications: state.notifications.filter((n) => n.to === 'starter') };
+  const base = { ...state, ...starterView(state, noFlags), needsDecisions: [], notifications: state.notifications.filter((n) => n.to === 'starter'), tasks: state.tasks.filter((t) => t.owner === 'starter') };
   return as === 'delegate' ? { ...base, actingFor: opts.actingFor } : base;
 }
 

@@ -1,5 +1,5 @@
 
- RUN  v5.1.0 /Users/naz/mwlaunchpad-five-pence-short
+ RUN  v5.1.0 <repo>
 
 No test files found, exiting with code 0
 

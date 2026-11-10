@@ -10,13 +10,13 @@ import { assertNoLoop } from './guard';
 export const dynamic = 'force-dynamic';
 
 const Add = z.object({
-  personId: z.string().min(1),
-  journeyId: z.string().min(1),
-  unlock: z.discriminatedUnion('kind', [z.object({ kind: z.literal('now') }), z.object({ kind: z.literal('after'), itemId: z.string().min(1) }), z.object({ kind: z.literal('after-container'), containerId: z.string().min(1) })]),
+  personId: z.string().min(1).max(100),
+  journeyId: z.string().min(1).max(100),
+  unlock: z.discriminatedUnion('kind', [z.object({ kind: z.literal('now') }), z.object({ kind: z.literal('after'), itemId: z.string().min(1).max(100) }), z.object({ kind: z.literal('after-container'), containerId: z.string().min(1).max(100) })]),
   mandatory: z.boolean().default(false),
-  byPersonId: z.string().min(1),
+  byPersonId: z.string().min(1).max(100),
 });
-const Remove = z.object({ personId: z.string().min(1), itemId: z.string().min(1), byPersonId: z.string().min(1) });
+const Remove = z.object({ personId: z.string().min(1).max(100), itemId: z.string().min(1).max(100), byPersonId: z.string().min(1).max(100) });
 
 // addAdditionToApplied throws plain-English Errors; they become 400s.
 const asBadRequest = (fn: () => void) => {
