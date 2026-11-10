@@ -53,7 +53,7 @@ For whoever runs the demo on stage. One laptop, **one browser window**. The blac
 
 - **The Needs decision's Confirm.** Sam Okafor (Chris Lee's starter) has one seeded at reset. Leave it alone. In step 5 use **Dismiss** with a reason, not Confirm, unless you mean to stop Bob's Pathway.
 - **Reset demo doesn't change the Person.** Set Person back to Bob Warwick after a Reset if you switched to someone else.
-- **Resetting before deleting the step 1 file.** If you forget, "Service desk tools access" stays in the library at 1.1.0. It's harmless, but run `git checkout journeys/ && git clean -f journeys/` afterwards.
+- **Resetting before deleting the step 1 file.** If you forget, "Service desk tools access" stays in the library at 1.1.0. It's harmless, but run `rm journeys/j-h-demo.json` afterwards.
 - **Saying "drag" is tested with a mouse.** Our automated runs used synthetic drag events. Try the real drag on the demo laptop first (flaky until someone has).
 - **Plus 3 weeks** is three weeks from Bob's offer (3 Nov), so it lands on 24 Nov, and the card says Day 14 of the wait. Say "two weeks into a three-to-four week wait", not "three weeks".
 - Don't call anything live AI, a real Teams chat or a real ServiceNow call. They're scripted or mocked, and the screens say "Simulated".

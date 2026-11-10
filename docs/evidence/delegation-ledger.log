@@ -74,3 +74,4 @@
 11:03 W2 H-fix-phone implementer sonnet: Phone layout squeezes /me two-column grid (lg: media queries vs narrow frame); switch to container queries in Frame + StarterPreview
 11:06 W2 H-fix-migrate implementer sonnet: make the column migration in src/db/client.ts race-safe (duplicate column flake at build)
 11:12 W2 H-review reviewer opus: independent review of d1ea8be 7455ca2 4d14ae3 1f05018 ac41693 (wave H fixes, phone fix, db race, script+README)
+11:14 W2 H-review-fix implementer sonnet: 3 NICE findings (TopStrip Studio container, README face name, script git clean)

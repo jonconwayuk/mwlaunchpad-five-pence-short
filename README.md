@@ -25,7 +25,7 @@ Open `http://localhost:3000/portal`. The whole demo runs in that one window. The
 | Face | Route | Who |
 | --- | --- | --- |
 | Onboarding Studio: Journey library and builder, Pathway builder, People, Insights, Agent library, Demo controls | `/portal` | HR and admins, on a laptop |
-| Joiner view | `/me` | Bob (or another starter, or their Delegate) |
+| Starter Preview (Joiner in the switcher) | `/me` | Bob (or another starter, or their Delegate) |
 | Manager and Buddy view | `/team` | Hannah Price (Line Manager) or Leo Grant (Buddy) |
 
 The black strip at the top of every page is the switcher. **View** moves between Onboarding Studio, Joiner, Manager and Buddy. **Person** picks the starter, and Manager and Buddy follow that starter's Line Manager and Buddy. **Layout** shows the three people views in a phone frame or full width. The default person is Bob. Phones on the same wifi can still open `http://<laptop-ip>:3000/me`. `/persona/bob`, `/persona/A`, `/persona/B` and `/persona/C` set the person directly.
