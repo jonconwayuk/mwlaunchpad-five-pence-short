@@ -328,8 +328,8 @@ export function addManualReminder(personId: string, message: string, at: ISODate
 }
 export const listManualReminders = (personId: string) =>
   db.select().from(s.manualReminders).where(eq(s.manualReminders.personId, personId)).orderBy(s.manualReminders.id).all();
-export function addHandover(personId: string, question: string, at: ISODate): void {
-  db.insert(s.handovers).values({ personId, question, at }).run();
+export function addHandover(personId: string, question: string, at: ISODate, agentName?: string, summary?: string): void {
+  db.insert(s.handovers).values({ personId, question, at, agentName, summary }).run();
 }
 /** Handovers from every starter this Line Manager manages, oldest first. */
 export function listHandovers(lineManagerId: string) {

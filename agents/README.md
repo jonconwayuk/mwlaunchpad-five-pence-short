@@ -17,6 +17,7 @@ Drop a file named `<id>.json` in this folder:
 | `journeyIds` | yes | The Journeys it supports (may be empty) |
 | `connectors` | no | Systems it talks to: `workday`, `servicenow`, `oracle` |
 | `intents` | yes | At least one `{ "id", "examples": [...], "answer" }` |
+| `handsOverTo` | no | Who it hands over to: `line-manager`. The Agent library shows "Hands over to: Line Manager, in Microsoft Teams" |
 | `handover` | no | `true` if it passes the question to a person (a simulated Teams chat) |
 
 A file that fails validation stops the load with an error naming the file. Run `npx vitest run src/agents` after adding one.

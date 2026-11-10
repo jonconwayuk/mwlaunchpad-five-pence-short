@@ -14,7 +14,7 @@ export interface TeamData {
   simulatedDate: string;
   starters: TeamStarter[];
   noPlan: { id: string; name: string }[];
-  handovers: { id: number; personId: string; starterName: string; question: string; at: string }[];
+  handovers: { id: number; personId: string; starterName: string; question: string; at: string; source?: string; agentName?: string | null; summary?: string }[];
   tasks: TaskRef[];
   library?: { id: string; title: string; stage: StageId; tags: Tags }[];
 }

@@ -10,7 +10,19 @@ export type Message =
   | { kind: 'you'; text: string }
   | { kind: 'agent'; agentName: string; text: string; handover?: boolean }
   | { kind: 'none' }
-  | { kind: 'handover'; lineManagerName: string; question: string };
+  | { kind: 'handover'; lineManagerName: string; question: string; agentName?: string; summary?: string };
+
+/** What to hand over: the last question that was not itself a request for a person, and the agent that offered the handover. */
+export function handoverSubject(messages: Message[]): { question?: string; agentName?: string } {
+  let question: string | undefined;
+  for (let i = messages.length - 1; i >= 0; i--) {
+    const m = messages[i];
+    const next = messages[i + 1];
+    if (m.kind === 'you' && !(next?.kind === 'agent' && next.handover)) { question = m.text; break; }
+  }
+  const offered = [...messages].reverse().find((m) => m.kind === 'agent' && m.handover);
+  return { question, agentName: offered?.kind === 'agent' ? offered.agentName : undefined };
+}
 
 async function post<T>(url: string, body: object): Promise<T | undefined> {
   try {
@@ -29,7 +41,6 @@ export function HelpChat({ personId, initial = [] }: { personId: string; initial
   const [text, setText] = useState('');
   const [busy, setBusy] = useState(false);
   const add = (m: Message) => setMessages((ms) => [...ms, m]);
-  const lastQuestion = [...messages].reverse().find((m) => m.kind === 'you')?.text;
 
   const ask = async (question: string) => {
     if (!question.trim() || busy) return;
@@ -42,11 +53,12 @@ export function HelpChat({ personId, initial = [] }: { personId: string; initial
   };
 
   const talk = async () => {
-    const question = lastQuestion ?? 'I would like to talk to someone.';
+    const { question: asked, agentName } = handoverSubject(messages);
+    const question = asked ?? 'I would like to talk to someone.';
     setBusy(true);
-    const r = await post<{ lineManagerName: string }>('/api/handover', { personId, question });
+    const r = await post<{ lineManagerName: string; agentName: string; summary: string }>('/api/handover', { personId, question, agentName });
     add(r?.lineManagerName
-      ? { kind: 'handover', lineManagerName: r.lineManagerName, question }
+      ? { kind: 'handover', lineManagerName: r.lineManagerName, question, agentName: r.agentName, summary: r.summary }
       : { kind: 'agent', agentName: 'Help', text: "Couldn't reach your Line Manager just now. Please try again." });
     setBusy(false);
   };
@@ -125,8 +137,10 @@ function Bubble({ m }: { m: Message }) {
     case 'handover':
       return (
         <div className="rounded-[12px] border border-[var(--hairline)] bg-paper p-4">
-          <p className="text-[13px] font-semibold uppercase tracking-wide text-[var(--muted)]">Simulated Teams handover</p>
-          <p className="mt-2">{m.lineManagerName} will pick this up in Teams.</p>
+          <p className="font-semibold">Handing this to {m.lineManagerName} in Microsoft Teams</p>
+          <p className="mt-1 text-[15px]">{m.agentName ? `Handed over by ${m.agentName}. ` : ''}Asked: &ldquo;{m.summary ?? m.question}&rdquo;</p>
+          <p className="mt-1 text-[15px]">Sent to {m.lineManagerName} in Microsoft Teams.</p>
+          <p className="mt-1 text-[13px] text-[var(--muted)]">Simulated: no message is sent to Microsoft Teams</p>
           <div className="mt-3 flex items-start gap-3">
             <span aria-hidden="true" className="flex size-9 shrink-0 items-center justify-center rounded-full bg-heritage text-[13px] font-semibold text-paper">
               {m.lineManagerName.split(' ').map((w) => w[0]).join('').slice(0, 2)}

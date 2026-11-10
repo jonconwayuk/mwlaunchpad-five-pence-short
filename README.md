@@ -45,7 +45,7 @@ This runs the type check, lint and the Vitest tests (the Pathway engine rules on
 - **The "Connected repository" is this repository.** There is no second repo. The Journey builder's Connected repository panel points at the `journeys/` folder here, connectors are described in `connectors/`, and agents in `agents/`. **Sync from repository** re-reads `journeys/`, and Publish writes the file back. Nothing talks to GitHub or any other remote.
 - **Connectors are mocked.** Workday, ServiceNow and Oracle are manifests in `connectors/` backed by mocked adapters in `src/adapters/`. A Hidden automation Action names a connector and an operation, but no real system is called. Demo controls stand in for the results.
 - **Agents and the help chat are scripted.** The Agent library (`agents/`) and the joiner's **Need help?** chat match questions to scripted answers. There is no LLM, and the chat is labelled "Simulated: scripted answers".
-- **The Teams handover is simulated.** "Talk to a person" shows a mock Teams card and puts the question in the Line Manager's To-do. Nothing is sent to Teams.
+- **The Teams handover is simulated.** "Talk to a person" shows a mock Teams card and puts the question in the Line Manager's To-do. Nothing is sent to Microsoft Teams. The chat, the manager's Task ("From a Teams chat") and the Agent library all say so.
 - **Insights use synthetic history:** 80 made-up past starters.
 - All data is synthetic.
 

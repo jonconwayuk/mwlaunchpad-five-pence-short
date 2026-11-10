@@ -52,7 +52,7 @@ describe('Joiner view', () => {
     expect(none).toContain('not sure. Would you like to talk to a person?');
     expect(none).toContain('Talk to a person');
     const card = renderToStaticMarkup(<HelpChat personId="p" initial={[{ kind: 'handover', lineManagerName: 'Hannah Price', question: 'xyz' }]} />);
-    expect(card).toContain('Simulated Teams handover');
-    expect(card).toContain('Hannah Price will pick this up in Teams');
+    expect(card).toContain('Handing this to Hannah Price in Microsoft Teams');
+    expect(card).toContain('Simulated: no message is sent to Microsoft Teams');
   });
 });

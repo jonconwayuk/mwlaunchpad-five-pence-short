@@ -18,6 +18,7 @@ export const AgentSchema = z.strictObject({
   connectors: z.array(z.enum(['workday', 'servicenow', 'oracle'])).optional(),
   intents: z.array(Intent).min(1),
   handover: z.boolean().optional(),
+  handsOverTo: z.enum(['line-manager']).optional(),
 });
 export type AgentDef = z.infer<typeof AgentSchema>;
 export type AgentIntent = AgentDef['intents'][number];

@@ -77,8 +77,11 @@ function Team({ data, reload }: { data: TeamData; reload: () => void }) {
             <ul className="mt-2 flex flex-col gap-2">
               {handovers.map((h) => (
                 <li key={`h-${h.id}`} className="border-l-[3px] border-heritage bg-paper py-2 pl-3">
-                  {h.starterName} asked for help: {h.question}
-                  <span className="block text-[15px] text-[var(--muted)]">{shortDate(h.at)}, from their help chat</span>
+                  {h.starterName} asked for help: {h.summary ?? h.question}
+                  <span className="block text-[15px] text-[var(--muted)]">
+                    {h.source ?? 'From a Teams chat'}{h.agentName ? `, handed over by ${h.agentName}` : ''}, {shortDate(h.at)}
+                  </span>
+                  <span className="block text-[13px] text-[var(--muted)]">Simulated: no message is sent to Microsoft Teams</span>
                 </li>
               ))}
               {tasks.map((t) => (

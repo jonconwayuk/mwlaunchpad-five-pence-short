@@ -40,7 +40,8 @@ const open = () => {
   sqlite.exec(DDL);
   // Optional columns added after the first build; older databases get them here.
   for (const [table, column] of [['journeys', 'semver'], ['pathway_versions', 'semver'],
-    ['duration_history', 'business_area'], ['duration_history', 'role'], ['duration_history', 'grade']]) {
+    ['duration_history', 'business_area'], ['duration_history', 'role'], ['duration_history', 'grade'],
+    ['handovers', 'agent_name'], ['handovers', 'summary']]) {
     const cols = sqlite.prepare(`PRAGMA table_info(${table})`).all() as { name: string }[];
     if (cols.some((c) => c.name === column)) continue;
     try {

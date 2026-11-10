@@ -6,6 +6,7 @@
   "ownerTeam": "HR",
   "journeyIds": [],
   "handover": true,
+  "handsOverTo": "line-manager",
   "intents": [
     {
       "id": "talk-to-person",

@@ -29,6 +29,10 @@ describe('routeQuestion', () => {
     expect(routeQuestion('Can I speak to a real person please?', agents)?.agent.handover).toBe(true);
   });
 
+  it('exposes handsOverTo, for the agent that hands over', () => {
+    expect(agents.filter((a) => a.handsOverTo).map((a) => a.id)).toEqual(['handover-agent']);
+  });
+
   it('routes every example to its own intent, when asked word for word', () => {
     for (const a of agents) for (const i of a.intents) for (const e of i.examples) {
       expect(routeQuestion(e, agents)?.intent.id, e).toBe(i.id);

@@ -171,6 +171,9 @@ describe("Bob's story", () => {
     expect(m.q.listManualReminders('person-bob')).toMatchObject([{ message: 'Have you received your merch?' }]);
     m.q.addHandover('person-bob', 'Can I bring my own keyboard?', '2026-11-10');
     expect(m.q.listHandovers('lm-hannah')).toMatchObject([{ personId: 'person-bob' }]);
+    expect(m.q.listHandovers('lm-hannah')[0]).toMatchObject({ agentName: null, summary: null });
+    m.q.addHandover('person-bob', 'Q2', '2026-11-10', 'Handover agent', 'Asked about Q2');
+    expect(m.q.listHandovers('lm-hannah')[1]).toMatchObject({ agentName: 'Handover agent', summary: 'Asked about Q2' });
     expect(m.q.listHandovers('lm-priya')).toEqual([]);
   });
 });

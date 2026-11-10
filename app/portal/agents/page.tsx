@@ -49,6 +49,12 @@ export default function Page() {
               </div>
             )}
 
+            {a.handsOverTo === 'line-manager' && (
+              <div>
+                <p>Hands over to: Line Manager, in Microsoft Teams</p>
+              </div>
+            )}
+
             <div className="mt-auto border-t border-[var(--hairline)] pt-3">
               <h3 className="text-[13px] text-[var(--muted)]">Starters ask</h3>
               <ul className="mt-1 flex flex-col gap-1">

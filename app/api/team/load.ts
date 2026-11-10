@@ -31,5 +31,6 @@ export function handoversFor(as: 'line-manager' | 'buddy', viewerId: string) {
   if (as !== 'line-manager') return [];
   return listHandovers(viewerId).map((h) => ({
     id: h.id, personId: h.personId, starterName: getPerson(h.personId)?.name ?? h.personId, question: h.question, at: h.at,
+    source: 'From a Teams chat', agentName: h.agentName ?? null, summary: h.summary ?? h.question,
   }));
 }

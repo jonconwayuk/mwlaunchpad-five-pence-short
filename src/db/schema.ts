@@ -129,4 +129,6 @@ export const handovers = sqliteTable('handovers', {
   personId: text('person_id').notNull(),
   question: text('question').notNull(),
   at: text('at').notNull(),
+  agentName: text('agent_name'),
+  summary: text('summary'),
 });
