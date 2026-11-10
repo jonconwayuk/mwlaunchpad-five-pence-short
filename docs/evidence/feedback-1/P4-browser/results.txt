@@ -1,0 +1,8 @@
+P4 browser check, HEAD worktree, port 3181, 1280 wide (cdp.mjs). Clicks via DOM .click(); select/search set via change/input events.
+1 PASS Apply pathway -> "Applied Pathway: Infrastructure engineer E version 1.0.0 / Based on Infrastructure engineer E 1.0.0". (Apply pathway button remains visible after applying.)
+2 PASS "Edit this pathway" -> search "Modern Workplace team" narrowed Journey list to 1; chose it, Unlock Now, Add Journey -> "Journey added. It shows on the joiner view now."
+3 PASS "Based on Infrastructure engineer E 1.0.0, modified: 1 Journey added"; "Added Modern Workplace team access package, by HR Partner, on 10 Nov" (no word "Simulated" in the record); 12 "Part of the template, locked" padlocks, one Remove button (on the added Journey only).
+4 PASS /me shows "Added by HR Partner" 260 ms after navigation; "Based on Infrastructure engineer E 1.0.0, modified: 1 Journey added".
+5 PASS /team?viewer=lm-hannah: "Based on Infrastructure engineer E 1.0.0, modified: 1 Journey added".
+6 PASS Infrastructure engineer E: "Applied 1 time, 1 modified". Note: Branch colleague B also shows "Applied 1 time, 1 modified" (seed state, not from this run).
+7 PASS 390px: scrollWidth 390 = innerWidth 390.
