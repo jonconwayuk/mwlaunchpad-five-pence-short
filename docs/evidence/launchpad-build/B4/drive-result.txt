@@ -1,0 +1,6 @@
+PASS drag from library into its lane: dropped over Pre-contract, card x=584 (Onboarding lane is 560 to 840)
+PASS card cannot leave its Stage lane: dragged 400px right, card x=316 (Pre-employment lane is 280 to 560)
+PASS loop refused with named message: "Payroll already waits for Contracting, so Contracting cannot wait for Payroll.Got it"
+PASS Dependency connects: edges 7 -> 8
+PASS Mandatory toggles and shows a padlock: padlock on Uniform false -> true
+PASS Container, Timer and Hard Stop render: ["Cleared to start","7 days before start date","14 days after start date","Hard StopPre-employment checks failedStops the whole pathway"]
