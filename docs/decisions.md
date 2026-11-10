@@ -396,3 +396,23 @@ Numbered once, in order, never renumbered or deleted. A reversed decision gets a
   - Design.MD goes to 1.3: D13 item 8 adds the two Demo controls, and D11 states the help chat's reach and the Teams handover wording. `GLOSSARY.md` needs no change: there are no new terms, "Integrations" is a section heading, and "trigger" stays on the Avoid list. No ADR changes.
 - **Why:** owner instruction. The split lets all three run at once without two owners on any file. Item 17 reuses the existing Notification Action and Simulate path, so the engine gets no new mechanism.
 - **Evidence:** `docs/evidence/feedback-1/{A17,B18,C19,H2}/`.
+
+### 45. Cheapest capable model per task (owner instruction, about 11:40)
+
+- **Decided:**
+  - Every spawn passes `model` explicitly. Implementers, fix loops, context-reading agents, and demo-script or README updates use sonnet.
+  - Reviewers use opus only where the task takes untrusted input, changes engine or server rules, or touches the spec. Otherwise they use sonnet.
+  - Step up to opus only when a sonnet implementer has failed its one fix loop, or the task needs an engine rule change. The ledger line says so.
+  - Prompts carry the brief, the Global Constraints and the owned files only, and tell agents not to re-read files they just wrote or summarise their own diffs.
+  - For the named tasks:
+    - P1 (grades): sonnet implementer, sonnet reviewer.
+    - P2 (Workday): sonnet implementer, opus reviewer (a new route taking input).
+    - P3 (search): sonnet implementer, sonnet reviewer.
+    - P4 (edit an Applied Pathway): sonnet implementer, opus reviewer (server rules, ADR-0002).
+  - This departs from the workflow's "review is always opus" rule, for low-risk tasks only.
+- **Why:** owner's instruction, to control cost on low-risk tasks.
+- **Applies to:**
+  - Every task not yet spawned, in both workstreams.
+  - Not to H2, which was already running on opus when this arrived. It isn't restarted, because nothing stops or restarts mid-run.
+- **Gap:** the instruction refers to briefs for P1 to P4 that weren't included in the message. They are not started. They will run under this table when their briefs arrive. Building stops at 12:30.
+- **Evidence:** the delegation ledger.
