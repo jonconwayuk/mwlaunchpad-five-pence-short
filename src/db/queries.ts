@@ -191,7 +191,7 @@ export function buildEngineInput(personId: string): EngineInput {
     journeys[`${j.id}@${j.version}`] = j;
   }
   return {
-    today: getDemoClock(), person, pathway: applied.snapshot, journeys,
+    today: getDemoClock(), person, appliedOn: applied.appliedOn, pathway: applied.snapshot, journeys,
     progress: db.select().from(s.actionProgress).where(eq(s.actionProgress.personId, personId)).all().map((r) => r.data),
     overrides: db.select().from(s.itemOverrides).where(eq(s.itemOverrides.personId, personId)).all().map((r) => r.data),
     hardStopDecisions: db.select().from(s.hardStopDecisions).where(eq(s.hardStopDecisions.personId, personId)).all().map((r) => r.data),

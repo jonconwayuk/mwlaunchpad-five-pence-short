@@ -90,6 +90,7 @@ export interface DurationSample { journeyId: string; journeyVersion: number; day
 export interface EngineInput {
   today: ISODate;
   person: PersonRef;
+  appliedOn?: ISODate;                      // when the Pathway was applied; items with no Dependencies start no earlier
   pathway: PathwaySnapshot;
   journeys: Record<string, JourneyDef>;     // keyed `${journeyId}@${version}`
   progress: ActionProgress[];

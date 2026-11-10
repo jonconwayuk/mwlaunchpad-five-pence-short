@@ -2,7 +2,7 @@
 // Deterministic: every date derives from DEMO_T and history comes from a seeded generator.
 import { sqlite, db } from './client';
 import * as s from './schema';
-import { applyPathway, addAdditionToApplied, insertJourney, publishPathway, recordActionProgress, savePathwayDraft } from './queries';
+import { applyPathway, addAdditionToApplied, insertJourney, publishPathway, recordActionProgress, recordOverride, savePathwayDraft } from './queries';
 import { buildTemplate, DEMO_T, JOURNEYS, PERSON_A_ADDITIONS, PERSONS, TEMPLATES } from './seedData';
 import { resetAdapters } from '../adapters/types';
 import { log } from '../lib/log';
@@ -59,15 +59,17 @@ export function seed(): void {
       const checks = checksDays(r);
       for (let starter = 0; starter < 20; starter++) {
         for (const j of new Set(draft.items.map((i) => i.journeyId))) {
-          const days = j === 'j-checks' ? checks[starter]! : r(2, 14);
+          // Payroll waits on the starter's bank details, which often come late: its Usual Range spans Persona A's 18 days.
+          const days = j === 'j-checks' ? checks[starter]! : j === 'j-payroll' ? r(10, 30) : r(2, 14);
           db.insert(s.durationHistory).values({ pathwayId: tpl.id, pathwayVersion: version, journeyId: j, journeyVersion: 1, days }).run();
         }
       }
     });
 
-    for (const [personId, pathwayId] of [['person-a', 'pw-branch'], ['person-b', 'pw-engineer'], ['person-c', 'pw-executive']] as const) {
-      applyPathway(pathwayId, personId, DEMO_T);
-    }
+    // Persona A's Pathway was applied when she accepted her Offer; B and C are applied at T.
+    applyPathway('pw-branch', 'person-a', addDays(DEMO_T, -21));
+    applyPathway('pw-engineer', 'person-b', DEMO_T);
+    applyPathway('pw-executive', 'person-c', DEMO_T);
     PERSON_A_ADDITIONS.items.forEach((i, n) =>
       addAdditionToApplied('person-a', i, n === 0 ? PERSON_A_ADDITIONS.timers : []));
 
@@ -78,6 +80,12 @@ export function seed(): void {
     recordActionProgress('person-a', { itemId: 'i-contracting', actionId: 'j-contracting-a2', state: 'done', doneAt: done, ...doneBy });
     recordActionProgress('person-a', { itemId: 'i-checks', actionId: 'j-checks-a1', state: 'done', doneAt: done, ...doneBy });
     recordActionProgress('person-a', { itemId: 'i-checks', actionId: 'j-checks-a2', state: 'pending' });
+    // Branch device and Manager ready are done; the optional Uniform was skipped.
+    recordActionProgress('person-a', { itemId: 'i-device', actionId: 'j-device-branch-a1', state: 'done', doneAt: addDays(DEMO_T, -16), value: 'Branch tablet', ...doneBy });
+    recordActionProgress('person-a', { itemId: 'i-device', actionId: 'j-device-branch-a2', state: 'done', doneAt: addDays(DEMO_T, -12), automationResult: 'passed' });
+    recordActionProgress('person-a', { itemId: 'i-manager-ready', actionId: 'j-manager-ready-a1', state: 'done', doneAt: addDays(DEMO_T, -14), doneByPersonId: 'lm-priya' });
+    recordActionProgress('person-a', { itemId: 'i-manager-ready', actionId: 'j-manager-ready-a2', state: 'done', doneAt: addDays(DEMO_T, -13), automationResult: 'passed' });
+    recordOverride('person-a', { itemId: 'i-uniform', status: 'skipped', reason: 'Uniform not needed yet', byPersonId: 'person-a', at: addDays(DEMO_T, -17) });
   })();
   log.info('seeded');
 }

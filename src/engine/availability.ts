@@ -46,9 +46,8 @@ export function createEvaluator(input: EngineInput): Evaluator {
     const met = item.dependsOn.map((dep) => ({ dep, on: metOn(dep) }));
     const unmetDependencies = met.filter((m) => !m.on).map((m) => m.dep);
     const available = unmetDependencies.length === 0;
-    // shortcut: an item with no Dependencies counts as available from Offer accepted; use the apply date once stored.
     const availableSince = available
-      ? latest([person.offerAcceptedDate, ...met.map((m) => m.on as ISODate)])
+      ? latest([input.appliedOn ?? person.offerAcceptedDate, person.offerAcceptedDate, ...met.map((m) => m.on as ISODate)])
       : undefined;
     const base = { item, journey, title: journey.title, available, availableSince, unmetDependencies, sent: [] };
 

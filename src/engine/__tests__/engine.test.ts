@@ -29,6 +29,12 @@ describe('availability and Journey Status (rules 1 and 2)', () => {
     expect(payroll.availableSince).toBe('2026-10-22');
   });
 
+  it('an item with no Dependencies, when applied after Offer accepted, is available from the apply date', () => {
+    const contracting = itemOf(branchInput({ appliedOn: '2026-11-05' }), 'i-contracting');
+    expect(contracting.availableSince).toBe('2026-11-05');
+    expect(contracting.waitingDays).toBe(5);
+  });
+
   it('Pathway Item, when on a Hidden automation, is in-progress with the Blocked Flag raised', () => {
     const progress = [...contracted, done('i-checks', 'a-rtw', '2026-10-23')];
     const checks = itemOf(branchInput({ progress }), 'i-checks');

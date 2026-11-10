@@ -1,0 +1,63 @@
+B1/B2 integration fix loop, 2026-11-10 09:16
+
+## npx vitest run src/engine
+ Test Files  1 passed (1)
+      Tests  37 passed (37)
+   Start at  09:16:47
+   Duration  72ms (transform 45%, tests 26%, import 25%, worker 5%)
+
+
+## npx tsc --noEmit -p . | grep src/(engine|db)
+(empty)
+
+## npx eslint src/engine src/db
+(clean, exit 0)
+
+## seed() then computeState(buildEngineInput(id)) at DEMO_T
+== person-a overdue=0
+  Contracting | done | wait=3 | range=5-10 | overdue=false
+  Payroll | action-required | wait=18 | range=15-25 | overdue=false
+  Pre-employment checks | in-progress | wait=18 | range=21-35 | overdue=false | Blocked Flag
+  ID creation (photo) | not-started | wait=- | range=6-12 | overdue=false
+  Branch device | done | wait=6 | range=6-10 | overdue=false
+  Manager ready | done | wait=5 | range=4-11 | overdue=false
+  Meet your buddy | not-started | wait=- | range=4-11 | overdue=false
+  Pulse check | not-started | wait=- | range=4-10 | overdue=false
+  Pulse check | not-started | wait=- | range=4-10 | overdue=false
+  Uniform (Merch distribution) | skipped | wait=- | range=3-9 | overdue=false
+  Branch induction | not-started | wait=- | range=4-12 | overdue=false
+  Cash-handling training | not-started | wait=- | range=4-13 | overdue=false
+  Start delay engagement | not-started | wait=- | range=- | overdue=false
+  In-person events calendar | not-started | wait=- | range=- | overdue=false
+  containers: Cleared to start complete=false
+  needsDecisions: []
+== person-b overdue=0
+  Contracting | action-required | wait=0 | range=5-10 | overdue=false
+  Payroll | not-started | wait=- | range=15-25 | overdue=false
+  Pre-employment checks | not-started | wait=- | range=21-35 | overdue=false
+  ID creation (photo) | not-started | wait=- | range=6-12 | overdue=false
+  Developer device | not-started | wait=- | range=5-10 | overdue=false
+  Manager ready | not-started | wait=- | range=4-11 | overdue=false
+  Meet your buddy | not-started | wait=- | range=4-11 | overdue=false
+  Pulse check | not-started | wait=- | range=4-10 | overdue=false
+  Pulse check | not-started | wait=- | range=4-10 | overdue=false
+  Engineering community intro | not-started | wait=- | range=5-12 | overdue=false
+  containers: Cleared to start complete=false
+  needsDecisions: [{"hardStopId":"hs-deadline","label":"Pre-employment checks not done in time","stopsItemIds":["i-buddy"],"wholePathway":false,"reason":"Pre-employment checks is not done by 5 days before Start date","raisedOn":"2026-11-10","extendAllowed":true}]
+== person-c overdue=0
+  Contracting | action-required | wait=0 | range=5-10 | overdue=false
+  Payroll | not-started | wait=- | range=15-25 | overdue=false
+  Pre-employment checks | not-started | wait=- | range=21-35 | overdue=false
+  ID creation (photo) | not-started | wait=- | range=6-12 | overdue=false
+  Executive device | not-started | wait=- | range=5-10 | overdue=false
+  Manager ready | not-started | wait=- | range=4-11 | overdue=false
+  Meet your buddy | not-started | wait=- | range=4-11 | overdue=false
+  Pulse check | not-started | wait=- | range=4-10 | overdue=false
+  Pulse check | not-started | wait=- | range=4-10 | overdue=false
+  Welcome from sponsoring exec | not-started | wait=- | range=4-11 | overdue=false
+  containers: Cleared to start complete=false
+  needsDecisions: []
+  (no open tasks for any persona)
+
+## Reseed determinism (full table dump after seed() twice)
+reseed twice: identical (120519 chars)

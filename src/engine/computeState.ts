@@ -32,7 +32,7 @@ export function computeState(input: EngineInput): EngineState {
         owner: ownerOf(s.currentAction) ?? 'starter', raisedOn: s.currentSince ?? s.availableSince ?? today });
     }
     if (overdue && range && s.availableSince) {
-      task({ itemId: item.id, actionId: s.currentAction?.id ?? '', owner: 'line-manager',
+      task({ itemId: item.id, actionId: s.currentAction?.id ?? s.journey.actions[0]!.id, owner: 'line-manager',
         label: `Check in with ${firstName}: ${s.title} is taking longer than usual`,
         raisedOn: addDays(s.availableSince, range[1] + 1) });
     }
