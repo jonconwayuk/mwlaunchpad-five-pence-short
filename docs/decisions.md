@@ -471,3 +471,8 @@ Numbered once, in order, never renumbered or deleted. A reversed decision gets a
 - **Process:** four implementers ran in parallel in worktrees, split by file ownership: engine and filter, Journeys and seed, joiner UI, and manager UI. The owner asked for parallel agents. The `ActionStep` contract was committed first, so no two touched the same file.
 - **Open:** the Line Manager view groups Journeys by Stage, not by Container, because the client state carries no Container membership. That can be upgraded by sending `itemIds` per Container.
 - **Why:** owner instruction.
+
+### 51. Push the expandable Journeys work to origin
+
+- **Decided:** push 1477c58..HEAD (decision 50) to `origin main`, following the owner's standing instruction this session to push finished work. The independent review passed, and in a clean worktree `npm run check` passed (236 tests) and `npm run build` compiled with zero warnings.
+- **Why:** owner instruction.
