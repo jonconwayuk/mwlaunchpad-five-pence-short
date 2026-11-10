@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { describeFilters, filterPathways, loosenHint, type PathwayMeta } from './pathwayFilter';
 import { insights, median, spread, withStarters, type InsightRow } from './aggregate';
 
 const row = (o: Partial<InsightRow>): InsightRow => ({
@@ -58,5 +59,32 @@ describe('insights aggregates', () => {
     const d = insights(ROWS, { by: 'role', journey: 'j1', stage: 'onboarding' }).drill!;
     expect(d).toMatchObject({ n: 3, min: 20, max: 50, median: 30, lo: 25, hi: 40 });
     expect(d.counts).toEqual([{ days: 20, count: 1 }, { days: 30, count: 1 }, { days: 50, count: 1 }]);
+  });
+});
+
+const META: PathwayMeta[] = [
+  { id: 'pw-a', title: 'Branch colleague', tags: { grade: 'C', jobFamily: 'Branch' }, semver: '1.0.0' },
+  { id: 'pw-b', title: 'Infrastructure engineer E', tags: { grade: 'E', jobFamily: 'Modern Workplace' }, semver: '1.2.0' },
+];
+
+describe('insights search and filters', () => {
+  it('grade filter, when set to E, narrows the matches and the figures to grade E Pathways', () => {
+    const r = insights(ROWS, { by: 'grade', grade: 'E' }, META);
+    expect(r.matches.map((m) => m.id)).toEqual(['pw-b']);
+    expect(r.pathways.map((p) => p.id)).toEqual(['pw-b']);
+    expect(r.starterCount).toBe(1);
+  });
+
+  it('search, when typing infra, finds the Pathway by name; with a filter that excludes it, finds nothing', () => {
+    expect(filterPathways(META, 'infra', {}).map((m) => m.title)).toEqual(['Infrastructure engineer E']);
+    expect(filterPathways(META, 'infra', { grade: 'C' })).toEqual([]);
+    expect(loosenHint({ grade: 'C' })).toBe('Try loosening the grade filter.');
+  });
+
+  it('clearing filters, when none are set, restores every Pathway and all the figures', () => {
+    const r = insights(ROWS, { by: 'grade' }, META);
+    expect(r.matches).toHaveLength(2);
+    expect(r.starterCount).toBe(3);
+    expect(describeFilters({ jobFamily: 'Technology', grade: 'E' })).toBe('Technology, grade E, all locations');
   });
 });

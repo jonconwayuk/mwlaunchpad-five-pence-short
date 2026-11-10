@@ -1,7 +1,11 @@
 'use client';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import type { StageId } from '@/src/engine/types';
 import { stageLabel } from '@/src/ui/components/journey-builder/constants';
+import { TAG_LABELS, TAG_LISTS } from '@/src/ui/components/journey-builder/constants';
+import { PathwaySearch } from './PathwaySearch';
+import { FILTER_KEYS, describeFilters, filterPathways, loosenHint, type Filters } from './pathwayFilter';
 import type { Dimension, Insights as Data, RangeLine } from './aggregate';
 
 const pct = (d: number, max: number) => `${(d / max) * 100}%`;
@@ -104,25 +108,44 @@ function Drill({ d }: { d: NonNullable<Data['drill']> }) {
 }
 
 export function Insights() {
-  const [stage, setStage] = useState<StageId | ''>('');
-  const [pathway, setPathway] = useState('');
-  const [by, setBy] = useState<Dimension>('businessArea');
-  const [journey, setJourney] = useState('');
+  // The URL holds the Pathway, search, filters and Stage, so a refresh or a persona switch keeps them.
+  const router = useRouter();
+  const params = useSearchParams();
+  const get = (k: string) => params.get(k) ?? '';
+  const stage = get('stage') as StageId | '';
+  const pathway = get('pathway');
+  const search = get('q');
+  const by = (get('by') || 'businessArea') as Dimension;
+  const journey = get('journey');
+  const filters: Filters = Object.fromEntries(FILTER_KEYS.filter((k) => get(k)).map((k) => [k, get(k)]));
+  const set = (patch: Record<string, string>) => {
+    const next = new URLSearchParams(params);
+    for (const [k, v] of Object.entries(patch)) { if (v) next.set(k, v); else next.delete(k); }
+    router.replace(`?${next}`, { scroll: false });
+  };
   const [data, setData] = useState<Data | null>(null);
   const [error, setError] = useState('');
   const drillRef = useRef<HTMLDivElement>(null);
+  const qsKey = [stage, pathway, journey, by, ...FILTER_KEYS.map(get)].join('|');
 
   useEffect(() => {
-    const qs = new URLSearchParams({ stage, pathway, journey, by });
+    const qs = new URLSearchParams({ stage, pathway, journey, by, ...Object.fromEntries(FILTER_KEYS.map((k) => [k, get(k)])) });
     fetch(`/api/insights?${qs}`).then((r) => r.json())
       .then((b: { ok: boolean; data?: Data; error?: string }) => (b.ok && b.data ? (setData(b.data), setError('')) : setError(b.error ?? 'Could not load insights')))
       .catch(() => setError('Could not load insights'));
-  }, [stage, pathway, journey, by]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- qsKey stands for every value read above
+  }, [qsKey]);
 
   if (!data) return <p className="p-6 text-[var(--muted)]">{error || 'Loading insights…'}</p>;
+  const hasFilters = FILTER_KEYS.some((k) => filters[k]) || !!search || !!pathway;
+  const results = filterPathways(data.matches, search, {});
+  const picked = data.matches.find((p) => p.id === pathway);
+  const nothing = data.matches.length === 0;
+  const emptyText = nothing ? `No Pathways match these filters (${describeFilters(filters)}). ${loosenHint(filters)}`
+    : `No Pathway name contains "${search}" with these filters. Clear the search${loosenHint(filters) ? ` or loosen the filters` : ''}.`;
   const dimLabel = data.dimensions.find((d) => d.id === by)!.label.toLowerCase();
   const stageText = stage ? `the ${stageLabel(stage)} Stage` : 'all four Stages';
-  const pick = (id: string) => { setJourney(id); requestAnimationFrame(() => drillRef.current?.scrollIntoView({ block: 'start' })); };
+  const pick = (id: string) => { set({ journey: id }); requestAnimationFrame(() => drillRef.current?.scrollIntoView({ block: 'start' })); };
   const dashMax = niceMax(Math.max(...data.journeys.flatMap((j) => j.groups.map((g) => g.median)), 0));
 
   return (
@@ -132,32 +155,42 @@ export function Insights() {
         <p className="mt-1 text-[var(--muted)]">How long onboarding usually takes, across {data.starterCount} past starters in {stageText}.</p>
       </header>
 
+      <p className="-mt-3 text-charcoal">Showing: {picked ? `${picked.title}, ` : ''}{describeFilters(filters)}</p>
+      <PathwaySearch search={search} onSearch={(v) => set({ q: v })} results={results} pickedId={pathway}
+        onPick={(id) => set({ pathway: id, journey: '' })} emptyText={emptyText} />
+
       <div className="sticky top-0 z-10 flex flex-wrap items-center gap-3 border-b border-[var(--hairline)] bg-paper py-3">
-        <Segmented label="Stage" value={stage} onChange={setStage}
+        <Segmented label="Stage" value={stage} onChange={(v) => set({ stage: v })}
           options={[{ id: '' as const, label: 'All Stages' }, ...data.stages]} />
-        <label className="flex items-center gap-2 text-[14px] text-charcoal">Pathway
-          <select value={pathway} onChange={(e) => setPathway(e.target.value)} className={`min-h-[44px] rounded-[6px] border border-[var(--hairline)] bg-paper px-2 text-ink ${focus}`}>
-            <option value="">All Pathways</option>
-            {data.pathwayOptions.map((p) => <option key={p.id} value={p.id}>{p.title}</option>)}
-          </select>
-        </label>
+        {FILTER_KEYS.map((k) => (
+          <label key={k} className="flex items-center gap-2 text-[14px] text-charcoal">{TAG_LABELS[k]}
+            <select value={filters[k] ?? ''} onChange={(e) => set({ [k]: e.target.value, pathway: '' })}
+              className={`min-h-[44px] rounded-[6px] border border-[var(--hairline)] bg-paper px-2 text-ink ${focus}`}>
+              <option value="">{k === 'grade' ? 'All grades' : k === 'location' ? 'All locations' : 'All job families'}</option>
+              {TAG_LISTS[k].map((v) => <option key={v}>{v}</option>)}
+            </select>
+          </label>
+        ))}
+        {hasFilters && <button type="button" onClick={() => set({ jobFamily: '', grade: '', location: '', q: '', pathway: '', journey: '' })}
+          className={`min-h-[44px] rounded-[6px] border border-[var(--hairline)] px-3 text-[14px] text-charcoal hover:bg-[var(--paper-2)] ${focus}`}>Clear filters</button>}
         {error && <p role="alert" className="text-charcoal">{error}</p>}
       </div>
 
       <Card title="How long each Pathway takes"
         lead={`From a starter's first Journey to their last, adding up each Stage (${stageText}). The dot is the middle starter; the shaded band is the usual range, the middle half of starters.`}>
-        {data.pathways.length ? <RangeChart lines={data.pathways} highlight={pathway} /> : <p className="text-[var(--muted)]">No Journeys in this Stage yet.</p>}
+        {data.pathways.length ? <RangeChart lines={data.pathways} highlight={pathway} /> : <p className="text-[var(--muted)]">{nothing ? emptyText : 'No past starters yet for these Pathways in this Stage. Choose another Stage or loosen the filters.'}</p>}
       </Card>
 
       <Card title="Which Pathways take longer, and where"
         lead="Each business area by role. Business area is based on the starter's job family.">
         {data.slowest && <p className="mb-4 text-[17px] font-semibold text-ink">{data.slowest}</p>}
-        {data.areas.length ? <RangeChart lines={data.areas} /> : <p className="text-[var(--muted)]">No starters match.</p>}
+        {data.areas.length ? <RangeChart lines={data.areas} /> : <p className="text-[var(--muted)]">{nothing ? emptyText : 'No past starters match. Choose another Stage or loosen the filters.'}</p>}
       </Card>
 
       <Card title="Journeys by business area, role and grade"
         lead={`Each dot is one ${dimLabel}: the middle Journey Duration for that group. Choose a Journey to see its full spread.`}>
-        <Segmented label="Group by" value={by} onChange={setBy} options={data.dimensions} />
+        <Segmented label="Group by" value={by} onChange={(v) => set({ by: v })} options={data.dimensions} />
+        {data.journeys.length === 0 && <p className="mt-4 text-[var(--muted)]">{nothing ? emptyText : 'No Journeys have past starters here. Choose another Stage or loosen the filters.'}</p>}
         <ul className="mt-4 divide-y divide-[var(--hairline)]">
           {data.journeys.map((j) => (
             <li key={j.id}>

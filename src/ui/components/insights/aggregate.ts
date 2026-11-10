@@ -1,6 +1,7 @@
 import { usualRange } from '@/src/engine/duration';
 import type { StageId } from '@/src/engine/types';
 import { STAGES } from '@/src/ui/components/journey-builder/constants';
+import { filterPathways, type Filters, type PathwayMeta } from './pathwayFilter';
 
 /** One history sample, as `insightsData()` returns it. businessArea is the past starter's job family. */
 export interface InsightRow {
@@ -8,7 +9,7 @@ export interface InsightRow {
   businessArea: string | null; role: string | null; grade: string | null; days: number;
 }
 export type Dimension = 'businessArea' | 'role' | 'grade';
-export interface Query { stage?: StageId; pathway?: string; journey?: string; by: Dimension }
+export interface Query extends Filters { stage?: StageId; pathway?: string; journey?: string; by: Dimension }
 export interface Spread { median: number; lo: number; hi: number; n: number }
 export interface RangeLine extends Spread { id: string; label: string; note?: string }
 
@@ -53,7 +54,12 @@ function groupBy<T>(items: T[], key: (t: T) => string): Map<string, T[]> {
 const label = (v: string | null) => v ?? 'Not recorded';
 
 /** Everything the Insights page shows, for one Stage, Pathway, Journey and dimension. */
-export function insights(all: InsightRow[], q: Query) {
+export function insights(everything: InsightRow[], q: Query, metas: PathwayMeta[] = []) {
+  // Filters narrow by the Pathway's own tags. Without Pathway details (old callers) nothing is narrowed.
+  const matches = filterPathways(metas, '', q);
+  const keep = new Set(matches.map((m) => m.id));
+  const filtered = metas.length > 0 && !!(q.jobFamily || q.grade || q.location);
+  const all = filtered ? everything.filter((r) => keep.has(r.pathwayId)) : everything;
   const rows = withStarters(all).filter((r) => !q.stage || r.stage === q.stage);
   // Journeys in a Stage run side by side (longest counts); Stages run one after another (they add up).
   const starters = [...groupBy(rows, (r) => r.starter).values()].map((rs) => ({
@@ -91,8 +97,8 @@ export function insights(all: InsightRow[], q: Query) {
   };
 
   return {
-    stages: STAGES, dimensions: DIMENSIONS, starterCount: starters.length,
-    pathwayOptions: [...groupBy(all, (r) => r.pathwayId).values()].map((rs) => ({ id: rs[0]!.pathwayId, title: rs[0]!.pathwayTitle })),
+    matches, stages: STAGES, dimensions: DIMENSIONS, starterCount: starters.length,
+    pathwayOptions: [...groupBy(everything, (r) => r.pathwayId).values()].map((rs) => ({ id: rs[0]!.pathwayId, title: rs[0]!.pathwayTitle })),
     pathways, areas, slowest, journeys, drill: drill ?? null,
   };
 }

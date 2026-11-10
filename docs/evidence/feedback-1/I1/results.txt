@@ -1,0 +1,9 @@
+search infra: Showing: all job families, all grades, all locations | Infrastructure engineer E | Grade E, live version 1.0.0 | Infrastructure engineer E | Infrastructure engineer
+url: ?q=infra&pathway=pw-infra-e select count: 8
+grade E: How long onboarding usually takes, across 20 past starters in all four Stages. | Showing: all job families, grade E, all locations | Infrastructure engineer E | Branch | Infrastructure engineer E | Infrastructure engineer
+grade E + Cardiff: Showing: all job families, grade E, all locations
+after clear + stage: ?stage=onboarding | How long onboarding usually takes, across 80 past starters in the Onboarding Stage. | Showing: all job families, all grades, all locations
+select result: set Cardiff
+url ?grade=E&location=Cardiff
+grade E + Cardiff: Showing: all job families, grade E, Cardiff | No Pathways match all job families, grade E, Cardiff. Try loosening the grade or location filter. | No Pathways match all job families, grade E, Cardiff. Try loosening the grade or location filter. | No Pathways match all job families, grade E, Cardiff. Try loosening the grade or location filter. | No Pathways match all job families, grade E, Cardiff. Try loosening the grade or location filter.
+Gates: eslint clean on owned paths; vitest 207 pass, 1 fail in src/db/appliedEdit.test.ts (another agent's area); tsc error only in app/portal/people/EditAppliedPathway.tsx (another agent).

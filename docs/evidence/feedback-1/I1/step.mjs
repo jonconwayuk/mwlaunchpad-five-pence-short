@@ -1,0 +1,20 @@
+export default async (c) => {
+  await c.go('/portal/insights'); await c.shot('01-all');
+  await c.type('input[type=search]', 'infra'); await c.wait(800);
+  c.log('search infra: ' + (await c.text()).split('\n').filter((l) => /Infrastructure|Showing|Grade E/.test(l)).join(' | '));
+  await c.click('Infrastructure engineer E', 'ul[aria-label="Matching Pathways"] button'); await c.wait(1200);
+  c.log('url: ' + await c.js('location.search') + ' select count: ' + await c.js('document.querySelectorAll("select").length'));
+  await c.shot('02-picked');
+  await c.click('Clear filters'); await c.wait(800);
+  await c.select('Grade', 'E'); await c.wait(1200);
+  c.log('grade E: ' + (await c.text()).split('\n').filter((l) => /Showing|Infrastructure|Branch|past starters in/.test(l)).slice(0, 6).join(' | '));
+  await c.shot('03-grade-e');
+  await c.select('Location', 'Cardiff'); await c.wait(1200);
+  c.log('grade E + Cardiff: ' + (await c.text()).split('\n').filter((l) => /Showing|No Pathways|loosen/.test(l)).join(' | '));
+  await c.shot('04-nothing');
+  await c.click('Clear filters'); await c.wait(1200);
+  await c.click('Onboarding', '[role=radio]'); await c.wait(1000);
+  await c.click('Pathways', 'button[aria-pressed]'); await c.wait(1000);
+  c.log('after clear + stage: ' + await c.js('location.search') + ' | ' + (await c.text()).split('\n').filter((l) => /Showing|past starters in/.test(l)).join(' | '));
+  await c.shot('05-stage-drill');
+};
