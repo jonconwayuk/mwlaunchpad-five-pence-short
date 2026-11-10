@@ -12,7 +12,7 @@ export const stageLabel = (id: StageId) => STAGES.find((s) => s.id === id)?.labe
 export const TAG_LISTS: Record<keyof Tags, string[]> = {
   jobFamily: ['Branch', 'Software engineering', 'Executive', 'Modern Workplace', 'HR', 'IT'],
   role: ['Customer service colleague', 'Software engineer', 'Infrastructure engineer', 'Managing director', 'Executive assistant', 'Line manager'],
-  grade: ['A', 'B', 'C', 'D', 'E', 'F', 'G'],
+  grade: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'X'],
   platform: ['Retail', 'Technology', 'Group Functions'],
   location: ['Cardiff', 'Leeds', 'London', 'Edinburgh'],
 };

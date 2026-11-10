@@ -7,7 +7,7 @@ import type { JourneyDef } from '../engine/types';
 export const TAG_LISTS = {
   jobFamily: ['Branch', 'Software engineering', 'Executive', 'Modern Workplace', 'HR', 'IT'],
   role: ['Customer service colleague', 'Software engineer', 'Infrastructure engineer', 'Managing director', 'Executive assistant', 'Line manager'],
-  grade: ['A', 'B', 'C', 'D', 'E', 'F', 'G'],
+  grade: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'X'],
   platform: ['Retail', 'Technology', 'Group Functions'],
   location: ['Cardiff', 'Leeds', 'London', 'Edinburgh'],
 };

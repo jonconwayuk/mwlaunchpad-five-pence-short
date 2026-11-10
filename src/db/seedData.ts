@@ -6,7 +6,7 @@ import type { ContainerDef, DependencyRef, HardStopDef, JourneyDef, PathwayItem,
 
 export const DEMO_T = '2026-11-10';
 
-// Grades A to G (feedback item 6). Old names map: Colleague B (C for engineers), Manager D, Senior manager E, Executive G.
+// Grades A to G, then X for the Executive (feedback items 6 and 20). Old names map: Colleague B (C for engineers), Manager D, Senior manager E, Executive G.
 export { TAG_LISTS };
 
 export interface SeedPerson {
@@ -21,9 +21,9 @@ const staff = (id: string, name: string, role: SeedPerson['role'], tags: Tags): 
 export const PERSONS: SeedPerson[] = [
   { id: 'person-a', name: 'Alex Morgan', role: 'starter', tags: t('Branch', 'Customer service colleague', 'B', 'Retail', 'Cardiff'),
     offerDays: -21, startDays: 56, lineManagerId: 'lm-priya', buddyId: 'buddy-tom' },
-  { id: 'person-b', name: 'Sam Okafor', role: 'starter', tags: t('Software engineering', 'Software engineer', 'C', 'Technology', 'Leeds'),
+  { id: 'person-b', name: 'Sam Okafor', role: 'starter', tags: t('Software engineering', 'Software engineer', 'D', 'Technology', 'Leeds'),
     offerDays: -35, startDays: 5, lineManagerId: 'lm-chris', buddyId: 'buddy-jo' },
-  { id: 'person-c', name: 'Dana Whitfield', role: 'starter', tags: t('Executive', 'Managing director', 'G', 'Group Functions', 'London'),
+  { id: 'person-c', name: 'Dana Whitfield', role: 'starter', tags: t('Executive', 'Managing director', 'X', 'Group Functions', 'London'),
     offerDays: -14, startDays: 21, lineManagerId: 'lm-ruth', buddyId: 'buddy-mark', delegateId: 'delegate-lena' },
   staff('lm-priya', 'Priya Shah', 'line-manager', t('Branch', 'Line manager', 'D', 'Retail', 'Cardiff')),
   staff('buddy-tom', 'Tom Evans', 'buddy', t('Branch', 'Customer service colleague', 'B', 'Retail', 'Cardiff')),
@@ -72,7 +72,7 @@ export function buildItems(seeds: ItemSeed[]): PathwayItem[] {
 
 interface Template { id: string; title: string; tags: Tags; device: [string, string]; extraItems: ItemSeed[]; extraTimers: TimerDef[]; stops: string[] }
 const TEMPLATES: Template[] = [
-  { id: 'pw-branch', title: 'Branch colleague', tags: { jobFamily: 'Branch', platform: 'Retail', grade: 'B' },
+  { id: 'pw-branch', title: 'Branch colleague B', tags: { jobFamily: 'Branch', platform: 'Retail', grade: 'B' },
     device: ['i-device', 'j-device-branch'],
     extraItems: [
       ['i-uniform', 'j-uniform', false, [dep.item('i-contracting')]],
@@ -80,11 +80,11 @@ const TEMPLATES: Template[] = [
       ['i-cash', 'j-cash-handling', true, [dep.timer('t-day-8')]],
     ],
     extraTimers: [startTimer('t-day-1', 'Day 1', 0), startTimer('t-day-8', 'Day 8', 7)], stops: [] },
-  { id: 'pw-engineer', title: 'Software engineer', tags: { jobFamily: 'Software engineering', platform: 'Technology', grade: 'C' },
+  { id: 'pw-engineer', title: 'Software engineer D', tags: { jobFamily: 'Software engineering', platform: 'Technology', grade: 'D' },
     device: ['i-device', 'j-device-dev'],
     extraItems: [['i-community', 'j-eng-community', false, [dep.timer('t-day-1')]]],
     extraTimers: [startTimer('t-day-1', 'Day 1', 0)], stops: [] },
-  { id: 'pw-executive', title: 'Executive', tags: { jobFamily: 'Executive', platform: 'Group Functions', grade: 'G' },
+  { id: 'pw-executive', title: 'Executive X', tags: { jobFamily: 'Executive', platform: 'Group Functions', grade: 'X' },
     device: ['i-device', 'j-device-exec'],
     extraItems: [['i-exec-welcome', 'j-exec-welcome', true, [dep.container('c-cleared')]]],
     extraTimers: [], stops: ['i-exec-welcome'] },

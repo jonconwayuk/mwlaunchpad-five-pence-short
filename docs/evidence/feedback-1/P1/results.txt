@@ -1,0 +1,9 @@
+P1 feedback item 20 results. Two fresh seeds into a temp db; tsc, eslint clean; vitest 192 passed.
+pw-branch|Branch colleague B|{"jobFamily":"Branch","platform":"Retail","grade":"B"}
+pw-engineer|Software engineer D|{"jobFamily":"Software engineering","platform":"Technology","grade":"D"}
+pw-executive|Executive X|{"jobFamily":"Executive","platform":"Group Functions","grade":"X"}
+pw-infra-e|Infrastructure engineer E|{"jobFamily":"Modern Workplace","role":"Infrastructure engineer","platform":"Technology","grade":"E"}
+person-a|Alex Morgan|{"jobFamily":"Branch","role":"Customer service colleague","grade":"B","platform":"Retail","location":"Cardiff"}
+person-b|Sam Okafor|{"jobFamily":"Software engineering","role":"Software engineer","grade":"D","platform":"Technology","location":"Leeds"}
+person-c|Dana Whitfield|{"jobFamily":"Executive","role":"Managing director","grade":"X","platform":"Group Functions","location":"London"}
+person-bob|Bob Warwick|{"jobFamily":"Modern Workplace","role":"Infrastructure engineer","grade":"E","platform":"Technology","location":"Edinburgh"}

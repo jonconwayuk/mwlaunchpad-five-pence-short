@@ -10,13 +10,13 @@ The synthetic data the demo runs on and the Pathway engine tests use (Design.MD 
 
 Used for Journey tags, Pathway tags and Person attributes. For browsing and filtering only; nothing is matched automatically.
 
-Grades are A to G (feedback 1, item 6). The old names were regraded: Colleague to B (C for software engineers and the Executive assistant), Manager to D, Senior manager to E, Executive to G. Line managers are D, except Hannah Price (F) and Ruth King (G).
+Grades are A to G, plus X for the Executive (feedback 1, items 6 and 20). The old names were regraded: Colleague to B (C for software engineers and the Executive assistant), Manager to D, Senior manager to E, Executive to G. Line managers are D, except Hannah Price (F) and Ruth King (G).
 
 | List | Values |
 | --- | --- |
 | Job family | Branch, Software engineering, Executive, Modern Workplace, HR, IT |
 | Role | Customer service colleague, Software engineer, Infrastructure engineer, Managing director, Executive assistant, Line manager |
-| Grade | A, B, C, D, E, F, G |
+| Grade | A, B, C, D, E, F, G, X (Executive) |
 | Platform | Retail, Technology, Group Functions |
 | Location | Cardiff, Leeds, London, Edinburgh |
 
@@ -27,8 +27,8 @@ Dates are relative to the Demo clock's starting "today" (T), so Reset demo alway
 | Persona | Job family / Role / Grade / Platform / Location | Offer accepted | Start date (Day 1) | Line Manager | Buddy | Delegate |
 | --- | --- | --- | --- | --- | --- | --- |
 | **A: Alex Morgan** | Branch / Customer service colleague / B / Retail / Cardiff | T − 21 days | T + 56 days (long vetting wait) | Priya Shah | Tom Evans | — |
-| **B: Sam Okafor** | Software engineering / Software engineer / C / Technology / Leeds | T − 35 days | T + 5 days | Chris Lee | Jo Patel | — |
-| **C: Dana Whitfield** | Executive / Managing director / G / Group Functions / London | T − 14 days | T + 21 days | Ruth King | Mark Allen | Lena Brooks (Executive assistant) |
+| **B: Sam Okafor** | Software engineering / Software engineer / D / Technology / Leeds | T − 35 days | T + 5 days | Chris Lee | Jo Patel | — |
+| **C: Dana Whitfield** | Executive / Managing director / X / Group Functions / London | T − 14 days | T + 21 days | Ruth King | Mark Allen | Lena Brooks (Executive assistant) |
 | **Bob Warwick** (`person-bob`) | Modern Workplace / Infrastructure engineer / E / Technology / Edinburgh | T − 7 days | T + 28 days | Hannah Price (F) | Leo Grant (D) | — |
 | HR Partner | HR / — / D / Group Functions / Leeds | | | | | |
 
@@ -90,9 +90,9 @@ Template-specific items:
 
 | Pathway | Tags | Device Journey | Extra Pathway Items |
 | --- | --- | --- | --- |
-| **Branch colleague** | Branch / Retail / B | Branch device | Uniform (optional, after Contracting); Branch induction (mandatory, Timer Day 1); Cash-handling training (mandatory, Timer Day 8) |
-| **Software engineer** | Software engineering / Technology / C | Developer device | Engineering community intro (optional, Timer Day 1) |
-| **Executive** | Executive / Group Functions / G | Executive device | Welcome from sponsoring exec (mandatory, after "Cleared to start") |
+| **Branch colleague B** | Branch / Retail / B | Branch device | Uniform (optional, after Contracting); Branch induction (mandatory, Timer Day 1); Cash-handling training (mandatory, Timer Day 8) |
+| **Software engineer D** | Software engineering / Technology / D | Developer device | Engineering community intro (optional, Timer Day 1) |
+| **Executive X** | Executive / Group Functions / X | Executive device | Welcome from sponsoring exec (mandatory, after "Cleared to start") |
 | **Infrastructure engineer E** (`pw-infra-e`) | Modern Workplace / Infrastructure engineer / Technology / E | Developer device | Privileged access request (mandatory, no Dependency, so it waits on ServiceNow from the day it is applied); Lab environment (mandatory, after Privileged access request and Timer Day 1); Equipment request (mandatory, no Dependency, so it waits on ServiceNow, synthetic reference REQ0041207, and a Notification tells the starter when ServiceNow reports it complete, simulated). Hard Stop deadline also stops Lab environment |
 
 Bob after HR applies `pw-infra-e` at T and the Demo clock moves 21 days: Privileged access request waiting 21 days, Usual Range 19 to 28, not overdue; "Cleared to start" Container incomplete; Pulse check (Day 14) held by its Timer; the On failed Hard Stop on Pre-employment checks is armed; Modern Workplace team access package is in the library for Hannah to add. Checked by `src/db/files.test.ts`.

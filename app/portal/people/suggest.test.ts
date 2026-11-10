@@ -3,7 +3,7 @@ import { suggestPathway } from './suggest';
 
 const PATHWAYS = [
   { id: 'pw-branch', tags: { jobFamily: 'Branch', platform: 'Retail', grade: 'B' } },
-  { id: 'pw-engineer', tags: { jobFamily: 'Software engineering', platform: 'Technology', grade: 'C' } },
+  { id: 'pw-engineer', tags: { jobFamily: 'Software engineering', platform: 'Technology', grade: 'D' } },
   { id: 'pw-infra-e', tags: { jobFamily: 'Modern Workplace', role: 'Infrastructure engineer', platform: 'Technology', grade: 'E' } },
 ];
 

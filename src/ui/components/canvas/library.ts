@@ -11,7 +11,7 @@ export const STAGES: { id: StageId; label: string }[] = [
 export const TAG_LISTS: { key: keyof Tags; label: string; values: string[] }[] = [
   { key: 'jobFamily', label: 'Job family', values: ['Branch', 'Software engineering', 'Executive', 'Modern Workplace', 'HR', 'IT'] },
   { key: 'role', label: 'Role', values: ['Customer service colleague', 'Software engineer', 'Infrastructure engineer', 'Managing director', 'Executive assistant', 'Line manager'] },
-  { key: 'grade', label: 'Grade', values: ['A', 'B', 'C', 'D', 'E', 'F', 'G'] },
+  { key: 'grade', label: 'Grade', values: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'X'] },
   { key: 'platform', label: 'Platform', values: ['Retail', 'Technology', 'Group Functions'] },
   { key: 'location', label: 'Location', values: ['Cardiff', 'Leeds', 'London', 'Edinburgh'] },
 ];
