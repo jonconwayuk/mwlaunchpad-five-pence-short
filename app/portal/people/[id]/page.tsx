@@ -30,7 +30,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
   const applied = getAppliedPathway(id);
   const state = applied ? computeState(buildEngineInput(id)) : undefined;
   const hrTasks = state?.tasks.filter((t) => t.owner === 'hr') ?? [];
-  const pathways = listPathways().filter((p) => p.liveVersion != null).map((p) => ({ id: p.id, title: p.title, tags: p.tags }));
+  const pathways = listPathways().filter((p) => p.liveVersion != null).map((p) => ({ id: p.id, title: p.title, tags: p.tags, semver: getPathwayVersionSemver(p.id, p.liveVersion!) }));
   const suggested = suggestPathway(person.tags, pathways);
   const others = listPersons().filter((p) => p.id !== id);
   const delegate = others.find((p) => p.id === person.delegateId);
@@ -47,7 +47,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
       {state && state.needsDecisions.length > 0 && <NeedsDecisionPanel personId={id} decisions={state.needsDecisions} />}
 
       <h2 className={h2}>{applied ? 'Change the Pathway' : 'Apply a Pathway'}</h2>
-      <ApplyPathway personId={id} firstName={person.name.split(' ')[0]} suggestedId={suggested?.id}
+      <ApplyPathway personId={id} firstName={person.name.split(' ')[0]} suggestedId={suggested?.id} personTags={person.tags}
         pathways={[...(suggested ? [suggested] : []), ...pathways.filter((p) => p !== suggested)]} />
 
       <h2 className={h2}>Applied Pathway{applied && `: ${applied.snapshot.title} version ${getPathwayVersionSemver(applied.snapshot.pathwayId, applied.snapshot.version) ?? applied.snapshot.version}`}</h2>

@@ -90,7 +90,7 @@ export function ApplyPathway({ personId, firstName, suggestedId, pathways, perso
                 <p className="mt-1 text-[13px] text-muted">{TAG_ORDER.map((k) => p.tags[k]).filter(Boolean).join(' · ') || 'No tags'}</p>
                 <p className="text-[13px] text-muted">{summaries[p.id] ?? ' '}</p>
               </div>
-              <button type="button" className="shrink-0 rounded-[4px] bg-heritage px-4 py-2 text-paper hover:bg-racing active:translate-y-[1px]" onClick={() => apply(p)}>Apply pathway</button>
+              <button type="button" className="shrink-0 rounded-[4px] bg-heritage px-4 py-2 text-paper hover:bg-racing active:translate-y-[1px]" aria-label={`Apply ${p.title}`} onClick={() => apply(p)}>Apply pathway</button>
             </li>
           ))}
         </ul>

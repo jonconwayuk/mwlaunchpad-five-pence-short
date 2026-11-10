@@ -26,6 +26,12 @@ describe('filtersToLoosen', () => {
   it('names the filter whose removal brings results back', () => {
     expect(filtersToLoosen(LIST, 'infra', { ...NO_FILTERS, grade: 'D' })).toEqual(['grade']);
   });
+  it('names only the filters that matter when two are set', () => {
+    expect(filtersToLoosen(LIST, '', { jobFamily: 'Branch', grade: 'E', location: '' })).toEqual(['jobFamily', 'grade']);
+  });
+  it('names nothing when a filter is set but clearing it changes nothing', () => {
+    expect(filtersToLoosen(LIST, 'zzz', { ...NO_FILTERS, grade: 'E' })).toEqual([]);
+  });
   it('names nothing when the typed words match no Pathway at all', () => {
     expect(filtersToLoosen(LIST, 'zzz', { ...NO_FILTERS, grade: 'D' })).toEqual([]);
   });

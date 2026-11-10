@@ -89,3 +89,9 @@
 11:57 W2 P4 implementer sonnet: edit an Applied Pathway
 11:57 W2 I1 implementer sonnet: Insights search and filters
 11:59 W2 P1-review reviewer sonnet: review P1 commit (decision 45)
+12:00 W2 P2-review reviewer opus: review P2 commit (new route taking input, decision 45)
+12:00 W2 P3-review reviewer sonnet: review P3 commit (decision 45)
+12:01 W2 P4-review reviewer opus: review P4 commit (server rules, ADR-0002)
+12:01 W2 P4-browser checker sonnet: click-through of Edit this pathway on Bob in a browser
+12:01 W2 P3-fix implementer sonnet: P3 review NICE 1,4 incl. page.tsx props
+12:01 W2 I1-review reviewer sonnet: review I1 commit (decision 45)
