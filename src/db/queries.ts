@@ -178,6 +178,11 @@ export const getPathwaySemver = (id: string): string | undefined =>
   db.select({ semver: s.pathwayVersions.semver }).from(s.pathwayVersions).where(eq(s.pathwayVersions.pathwayId, id))
     .orderBy(desc(s.pathwayVersions.version)).get()?.semver ?? undefined;
 
+/** The semver of one published version: Applied Pathways pin the integer, People shows this. */
+export const getPathwayVersionSemver = (id: string, version: number): string | undefined =>
+  db.select({ semver: s.pathwayVersions.semver }).from(s.pathwayVersions)
+    .where(and(eq(s.pathwayVersions.pathwayId, id), eq(s.pathwayVersions.version, version))).get()?.semver ?? undefined;
+
 /** publishPathway plus a semantic version on top of the integer one. The first publish is 1.0.0. */
 export function publishPathwaySemver(id: string, bump: SemverBump = 'minor'): { version: number; semver: string } {
   return db.transaction(() => {

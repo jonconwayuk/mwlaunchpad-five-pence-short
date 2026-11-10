@@ -1,5 +1,5 @@
 import { notFound } from 'next/navigation';
-import { buildEngineInput, getAppliedPathway, getPerson, listManualReminders, listPathways, listPersons } from '@/src/db/queries';
+import { buildEngineInput, getAppliedPathway, getPathwayVersionSemver, getPerson, listManualReminders, listPathways, listPersons } from '@/src/db/queries';
 import { computeState } from '@/src/engine';
 import type { ItemState, StageId } from '@/src/engine';
 import { STAGES, STAGE_LABEL, shortDate } from '@/src/ui/components/starter/format';
@@ -49,7 +49,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
       <ApplyPathway personId={id} firstName={person.name.split(' ')[0]} suggestedId={suggested?.id}
         pathways={[...(suggested ? [suggested] : []), ...pathways.filter((p) => p !== suggested)]} />
 
-      <h2 className={h2}>Applied Pathway{applied && `: ${applied.snapshot.title} v${applied.snapshot.version}`}</h2>
+      <h2 className={h2}>Applied Pathway{applied && `: ${applied.snapshot.title} version ${getPathwayVersionSemver(applied.snapshot.pathwayId, applied.snapshot.version) ?? applied.snapshot.version}`}</h2>
       {state ? STAGES.map((stage: StageId) => {
         const items = state.items.filter((i) => i.stage === stage);
         return items.length === 0 ? null : (

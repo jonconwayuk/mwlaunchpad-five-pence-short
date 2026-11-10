@@ -47,3 +47,13 @@ describe('applyPathway', () => {
     expect(m.q.buildEngineInput('person-a').hardStopDecisions).toEqual([]);
   });
 });
+
+describe('getPathwayVersionSemver', () => {
+  it('names the pinned version semantically, when HR applies a Pathway after a New content publish, so People shows 1.1.0 not v2', () => {
+    m.seedMod.seed();
+    expect(m.q.publishPathwaySemver('pw-infra-e', 'minor')).toEqual({ version: 2, semver: '1.1.0' });
+    m.q.applyPathway('pw-infra-e', 'person-bob', '2026-11-10');
+    const applied = m.q.getAppliedPathway('person-bob')!;
+    expect(m.q.getPathwayVersionSemver(applied.snapshot.pathwayId, applied.snapshot.version)).toBe('1.1.0');
+  });
+});
