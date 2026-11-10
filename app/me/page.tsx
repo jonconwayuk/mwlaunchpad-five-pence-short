@@ -1,3 +1,5 @@
+import { StarterPreview } from '@/src/ui/components/starter/StarterPreview';
+
 export default function Page() {
-  return <main className="p-4">Starter Preview</main>;
+  return <StarterPreview />;
 }
