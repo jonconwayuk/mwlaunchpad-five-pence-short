@@ -1,0 +1,12 @@
+Wave G post-G1-fix gate, 10:48, HEAD b306b21, clean worktree
+
+ Test Files  18 passed (18)
+      Tests  168 passed (168)
+   Start at  10:48:11
+   Duration  637ms (tests 77%, import 14%, transform 8%, worker 2%)
+
+
+
+ƒ  (Dynamic)  server-rendered on demand
+
+Smoke on :3089: apply pw-infra-e to person-bob ok; /portal/{people,journeys,pathways,insights,agents} /me /team all 200.
