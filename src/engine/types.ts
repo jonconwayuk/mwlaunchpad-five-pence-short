@@ -111,6 +111,13 @@ export interface ItemState {
   unmetDependencies: DependencyRef[];
   whileYouWait?: string;
   addedBy?: { personId: string; name: string };
+  /** Every Action in order, for the expandable rows. Filtered per viewer: no automations for the starter, absent for a Buddy. */
+  actions?: ActionStep[];
+}
+
+export interface ActionStep {
+  id: string; type: ActionType; label: string; owner?: ActorRole;
+  state: 'done' | 'current' | 'upcoming'; doneAt?: ISODate;
 }
 
 export interface ContainerState {
