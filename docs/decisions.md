@@ -455,3 +455,8 @@ Numbered once, in order, never renumbered or deleted. A reversed decision gets a
 - **Spec:** Design.MD goes to 1.5. D13 item 8 now puts the inputs control on `/me` as a labelled demo shortcut, starter view only.
 - **Process:** the `anthropic-skills:phase-workflow` skill was not installed this session, so the repo copy `docs/workflow/phase-workflow.md` was used, with the owner's approval.
 - **Why:** owner instruction.
+
+### 49. Push the Skip (Demo) work to origin
+
+- **Decided:** the owner asked for commits 83da62b (Skip (Demo), decision 48) and e5dc9b1 (ledger) to be pushed to `origin main`. The independent review passed, and `npm run check` passed in a clean worktree (218 tests).
+- **Why:** owner instruction. This sits outside decision 11's wave-gate pre-authorisation, so it is recorded here.
