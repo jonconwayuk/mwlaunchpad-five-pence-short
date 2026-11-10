@@ -1,0 +1,2 @@
+# time | task | role | model | brief
+09:03 | A1 | implementer | sonnet | Scaffold Next 15 app, tokens, engine types/loops verbatim, fixtures, fixture-backed /api/state, stubs

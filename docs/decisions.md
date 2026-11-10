@@ -10,7 +10,7 @@ One row per `BUILD-PLAN.md` task (waves A to E), updated as each phase lands. Th
 
 | Build plan item | Status | Evidence or decision |
 | --- | --- | --- |
-| A1 Scaffold, tokens, engine contract, fixtures | In progress | |
+| A1 Scaffold, tokens, engine contract, fixtures | In progress (gate green, review pending) | `docs/evidence/launchpad-build/A1/` |
 | B1 Pathway engine and Vitest tests | Not started | |
 | B2 Database, seed data and mocked adapters | Not started | |
 | B3 Starter Preview | Not started | |
@@ -115,3 +115,15 @@ Numbered once, in order, never renumbered or deleted. A reversed decision gets a
 - **Decided:** We carry on without `anthropic-skills:phase-workflow` and `frontend-design`, neither of which is in this session's installed skills list. The workflow is followed from its repo copy, `docs/workflow/phase-workflow.md`. Frontend tasks use `taste-skill:design-taste-frontend` and `engineering-skills:senior-frontend` instead. All the other listed sets are installed: `engineering-skills:*`, `ponytail:*`, `mattpocock-skills:*`, `taste-skill:design-taste-frontend` and the built-in `security-review`.
 - **Why:** The owner told us to record a missing skill and carry on, not stop.
 - **Evidence:** The installed skills list in the build session, 10 Nov 2026 09:02.
+
+### 14. The three engine signatures live in their implementation files, not in types.ts
+
+- **Decided:** `src/engine/types.ts` is section 4.2 verbatim, apart from the three bodiless `export function` declarations at the end. Those fail `tsc` because an overload has no implementation, so they live in `computeState.ts`, `availability.ts` and `loops.ts`, as the comment in section 4.2 already says.
+- **Why:** The brief's verbatim text does not compile. Taking this fallback keeps the contract and the gate green.
+- **Evidence:** `docs/evidence/launchpad-build/A1/`.
+
+### 15. The A1 review runs alongside wave B
+
+- **Decided:** A1's gate (`npm run check` and `npm run build`) was green at 09:05, so wave A was committed and pushed then. Its independent reviewer runs at the same time as the wave B implementers. Any finding becomes a scoped fix in wave B's gate.
+- **Why:** The 127-minute critical path, started at 09:03, already ends after the 10:58 stop. Holding wave B back for a review of transcribed scaffold code would cost about ten minutes on that path.
+- **Evidence:** This entry; the delegation ledger.
