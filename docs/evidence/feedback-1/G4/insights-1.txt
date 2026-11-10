@@ -1,0 +1,135 @@
+width 1280 scrollWidth 1280
+Simulated date 10 Nov 2026
+View
+Onboarding Studio
+Joiner
+Manager
+Buddy
+Person
+Bob Warwick
+Alex Morgan
+Sam Okafor
+Dana Whitfield
+Layout
+Phone
+Desktop
+
+Onboarding Studio
+
+Journeys
+Pathways
+People
+Insights
+Agent library
+Demo controls
+Plus 1 day
+Plus 1 week
+Set date
+Alex Morgan
+Sam Okafor
+Dana Whitfield
+Bob Warwick
+Offer accepted
+Plus 3 weeks
+Day 1
+Day 14
+Day 30
+Alex Morgan: Pre-employment checks
+Simulate passed
+Simulate failed
+Simulate returned
+Reset demo
+Insights
+
+How long onboarding usually takes, across 80 past starters in the Onboarding Stage.
+
+All Stages
+Pre-contract
+Pre-employment
+Onboarding
+First 30 days
+Pathway
+All Pathways
+Branch colleague
+Software engineer
+Executive
+Infrastructure engineer E
+How long each Pathway takes
+
+From a starter's first Journey to their last in the Onboarding Stage. The dot is the middle starter; the shaded band is the usual range, the middle half of starters.
+
+Executive
+Executive
+usually 4 to 11 days
+Infrastructure engineer E
+Modern Workplace
+usually 5 to 10 days
+Branch colleague
+Branch
+usually 4 to 12 days
+Software engineer
+Software engineering
+usually 5 to 12 days
+0
+10
+20
+Which Pathways take longer, and where
+
+Each business area by role. Business area is based on the starter's job family.
+
+Software engineer starters in Software engineering take longest: usually 4 to 12 days.
+
+Customer service colleague
+Branch
+usually 4 to 12 days
+Line manager
+Branch
+usually 6 to 12 days
+Executive assistant
+Executive
+usually 4 to 11 days
+Managing director
+Executive
+usually 4 to 11 days
+Line manager
+Modern Workplace
+usually 5 to 11 days
+Infrastructure engineer
+Modern Workplace
+usually 5 to 10 days
+Software engineer
+Software engineering
+usually 4 to 12 days
+Line manager
+Software engineering
+usually 5 to 9 days
+0
+10
+20
+Journeys by business area, role and grade
+
+Each dot is one business area: the middle Journey Duration for that group. Choose a Journey to see its full spread.
+
+Business area
+Role
+Grade
+Welcome from sponsoring exec
+Onboarding
+Longest: Executive, 8 days
+Lab environment
+Onboarding
+Longest: Modern Workplace, 8 days
+Branch induction
+Onboarding
+Longest: Branch, 7 days
+Engineering community intro
+Onboarding
+Longest: Software engineering, 7 days
+0
+5
+10
+One Journey up close
+
+Choose a Journey above to see how long it usually takes.
+
+Built from synthetic history: made-up past starters, not real people.

@@ -1,0 +1,174 @@
+width 1280 scrollWidth 1280
+Simulated date 10 Nov 2026
+View
+Onboarding Studio
+Joiner
+Manager
+Buddy
+Person
+Bob Warwick
+Alex Morgan
+Sam Okafor
+Dana Whitfield
+Layout
+Phone
+Desktop
+
+Onboarding Studio
+
+Journeys
+Pathways
+People
+Insights
+Agent library
+Demo controls
+Plus 1 day
+Plus 1 week
+Set date
+Alex Morgan
+Sam Okafor
+Dana Whitfield
+Bob Warwick
+Offer accepted
+Plus 3 weeks
+Day 1
+Day 14
+Day 30
+Alex Morgan: Pre-employment checks
+Simulate passed
+Simulate failed
+Simulate returned
+Reset demo
+Insights
+
+How long onboarding usually takes, across 80 past starters in all four Stages.
+
+All Stages
+Pre-contract
+Pre-employment
+Onboarding
+First 30 days
+Pathway
+All Pathways
+Branch colleague
+Software engineer
+Executive
+Infrastructure engineer E
+How long each Pathway takes
+
+From a starter's first Journey to their last in all four Stages. The dot is the middle starter; the shaded band is the usual range, the middle half of starters.
+
+Infrastructure engineer E
+Modern Workplace
+usually 27 to 35 days
+Software engineer
+Software engineering
+usually 22 to 35 days
+Executive
+Executive
+usually 26 to 35 days
+Branch colleague
+Branch
+usually 22 to 35 days
+0
+20
+40
+Which Pathways take longer, and where
+
+Each business area by role. Business area is based on the starter's job family.
+
+Managing director starters in Executive take longest: usually 33 to 38 days.
+
+Line manager
+Branch
+usually 23 to 35 days
+Customer service colleague
+Branch
+usually 22 to 34 days
+Managing director
+Executive
+usually 33 to 38 days
+Executive assistant
+Executive
+usually 24 to 29 days
+Line manager
+Modern Workplace
+usually 28 to 35 days
+Infrastructure engineer
+Modern Workplace
+usually 23 to 39 days
+Software engineer
+Software engineering
+usually 26 to 35 days
+Line manager
+Software engineering
+usually 22 to 32 days
+0
+20
+40
+Journeys by business area, role and grade
+
+Each dot is one business area: the middle Journey Duration for that group. Choose a Journey to see its full spread.
+
+Business area
+Role
+Grade
+Pre-employment checks
+Pre-employment
+Longest: Modern Workplace, 34 days
+Privileged access request
+Pre-employment
+Longest: Modern Workplace, 24 days
+Payroll
+Pre-employment
+Longest: Executive, 22 days
+ID creation (photo)
+Pre-employment
+Longest: Branch, 9 days
+Contracting
+Pre-contract
+Longest: Branch, 9 days
+Branch device
+Pre-employment
+Longest: Branch, 8 days
+Manager ready
+Pre-employment
+Longest: Software engineering, 10 days
+Meet your buddy
+Pre-employment
+Longest: Branch, 11 days
+Pulse check
+First 30 days
+Longest: Branch, 9 days
+Developer device
+Pre-employment
+Longest: Modern Workplace, 9 days
+Welcome from sponsoring exec
+Onboarding
+Longest: Executive, 8 days
+Lab environment
+Onboarding
+Longest: Modern Workplace, 8 days
+Branch induction
+Onboarding
+Longest: Branch, 7 days
+Cash-handling training
+First 30 days
+Longest: Branch, 7 days
+Engineering community intro
+Onboarding
+Longest: Software engineering, 7 days
+Executive device
+Pre-employment
+Longest: Executive, 7 days
+Uniform (Merch distribution)
+Pre-employment
+Longest: Branch, 5 days
+0
+20
+40
+One Journey up close
+
+Choose a Journey above to see how long it usually takes.
+
+Built from synthetic history: made-up past starters, not real people.
