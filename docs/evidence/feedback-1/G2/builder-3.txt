@@ -1,0 +1,173 @@
+width 1280 scrollWidth 1280
+Simulated date 10 Nov 2026
+View
+Onboarding Studio
+Joiner
+Manager
+Buddy
+Person
+Bob Warwick
+Alex Morgan
+Sam Okafor
+Dana Whitfield
+Layout
+Phone
+Desktop
+
+Onboarding Studio
+
+Journeys
+Pathways
+People
+Insights
+Agent library
+Demo controls
+Plus 1 day
+Plus 1 week
+Set date
+Alex Morgan
+Sam Okafor
+Dana Whitfield
+Bob Warwick
+Offer accepted
+Plus 3 weeks
+Day 1
+Day 14
+Day 30
+Alex Morgan: Pre-employment checks
+Simulate passed
+Simulate failed
+Simulate returned
+Reset demo
+Back to the Journey library
+Developer device
+Admin only — for engineers
+Title
+Description
+Owner team
+Stage
+Pre-contract
+Pre-employment
+Onboarding
+First 30 days
+Job family
+None
+Branch
+Software engineering
+Executive
+Modern Workplace
+HR
+IT
+Role
+None
+Customer service colleague
+Software engineer
+Infrastructure engineer
+Managing director
+Executive assistant
+Line manager
+Grade
+None
+A
+B
+C
+D
+E
+F
+G
+Platform
+None
+Retail
+Technology
+Group Functions
+Location
+None
+Cardiff
+Leeds
+London
+Edinburgh
+While you wait message
+This Journey declares an Outcome
+Actions
+::
+1. Choose
+Flag answers at or below 
+ Starter only
+Move up
+Move down
+Remove
+::
+2. Hidden automation
+Connector 
+None (mocked)
+Oracle
+ServiceNow
+Workday
+Operation 
+createPrivilegedAccessRequest
+requestAccessPackage
+provisionLabEnvironment
+ Sets the Outcome
+Move up
+Move down
+Remove
+Read
+Notification
+Task
+Hidden automation
+Choose
+Provide
+Add an action
+
+Published version 1.2.0 and wrote journeys/j-device-dev.json
+
+Publish
+Connected repository
+
+Points at the journeys/ folder in this repository.
+
+Repository
+This repository
+Branch
+main
+Folder
+journeys/
+Last sync
+At the last Reset demo
+Sync from repository
+View as code
+
+journeys/j-device-dev.json, exactly as it is on disk
+
+{
+  "id": "j-device-dev",
+  "semver": "1.2.0",
+  "title": "Developer device",
+  "description": "Choose and receive your high-spec device.",
+  "ownerTeam": "IT",
+  "stage": "pre-employment",
+  "tags": {
+    "jobFamily": "Software engineering"
+  },
+  "declaresOutcome": false,
+  "actions": [
+    {
+      "id": "j-device-dev-a1",
+      "type": "choose",
+      "label": "Choose your high-spec device",
+      "owner": "starter",
+      "options": [
+        "Laptop 16 inch",
+        "Laptop 14 inch"
+      ]
+    },
+    {
+      "id": "j-device-dev-a2",
+      "type": "automation",
+      "label": "Order your device",
+      "connector": "servicenow",
+      "operation": "requestAccessPackage"
+    }
+  ]
+}
+

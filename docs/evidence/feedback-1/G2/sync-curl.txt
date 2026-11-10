@@ -1,0 +1,12 @@
+# 1. File named zz-test-journey.json (as briefed): the loader requires ids to start with j-, so sync refuses it and changes nothing
+{"ok":false,"error":"journeys/zz-test-journey.json is not valid: ✖ Invalid string: must match pattern /^j-[a-z0-9-]+$/\n  → at id"}
+# 2. Same file as j-zz-test-journey.json
+{"ok":true,"data":{"added":["j-zz-test-journey"],"updated":[],"summary":"1 added, 0 updated","syncedOn":"2026-11-10"}}
+# GET /api/journeys contains it:
+"id":"j-zz-test-journey","version":1,"title":"Sync test journey"
+# 3. Edit its semver to 1.1.0 and sync again
+{"ok":true,"data":{"added":[],"updated":["j-zz-test-journey"],"summary":"0 added, 1 updated","syncedOn":"2026-11-10"}}
+# 4. Path traversal on View as code
+{"ok":false,"error":"That is not a Journey id."}
+{"ok":false,"error":"This Journey has no file in journeys/ yet."}
+# file deleted; git status journeys/:

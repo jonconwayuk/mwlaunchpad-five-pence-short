@@ -8,11 +8,11 @@ export const STAGES: { id: StageId; label: string }[] = [
 ];
 export const stageLabel = (id: StageId) => STAGES.find((s) => s.id === id)?.label ?? id;
 
-// SEED-DATA.md section 1
+// SEED-DATA.md section 1 (same lists as src/db/files.ts, which validates the Journey files)
 export const TAG_LISTS: Record<keyof Tags, string[]> = {
-  jobFamily: ['Branch', 'Software engineering', 'Executive', 'HR', 'IT'],
-  role: ['Customer service colleague', 'Software engineer', 'Managing director', 'Executive assistant', 'Line manager'],
-  grade: ['Colleague', 'Manager', 'Senior manager', 'Executive'],
+  jobFamily: ['Branch', 'Software engineering', 'Executive', 'Modern Workplace', 'HR', 'IT'],
+  role: ['Customer service colleague', 'Software engineer', 'Infrastructure engineer', 'Managing director', 'Executive assistant', 'Line manager'],
+  grade: ['A', 'B', 'C', 'D', 'E', 'F', 'G'],
   platform: ['Retail', 'Technology', 'Group Functions'],
   location: ['Cardiff', 'Leeds', 'London', 'Edinburgh'],
 };

@@ -19,6 +19,8 @@ export interface ActionDef {
   options?: string[];             // choose
   flagAtOrBelow?: number;         // choose: raises a Line Manager Task
   setsOutcome?: boolean;          // automation
+  connector?: string;             // automation: a connectors/ manifest id, always with operation
+  operation?: string;             // automation: an operation name in that manifest
 }
 
 export interface JourneyDef {

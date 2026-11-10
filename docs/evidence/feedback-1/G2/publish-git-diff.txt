@@ -1,0 +1,23 @@
+diff --git a/journeys/j-device-dev.json b/journeys/j-device-dev.json
+index 0a80ffa..7d8fd4b 100644
+--- a/journeys/j-device-dev.json
++++ b/journeys/j-device-dev.json
+@@ -1,6 +1,6 @@
+ {
+   "id": "j-device-dev",
+-  "semver": "1.0.0",
++  "semver": "1.2.0",
+   "title": "Developer device",
+   "description": "Choose and receive your high-spec device.",
+   "ownerTeam": "IT",
+@@ -23,7 +23,9 @@
+     {
+       "id": "j-device-dev-a2",
+       "type": "automation",
+-      "label": "Order your device"
++      "label": "Order your device",
++      "connector": "servicenow",
++      "operation": "requestAccessPackage"
+     }
+   ]
+ }

@@ -1,0 +1,181 @@
+width 1280 scrollWidth 1280
+Simulated date 10 Nov 2026
+View
+Onboarding Studio
+Joiner
+Manager
+Buddy
+Person
+Bob Warwick
+Alex Morgan
+Sam Okafor
+Dana Whitfield
+Layout
+Phone
+Desktop
+
+Onboarding Studio
+
+Journeys
+Pathways
+People
+Insights
+Agent library
+Demo controls
+Plus 1 day
+Plus 1 week
+Set date
+Alex Morgan
+Sam Okafor
+Dana Whitfield
+Bob Warwick
+Offer accepted
+Plus 3 weeks
+Day 1
+Day 14
+Day 30
+Alex Morgan: Pre-employment checks
+Simulate passed
+Simulate failed
+Simulate returned
+Reset demo
+Journey library
+Admin only — for engineers
+New journey
+
+Every Journey a Pathway can use: what it is, what it does and who owns it. Open one to see its Actions.
+
+Search
+Stage
+All
+Pre-contract
+Pre-employment
+Onboarding
+First 30 days
+Job family
+All
+Branch
+Software engineering
+Executive
+Modern Workplace
+HR
+IT
+Role
+All
+Customer service colleague
+Software engineer
+Infrastructure engineer
+Managing director
+Executive assistant
+Line manager
+Grade
+All
+A
+B
+C
+D
+E
+F
+G
+Platform
+All
+Retail
+Technology
+Group Functions
+Location
+All
+Cardiff
+Leeds
+London
+Edinburgh
+
+22 of 22 Journeys
+
+Branch device
+v1.0.0
+Choose and receive your device.
+Owned by IT. Pre-employment.
+Branch induction
+v1.0.0
+Your first week in the branch.
+Owned by Retail. Onboarding.
+Cash-handling training
+v1.0.0
+Learn to handle cash safely.
+Owned by Retail. First 30 days.
+Contracting
+v1.0.0
+Read and sign your contract.
+Owned by HR. Pre-contract.
+Developer device
+v1.0.0
+Choose and receive your high-spec device.
+Owned by IT. Pre-employment.
+Engineering community intro
+v1.0.0
+Meet the engineering community.
+Owned by Technology. Onboarding.
+Executive device
+v1.0.0
+Choose and receive your device.
+Owned by IT. Pre-employment.
+ID creation (photo)
+v1.0.0
+Your photo for your building pass.
+Owned by Security. Pre-employment.
+In-person events calendar
+v1.0.0
+Events near you.
+Owned by HR. Onboarding.
+Lab environment
+v1.0.0
+Your own lab to build and test in, paid for from your team cost centre.
+Owned by Modern Workplace. Onboarding.
+Manager ready
+v1.0.0
+Your Line Manager gets ready for you.
+Owned by HR. Pre-employment.
+Meet your buddy
+v1.0.0
+Say hello to your buddy.
+Owned by HR. Pre-employment.
+Modern Workplace team access package
+v1.0.0
+Team channels, shared mailboxes and the on-call rota for Modern Workplace.
+Owned by Modern Workplace. Pre-employment.
+Payments squad access package
+v1.0.0
+Access to the Payments squad systems.
+Owned by Technology. Pre-employment.
+Payroll
+v1.0.0
+Give us the details we need to pay you.
+Owned by HR. Pre-employment.
+Pre-employment checks
+v1.0.0
+Right to work, proof of address and vetting.
+Owned by HR. Pre-employment.
+Privileged access request
+v1.0.0
+Admin rights for the infrastructure you will look after, approved by Security.
+Owned by Modern Workplace. Pre-employment.
+Pulse check
+v1.0.0
+A quick check on how it is going.
+Owned by HR. First 30 days.
+Start delay engagement
+v1.0.0
+Staying in touch while you wait.
+Owned by HR. Pre-employment.
+Sync test journey
+v1.1.0
+A synthetic Journey dropped into the folder to prove sync.
+Owned by IT. Onboarding.
+Uniform (Merch distribution)
+v1.0.0
+Choose your uniform size.
+Owned by Retail. Pre-employment.
+Welcome from sponsoring exec
+v1.0.0
+A welcome from your sponsoring executive.
+Owned by Executive office. Onboarding.

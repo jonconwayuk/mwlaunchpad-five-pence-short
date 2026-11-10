@@ -1,6 +1,7 @@
 'use client';
 import { useRouter } from 'next/navigation';
-import { useRef, useState } from 'react';
+import Link from 'next/link';
+import { useEffect, useRef, useState } from 'react';
 import type { ActionDef, ActionType, JourneyDef, Tags } from '@/src/engine/types';
 import { ACTION_TYPES, STAGES, TAG_KEYS, TAG_LABELS, TAG_LISTS } from './constants';
 
@@ -11,14 +12,28 @@ const blank: Draft = {
 const slug = (t: string) => t.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 const field = 'h-8 rounded-sm border border-hairline bg-paper px-2 text-[13px]';
 const label = 'flex flex-col gap-1 text-[13px]';
+type Bump = 'patch' | 'minor' | 'major';
+interface Connector { id: string; name: string; operations: { name: string; description: string }[] }
+const BUMPS = [['patch', 'Fix', 'Corrects something small'], ['minor', 'New content', 'Adds or changes Actions'], ['major', 'Breaking change', 'Changes what the Journey does']] as const;
+const panel = 'rounded-sm border border-[var(--hairline)] bg-paper p-3 text-[13px]';
 const btn = 'rounded-sm border border-hairline bg-paper px-2 py-1 text-[13px] disabled:text-muted';
 
-export function JourneyBuilder({ initial }: { initial?: JourneyDef }) {
+/** Admin only: engineers edit the Journey here, and Publish writes journeys/<id>.json in this repository. */
+export function JourneyBuilder({ initial, code: onDisk, branch }: { initial?: JourneyDef; code?: { file: string; text: string }; branch: string }) {
   const router = useRouter();
   const [d, setD] = useState<Draft>(initial ?? blank);
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
   const [addType, setAddType] = useState<ActionType>('task');
+  const [asking, setAsking] = useState(false);
+  const [notice, setNotice] = useState('');
+  const [sync, setSync] = useState<{ summary: string; syncedOn: string } | null>(null);
+  const [code, setCode] = useState(onDisk);
+  const [connectors, setConnectors] = useState<Connector[]>([]);
+  useEffect(() => {
+    void fetch('/api/connectors').then((r) => r.json() as Promise<{ ok: boolean; data?: Connector[] }>)
+      .then((j) => setConnectors(j.data ?? []), () => setError('Could not load the connectors'));
+  }, []);
   const dragFrom = useRef<number | null>(null);
   const isNew = !initial;
   const set = <K extends keyof Draft>(k: K, v: Draft[K]) => setD((p) => ({ ...p, [k]: v }));
@@ -35,20 +50,35 @@ export function JourneyBuilder({ initial }: { initial?: JourneyDef }) {
     const extra: Partial<ActionDef> = addType === 'choose' ? { options: ['Yes', 'No'] } : {};
     set('actions', [...d.actions, { id: `a${n}`, type: addType, label: '', ...extra }]);
   };
-  const publish = async () => {
+  const syncNow = async () => {
     setBusy(true); setError('');
-    const body = { ...d, id: isNew ? slug(d.title) : d.id, isNew };
-    const res = await fetch('/api/journeys', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) });
-    const json = (await res.json()) as { ok: boolean; error?: string };
+    const json = (await (await fetch('/api/journeys/sync', { method: 'POST' })).json()) as { ok: boolean; error?: string; data?: { summary: string; syncedOn: string } };
     setBusy(false);
-    if (!json.ok) return setError(json.error ?? 'Could not publish');
-    router.push('/portal/journeys');
+    if (!json.ok || !json.data) return setError(json.error ?? 'Could not sync');
+    setSync(json.data);
     router.refresh();
+  };
+  const publish = async (bump: Bump) => {
+    setBusy(true); setError(''); setAsking(false);
+    const body = { ...d, id: isNew ? `j-${slug(d.title)}` : d.id, isNew, bump };
+    const res = await fetch('/api/journeys', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) });
+    const json = (await res.json()) as { ok: boolean; error?: string; data?: { id: string; semver?: string; file: string } };
+    setBusy(false);
+    if (!json.ok || !json.data) return setError(json.error ?? 'Could not publish');
+    setNotice(`Published version ${json.data.semver ?? ''} and wrote ${json.data.file}`);
+    if (isNew) return router.push(`/portal/journeys/${json.data.id}`);
+    const file = (await (await fetch(`/api/journeys/${json.data.id}/file`)).json()) as { data?: { file: string; text: string } };
+    setCode(file.data);
   };
 
   return (
-    <main className="max-w-3xl p-6">
-      <h1 className="mb-4 text-[26px]">{isNew ? 'New journey' : d.title}</h1>
+    <main className="grid max-w-6xl gap-6 p-6 lg:grid-cols-[minmax(0,1fr)_22rem]">
+     <div>
+      <Link href="/portal/journeys" className="text-[13px] text-heritage underline">Back to the Journey library</Link>
+      <div className="mb-4 mt-2 flex flex-wrap items-center gap-3">
+        <h1 className="text-[26px]">{isNew ? 'New journey' : d.title}</h1>
+        <span className="rounded-sm border border-[var(--hairline)] px-2 py-0.5 text-[13px] text-muted">Admin only — for engineers</span>
+      </div>
       <div className="grid grid-cols-2 gap-3">
         <label className={`${label} col-span-2`}>Title
           <input className={field} value={d.title} onChange={(e) => set('title', e.target.value)} /></label>
@@ -100,7 +130,18 @@ export function JourneyBuilder({ initial }: { initial?: JourneyDef }) {
               <label className="text-[13px]"><input type="checkbox" checked={!!a.starterOnly} onChange={(e) => setAction(i, { starterOnly: e.target.checked })} /> Starter only</label>
             )}
             {a.type === 'automation' && (
-              <label className="text-[13px]"><input type="checkbox" checked={!!a.setsOutcome} onChange={(e) => setAction(i, { setsOutcome: e.target.checked })} /> Sets the Outcome</label>
+              <>
+                <label className="text-[13px]">Connector{' '}
+                  <select className={field} value={a.connector ?? ''}
+                    onChange={(e) => setAction(i, { connector: e.target.value || undefined, operation: e.target.value ? connectors.find((c) => c.id === e.target.value)?.operations[0]?.name : undefined })}>
+                    <option value="">None (mocked)</option>{connectors.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}</select></label>
+                {a.connector && (
+                  <label className="text-[13px]">Operation{' '}
+                    <select className={field} value={a.operation ?? ''} onChange={(e) => setAction(i, { operation: e.target.value })}>
+                      {connectors.find((c) => c.id === a.connector)?.operations.map((o) => <option key={o.name} value={o.name} title={o.description}>{o.name}</option>)}</select></label>
+                )}
+                <label className="text-[13px]"><input type="checkbox" checked={!!a.setsOutcome} onChange={(e) => setAction(i, { setsOutcome: e.target.checked })} /> Sets the Outcome</label>
+              </>
             )}
             <button className={btn} disabled={i === 0} onClick={() => move(i, i - 1)}>Move up</button>
             <button className={btn} disabled={i === d.actions.length - 1} onClick={() => move(i, i + 1)}>Move down</button>
@@ -115,7 +156,45 @@ export function JourneyBuilder({ initial }: { initial?: JourneyDef }) {
       </div>
 
       {error && <p role="alert" className="mt-4 text-[13px] font-medium text-charcoal">{error}</p>}
-      <button className="mt-6 rounded-sm bg-racing px-4 py-2 text-[13px] text-paper disabled:opacity-60" disabled={busy} onClick={publish}>Publish</button>
+      {notice && <p role="status" className="mt-4 text-[13px] font-medium text-heritage">{notice}</p>}
+      <div className="relative mt-6 inline-block">
+        <button className="rounded-sm bg-racing px-4 py-2 text-[13px] text-paper disabled:opacity-60" disabled={busy} aria-expanded={asking}
+          onClick={() => (isNew ? void publish('minor') : setAsking(!asking))}>Publish</button>
+        {asking && (
+          <div role="dialog" aria-label="What kind of change is this?" className="absolute bottom-full left-0 z-20 mb-1 grid w-[260px] gap-1 rounded-sm border border-[var(--hairline)] bg-paper p-3">
+            <p className="mb-1 text-[15px] font-medium">What kind of change is this?</p>
+            {BUMPS.map(([bump, text, hint]) => (
+              <button key={bump} type="button" onClick={() => void publish(bump)} className="rounded-sm border border-hairline px-2 py-1.5 text-left hover:border-heritage">
+                <span className="block text-[15px]">{text}</span><span className="block text-[13px] text-muted">{hint}</span>
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+     </div>
+
+      <aside className="flex flex-col gap-4">
+        <section className={panel} aria-labelledby="repo-h">
+          <h2 id="repo-h" className="mb-2 text-[15px] font-medium">Connected repository</h2>
+          <p className="mb-2 text-muted">Points at the journeys/ folder in this repository.</p>
+          <dl className="grid grid-cols-[6rem_1fr] gap-y-1">
+            <dt className="text-muted">Repository</dt><dd>This repository</dd>
+            <dt className="text-muted">Branch</dt><dd>{branch}</dd>
+            <dt className="text-muted">Folder</dt><dd>journeys/</dd>
+            <dt className="text-muted">Last sync</dt><dd>{sync ? `${sync.syncedOn} (Simulated date): ${sync.summary}` : 'At the last Reset demo'}</dd>
+          </dl>
+          <button className={`${btn} mt-3`} disabled={busy} onClick={() => void syncNow()}>Sync from repository</button>
+        </section>
+        <details className={panel} open={!!code}>
+          <summary className="cursor-pointer text-[15px] font-medium">View as code</summary>
+          {code ? (
+            <>
+              <p className="my-2 text-muted">{code.file}, exactly as it is on disk</p>
+              <pre className="max-h-[32rem] overflow-auto bg-[var(--paper-2)] p-2 font-mono text-[12px] leading-snug">{code.text}</pre>
+            </>
+          ) : <p className="mt-2 text-muted">Publish this Journey to write its file.</p>}
+        </details>
+      </aside>
     </main>
   );
 }
