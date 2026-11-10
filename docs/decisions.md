@@ -386,3 +386,13 @@ Numbered once, in order, never renumbered or deleted. A reversed decision gets a
 - **Decided:** the team's demo instance on port 3000 now serves `main` at fc05924 (the final gate), freshly seeded, replacing the `pre-feedback-1` build. Port 3001 serves the same build.
 - **Why:** the owner said "switch to port 3000" at 11:17 on 10 Nov, which is the "until I say" in the feedback brief.
 - **Evidence:** `docs/evidence/feedback-1/final-gate.txt`. The `pre-feedback-1` tag is unchanged, so the old build can still be restored.
+
+### 44. Feedback 1 additions 17 to 19 accepted; Design.MD 1.3
+
+- **Decided:**
+  - The owner's three additions are accepted as owner instruction. They're recorded verbatim as items 17 to 19 in `docs/feedback/2026-11-10-feedback-1.md`.
+  - They run as three concurrent tasks, A17, B18 and C19, on separate files (plan: "Additions 17 to 19"). Then H2 walks the new steps and updates the script.
+  - No task was in flight at 11:30, so nothing waits on a commit.
+  - Design.MD goes to 1.3: D13 item 8 adds the two Demo controls, and D11 states the help chat's reach and the Teams handover wording. `GLOSSARY.md` needs no change: there are no new terms, "Integrations" is a section heading, and "trigger" stays on the Avoid list. No ADR changes.
+- **Why:** owner instruction. The split lets all three run at once without two owners on any file. Item 17 reuses the existing Notification Action and Simulate path, so the engine gets no new mechanism.
+- **Evidence:** `docs/evidence/feedback-1/{A17,B18,C19,H2}/`.

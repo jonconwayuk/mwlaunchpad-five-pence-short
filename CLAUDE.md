@@ -46,7 +46,7 @@ The deliberate omissions in `Design.MD` D15 are out of scope. Don't build login,
 
 ### Source of truth
 
-- `Design.MD`: the agreed spec, version 1.2. Follow it; don't redesign it. It changes only by explicit amendment: bump its version, add a line to its amendment log, record a decision in `docs/decisions.md`, and update `GLOSSARY.md` and any ADR it names in the same change. Where the spec and the code disagree, record it as a finding; never quietly change either to match.
+- `Design.MD`: the agreed spec, version 1.3. Follow it; don't redesign it. It changes only by explicit amendment: bump its version, add a line to its amendment log, record a decision in `docs/decisions.md`, and update `GLOSSARY.md` and any ADR it names in the same change. Where the spec and the code disagree, record it as a finding; never quietly change either to match.
 - `GLOSSARY.md`: use its terms exactly in code, UI copy and docs (Journey, Action, Pathway, Pathway Item, Dependency, Container, Timer, Addition and so on). Don't use the words it lists under "Avoid": for example, it's Container, not Milestone. Nothing matches Journeys or Pathways to a Person automatically (ADR-0004), so there are no Conditions; tags are only for browsing and filtering.
 - `BUILD-PLAN.md`: the agreed waves, briefs, file ownership and closed decisions B1 to B17 (decision 9).
 - `SEED-DATA.md`: the synthetic data the demo and the engine tests use (draft, for team review). Reset demo reseeds exactly this.
