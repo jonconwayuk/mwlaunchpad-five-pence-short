@@ -138,10 +138,25 @@ export function JourneyBuilder({ initial, code: onDisk, branch }: { initial?: Jo
                 {a.connector && (
                   <label className="text-[13px]">Operation{' '}
                     <select className={field} value={a.operation ?? ''} onChange={(e) => setAction(i, { operation: e.target.value })}>
-                      {connectors.find((c) => c.id === a.connector)?.operations.map((o) => <option key={o.name} value={o.name} title={o.description}>{o.name}</option>)}</select></label>
+                      {connectors.find((c) => c.id === a.connector)?.operations.map((o) => <option key={o.name} value={o.name} title={o.name}>{o.description}</option>)}</select></label>
                 )}
                 <label className="text-[13px]"><input type="checkbox" checked={!!a.setsOutcome} onChange={(e) => setAction(i, { setsOutcome: e.target.checked })} /> Sets the Outcome</label>
               </>
+            )}
+            {a.type === 'automation' && (
+              <section aria-label="Integrations" className="basis-full rounded-sm border border-hairline px-3 py-2 text-[13px]">
+                <h3 className="font-medium">Integrations (simulated)</h3>
+                {a.connector ? (
+                  <>
+                    <p>{connectors.find((c) => c.id === a.connector)?.name ?? a.connector}: {connectors.find((c) => c.id === a.connector)?.operations.find((o) => o.name === a.operation)?.description ?? a.operation}.</p>
+                    <p className="text-muted">
+                      {d.actions[i + 1]?.type === 'notification' && (d.actions[i + 1]?.owner ?? 'starter') === 'starter'
+                        ? `When ${connectors.find((c) => c.id === a.connector)?.name ?? a.connector} reports the request complete, notify the joiner.`
+                        : 'This Journey moves on when the system reports back. Add a Notification after it to tell the joiner.'}
+                    </p>
+                  </>
+                ) : <p className="text-muted">Pick a connector above to link this Action to a system. Nothing is connected for real.</p>}
+              </section>
             )}
             <button className={btn} disabled={i === 0} onClick={() => move(i, i - 1)}>Move up</button>
             <button className={btn} disabled={i === d.actions.length - 1} onClick={() => move(i, i + 1)}>Move down</button>

@@ -1,0 +1,6 @@
+A17 results (synthetic data only)
+- Applied pw-infra-e to person-bob; POST /api/simulate i-equipment / j-equipment-request-a1 result returned: ok.
+- /api/state (starter) then holds the Notification "Your equipment request is complete. ServiceNow has confirmed it (simulated)."
+- me-1280.png, me-390.png: banner is first on screen and "Need help?" sits directly under the heading, both without scrolling. (390 capture is cropped on the right: headless Chrome enforces a minimum window width.)
+- builder-integrations.png: Integrations (simulated) section on the Hidden automation reads "When ServiceNow reports the request complete, notify the joiner."
+- Vitest: 182 pass (4 new in app/api/simulate/route.test.ts).

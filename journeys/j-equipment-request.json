@@ -1,0 +1,29 @@
+{
+  "id": "j-equipment-request",
+  "semver": "1.0.0",
+  "title": "Equipment request",
+  "description": "Your equipment request is raised for you in ServiceNow (synthetic reference REQ0041207). You will be told here when it is complete.",
+  "ownerTeam": "Modern Workplace",
+  "stage": "pre-employment",
+  "tags": {
+    "jobFamily": "Modern Workplace",
+    "role": "Infrastructure engineer",
+    "grade": "E"
+  },
+  "declaresOutcome": false,
+  "actions": [
+    {
+      "id": "j-equipment-request-a1",
+      "type": "automation",
+      "label": "Equipment request",
+      "connector": "servicenow",
+      "operation": "raiseEquipmentRequest"
+    },
+    {
+      "id": "j-equipment-request-a2",
+      "type": "notification",
+      "label": "Your equipment request is complete. ServiceNow has confirmed it (simulated).",
+      "owner": "starter"
+    }
+  ]
+}

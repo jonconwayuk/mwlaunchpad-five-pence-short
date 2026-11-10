@@ -9,7 +9,7 @@ export interface LiveData {
   personas: { id: string; name: string }[];
 }
 
-/** Polls GET /api/state every 3000 ms, paused while the tab is hidden. */
+/** Polls GET /api/state every 2500 ms, paused while the tab is hidden. */
 // `query` is a raw query string including the leading '?', e.g. '?as=starter'.
 export function useLiveState(query = '') {
   const [state, setState] = useState<LiveData | null>(null);
@@ -31,7 +31,7 @@ export function useLiveState(query = '') {
       if (document.visibilityState === 'visible') void refresh().catch(() => undefined);
     };
     tick();
-    const id = setInterval(tick, 3000);
+    const id = setInterval(tick, 2500);
     document.addEventListener('visibilitychange', tick);
     return () => {
       clearInterval(id);

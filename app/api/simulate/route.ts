@@ -3,6 +3,7 @@ import { ApiError, apiHandler } from '@/src/lib/apiHandler';
 import { buildEngineInput, getAppliedPathway, getPerson, recordActionProgress } from '@/src/db/queries';
 import { computeState } from '@/src/engine';
 import { getToday } from '@/src/lib/clock';
+import { mockServiceNow } from '@/src/adapters/mockServiceNow';
 
 export const dynamic = 'force-dynamic';
 
@@ -20,6 +21,7 @@ export const POST = apiHandler(async (req: Request) => {
   const a = item?.currentAction;
   if (!a || a.id !== actionId || a.type !== 'automation') throw new ApiError('That Journey is not waiting on a Hidden automation.');
   if (result !== 'returned' && !a.setsOutcome) throw new ApiError('This automation does not set an Outcome. Use Simulate returned.');
+  if (a.connector === 'servicenow') mockServiceNow.simulate(personId, result); // the mocked ServiceNow records what it reported
   recordActionProgress(personId, { itemId, actionId, state: 'done', doneAt: getToday(), automationResult: result });
   return { engineState: computeState(buildEngineInput(personId)) };
 });

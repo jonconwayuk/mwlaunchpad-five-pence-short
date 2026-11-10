@@ -5,7 +5,7 @@ import { useLiveState } from '@/src/lib/useLiveState';
 import { STAGES, STAGE_LABEL, shortDate } from './format';
 import { JourneyRow, type Act } from './JourneyRow';
 import { WaitingCard } from './WaitingCard';
-import { Reminders } from './Reminders';
+import { LatestNotification, Reminders } from './Reminders';
 import { HelpChat } from '@/src/ui/components/chat/HelpChat';
 
 // The Blocked Flag only picks the card and is never shown. After wave C the server strips it for a
@@ -76,6 +76,7 @@ export function StarterPreview({ query = '?as=starter', personId, firstName = 't
 
   return (
     <main className={PAGE}>
+      <LatestNotification notifications={es.notifications} />
       {actingFor && <ActingFor name={actingFor} />}
       <header>
         <h1 className="font-serif text-[27px] leading-tight text-racing">{STAGE_LABEL[es.stage]}</h1>
@@ -84,13 +85,12 @@ export function StarterPreview({ query = '?as=starter', personId, firstName = 't
         )}
       </header>
 
-      {/* Phone: one column in DOM order. Desktop: the plan on the left, waiting card and help on the right. */}
+      {/* Phone: one column in DOM order, help first so it is never held behind Actions. Desktop: the plan on the left, help and waiting card on the right. */}
       <div className="@5xl:grid @5xl:grid-cols-[minmax(0,1fr)_360px] @5xl:grid-rows-[auto_1fr] @5xl:items-start @5xl:gap-x-12">
-        {waiting.length > 0 && (
-          <div className="mt-6 flex flex-col gap-4 @5xl:col-start-2 @5xl:row-start-1">
-            {waiting.map((i) => <WaitingCard key={i.itemId} item={i} />)}
-          </div>
-        )}
+        <div className="mt-6 flex flex-col gap-4 @5xl:col-start-2 @5xl:row-start-1">
+          <HelpChat personId={person.id} />
+          {waiting.map((i) => <WaitingCard key={i.itemId} item={i} />)}
+        </div>
 
         <div className="@5xl:col-start-1 @5xl:row-span-2 @5xl:row-start-1">
           {es.nextUp && <p className="mt-6 max-w-[62ch]">{es.nextUp.line}</p>}
@@ -123,9 +123,8 @@ export function StarterPreview({ query = '?as=starter', personId, firstName = 't
           })}
         </div>
 
-        <div className="mt-8 flex flex-col gap-8 @5xl:col-start-2 @5xl:row-start-2">
+        <div className="mt-8 @5xl:col-start-2 @5xl:row-start-2">
           <Reminders notifications={es.notifications} />
-          <HelpChat personId={person.id} />
         </div>
       </div>
     </main>

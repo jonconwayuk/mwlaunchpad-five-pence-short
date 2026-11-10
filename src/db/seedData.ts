@@ -95,6 +95,7 @@ const TEMPLATES: Template[] = [
     extraItems: [
       ['i-priv-access', 'j-priv-access', true, []],
       ['i-lab', 'j-lab-env', true, [dep.item('i-priv-access'), dep.timer('t-day-1')]],
+      ['i-equipment', 'j-equipment-request', true, []],
     ],
     extraTimers: [startTimer('t-day-1', 'Day 1', 0)], stops: ['i-lab'] },
 ];

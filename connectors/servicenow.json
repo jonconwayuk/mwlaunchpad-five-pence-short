@@ -39,6 +39,18 @@
         "ticketId",
         "result"
       ]
+    },
+    {
+      "name": "raiseEquipmentRequest",
+      "description": "Raise an equipment request",
+      "inputs": [
+        "personId",
+        "items"
+      ],
+      "outputs": [
+        "ticketId",
+        "result"
+      ]
     }
   ]
 }

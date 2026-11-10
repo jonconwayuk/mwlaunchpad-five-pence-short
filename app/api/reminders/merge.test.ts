@@ -26,3 +26,12 @@ describe('withManualReminders', () => {
     expect(view('buddy').notifications.some((x) => x.message === 'Have you received your merch?')).toBe(false);
   });
 });
+
+describe('withManualReminders order', () => {
+  it('puts the engine Notification last, when a manual Reminder and a ServiceNow Notification share a day', () => {
+    const base = m.engine.computeState(m.q.buildEngineInput('person-c'));
+    const sn = { to: 'starter' as const, message: 'Your equipment request is complete.', sentOn: '2026-11-10' };
+    const out = m.merge.withManualReminders({ ...base, notifications: [sn] }, [{ message: 'Nudge', at: '2026-11-10' }]);
+    expect(out.notifications.map((n) => n.message)).toEqual(['Nudge', sn.message]);
+  });
+});

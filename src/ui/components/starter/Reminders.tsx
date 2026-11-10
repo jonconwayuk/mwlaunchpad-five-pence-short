@@ -18,3 +18,15 @@ export function Reminders({ notifications }: { notifications: EngineState['notif
     </section>
   );
 }
+
+/** The newest Notification as a banner at the very top of the joiner's screen. */
+export function LatestNotification({ notifications }: { notifications: EngineState['notifications'] }) {
+  const n = notifications[notifications.length - 1];
+  if (!n) return null;
+  return (
+    <div role="status" aria-live="polite" data-testid="latest-notification" className="mb-6 rounded-[12px] border border-heritage bg-calm px-5 py-4">
+      <p className="text-[13px] font-medium text-racing">New for you, {shortDate(n.sentOn)}</p>
+      <p className="mt-1 text-[19px] font-medium text-racing">{n.message}</p>
+    </div>
+  );
+}
