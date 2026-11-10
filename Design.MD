@@ -6,23 +6,31 @@ The agreed spec for the LaunchPad '26 build. `Ideas.MD` is an early raw log, sup
 
 Agreed by the team on 9 Nov 2026 (Day 1). Every design question is settled except the demo script, which is parked. Later changes to an agreed decision should update this file, the glossary and any ADR it names.
 
-**Version 1.1** (10 Nov 2026). This is the project's spec under the phase workflow (`docs/workflow/phase-workflow.md`). It changes only by explicit amendment: each amendment bumps the version, adds a line to the amendment log below, and gets an entry in `docs/decisions.md`.
+**Version 1.2** (10 Nov 2026). This is the project's spec under the phase workflow (`docs/workflow/phase-workflow.md`). It changes only by explicit amendment: each amendment bumps the version, adds a line to the amendment log below, and gets an entry in `docs/decisions.md`.
 
 | Version | Date | Amendment | Decision |
 | --- | --- | --- | --- |
 | 1.0 | 9 Nov 2026 | Agreed by the team (Day 1) | 1 |
 | 1.1 | 10 Nov 2026 | Third pass (ba12e57): Pathways are templates HR chooses and applies, with no automatic matching (ADR-0004 replaced); Milestone renamed Container; Additions; phasing moved to `BUILD-PLAN.md`; seed data drafted in `SEED-DATA.md` | 8 |
+| 1.2 | 10 Nov 2026 | Mentor feedback 1: Onboarding Studio replaces Admin Portal as the visible name; grades A to G; Journeys and connectors as config as code (ADR-0007); Agent library; scripted help chat with simulated Teams handover; Insights; Delegate management in People; Send a Reminder now; semantic versions; single-window view and switchers; Bob Warwick as protagonist; D15 omissions narrowed | 31 to 37 |
 
 ## Decisions
 
-### D1. The demo centres on the Admin Portal (ADR-0003)
+### D1. The demo centres on the Onboarding Studio (ADR-0003)
+
+_Named "Admin Portal" before version 1.2; the route `/portal` is unchanged._
 
 - The lead is the back end and pathway-building logic, with a front end: Journey library and builder, Pathway builder, applying a Pathway to a Person, observability. This is the USP.
 - Built as one web app with three faces:
-  - **Admin Portal**: laptop-first, not designed for phones. Journey library and builder, Pathway library and builder, apply, observability.
+  - **Onboarding Studio**: laptop-first, not designed for phones. Journey library and builder, Pathway library and builder, apply, observability.
   - **Starter Preview**: mobile. The starter is the consumer.
   - **Manager and Buddy view**: mobile. Seeing what is left and acting on it.
-- Changes in the Admin Portal show up live in the mobile faces.
+- Changes in the Onboarding Studio show up live in the mobile faces.
+- **One window** (1.2): the whole demo runs in one desktop browser. A switcher chooses desktop or phone layout, and a persona switcher chooses joiner, manager or buddy.
+- **Bob Warwick is the protagonist** (1.2): a Modern Workplace infrastructure engineer, grade E, with HR applying "Infrastructure engineer E" from the People tab. Every headline moment is shown through Bob. Personas A, B and C (D12) stay as supporting data.
+- **Insights** (1.2): observability pages in the Onboarding Studio. A manager sees each starter's progress; a high-level view shows Pathway completion times across starters and business areas, filterable by Stage, with drill-down into a Journey and a Journey completion view by business area, role and grade.
+- **Agent library** (1.2): scripted agents, defined as files in `agents/`, listed in the Onboarding Studio.
+- **Connected repository** (1.2): the Journey builder shows the folders its Journeys, connectors and agents are loaded from (ADR-0007).
 - Any screenshots or mock-ups use synthetic data only.
 - The presentation includes a slide on the advantages of building a web app.
 
@@ -30,7 +38,7 @@ Agreed by the team on 9 Nov 2026 (Day 1). Every design question is settled excep
 
 - A phone page that shows an Applied Pathway as the starter would see it: Journeys grouped by Stage, each with its Journey Status, plus a "what's next" line.
 - It is interactive: the starter (or their Delegate) completes their own Actions here: acknowledging Read cards, ticking Tasks, making Choose selections, submitting Provide forms and answering Pulse checks (D3, D9, D12a). No chat.
-- Built live from the back end, so a change made in the Admin Portal or by a Line Manager shows up in the preview. The key demo move is in D2.
+- Built live from the back end, so a change made in the Onboarding Studio or by a Line Manager shows up in the preview. The key demo move is in D2.
 - Static mock-ups only for things we won't build, such as chat or the Teams integration, and labelled as mock-ups.
 
 ### D2. Pathways are templates that HR chooses and applies (ADR-0004)
@@ -38,7 +46,7 @@ Agreed by the team on 9 Nov 2026 (Day 1). Every design question is settled excep
 - A **Journey** is a discrete, self-contained set of instructions. It holds no dependencies and never refers to another Journey. It is built once and reused in many Pathways.
 - A **Pathway** is a template built by HR from library Journeys. It holds all the logic between them, on Pathway Items: **Dependencies** (which Pathway Items, Containers or Timers must be met first) and whether each Journey is **mandatory**.
 - Sequence and parallel work both come from Dependencies: anything with no unmet Dependencies is available.
-- **Nothing is matched automatically.** There are no rules that pick Journeys or Pathways for a Person. Journeys and Pathways are tagged with job family, role, grade, platform and location (fixed lists maintained by HR) only so that people can browse and filter the library.
+- **Nothing is matched automatically.** There are no rules that pick Journeys or Pathways for a Person. Journeys and Pathways are tagged with job family, role, grade, platform and location (fixed lists maintained by HR; grades run A to G) only so that people can browse and filter the library.
 - **How a starter gets their pack:**
   1. HR builds and publishes Pathway templates for the kinds of starter they see, such as "Branch colleague" or "Software engineer".
   2. When a new starter is selected, HR filters the Pathway library by the starter's job family, role, grade, platform and location, and applies the right template. This creates the starter's Applied Pathway.
@@ -51,7 +59,7 @@ Agreed by the team on 9 Nov 2026 (Day 1). Every design question is settled excep
 
 - This is the core USP, so it gets the build time. It must be intuitive to a non-technical HR Partner.
 - HR drags Journeys from the library onto a canvas to make Pathway Items, and draws connections between them to set Dependencies.
-- Laptop only (Admin Portal).
+- Laptop only (Onboarding Studio).
 
 ### D2a-i. Canvas interaction rules
 
@@ -62,6 +70,7 @@ Agreed by the team on 9 Nov 2026 (Day 1). Every design question is settled excep
 5. **Cues on cards**: a lock icon for mandatory.
 6. **Pathway tags**: HR tags the Pathway itself with job family, role, grade, platform and location from the fixed lists, so it can be found in the Pathway library.
 7. **Save Draft and Publish**: edits save as a draft automatically; Publish creates a new Pathway version. Nothing reaches starters until published.
+8. **Journey filters** (1.2): the canvas's Journey library panel filters by Stage, job family, grade (A to G) and location.
 
 ### D2a-ii. Three more canvas building blocks
 
@@ -89,6 +98,7 @@ Besides Journey cards, the canvas has three kinds of block:
 4. One firing, no repeats. A second Reminder needs a second Timer.
 5. When an Anchor's date moves (such as a slipped start date), every Timer anchored to it moves too (SQ-06, "When Plans Change").
 6. The starter sees a friendly date ("Flex benefits open on 24 Nov"), never the Timer itself.
+7. **Send a Reminder now** (1.2): for optional prompts that no date decides, such as the company car scheme or "Have you received your merch?", the HR Partner or Line Manager sends a manual Reminder on a starter's page. It reaches the starter's notifications like a Timer's Reminder, is not tied to a Timer, and does not repeat.
 
 Timers count against the Demo clock (D13), never the real clock.
 
@@ -98,13 +108,15 @@ Timers count against the Demo clock (D13), never the real clock.
 - A Journey can optionally declare an **Outcome**: Passed or Failed (Vetting, Right to work, pre-employment checks). A Failed Outcome still counts as Done for Journey Duration.
 1. Two triggers: **On Failed** (drag from a card's Failed dot to the Hard Stop) and **On deadline** (a Timer plus the card it watches; fires only if that card isn't Done in time).
 2. What it stops is drawn: HR connects it to cards or Containers, or ticks "Stop the whole pathway". Stopped items become **Cancelled**: no Reminders, nothing downstream unlocks.
-3. A person always confirms. It raises a **Needs decision** alert for the HR Partner in the Admin Portal and for the Line Manager in the Manager and Buddy view (never the Buddy). Either can **Confirm**, **Extend** (deadlines only; moves the Timer) or **Dismiss** (proceed, with a reason). The reason is recorded for audit.
+3. A person always confirms. It raises a **Needs decision** alert for the HR Partner in the Onboarding Studio and for the Line Manager in the Manager and Buddy view (never the Buddy). Either can **Confirm**, **Extend** (deadlines only; moves the Timer) or **Dismiss** (proceed, with a reason). The reason is recorded for audit.
 4. The starter never hears it from the app first. While pending, nothing changes for them; after Confirm the Starter Preview says only that their recruiter will be in touch.
 5. No undo in the demo: re-apply the Pathway instead. Reinstating cancelled items is a production-path item.
 
 ### D3. A Journey is made of Actions
 
 A Journey is a header (title, description, owner, version, Stage, tags), an ordered list of **Actions**, and an optional **"while you wait" message** shown on the starter's waiting card (D6). It may declare a pass/fail **Outcome** (D2f).
+
+**Config as code (1.2).** Journeys are JSON files in `journeys/`, and the Workday, ServiceNow and Oracle **connectors** are JSON files in `connectors/`, both in this repo. The seed and a runtime sync load them, validating each file; the database is a cache. A Hidden automation Action may name a connector and an **Operation** to call. The Journey builder offers a connector's Operations to choose from. The detail is in ADR-0007.
 
 | Type | What it does | Who acts | Done when |
 | --- | --- | --- | --- |
@@ -125,7 +137,7 @@ Rules:
 3. **Journey Duration** runs from the moment the Journey becomes available (leaves Not started) to the moment it is Done.
 4. A **To-do list** is a roll-up of each person's open Tasks across all Journeys and starters, shown in their view. It is not an Action type.
 5. The Journey builder is a simple laptop form: header plus a drag-to-reorder Action list.
-6. An AI Agent attaches to a Journey as a "Need help?" button, not as an Action type.
+6. An Agent attaches to a Journey as a "Need help?" button, not as an Action type.
 
 ### D3a. Data kept and data passed through
 
@@ -156,13 +168,14 @@ Rules:
 2. Only the Pathway's owner publishes a new live version.
 3. Applying snapshots the live version (and its Journey versions, ADR-0001) and records it against the Person as their Applied Pathway. Later changes reach only starters it is applied to afterwards.
 4. The only per-starter change is an **addition**: a Journey added to one starter's Applied Pathway by HR or their Line Manager (D4a). It is recorded on that starter only, never saved as a new Pathway, never reusable, never in the library.
-5. No forks, no merging. If the same addition keeps being made, the owner publishes it in the live version.
+5. **Semantic versions** (1.2): the Journey and Pathway builders show a semantic version (major.minor.patch) on top of the integer version. A fix bumps the patch, an addition the minor, a breaking change the major. The integer version stays the pin that Applied Pathways record (ADR-0001, ADR-0002 unchanged).
+6. No forks, no merging. If the same addition keeps being made, the owner publishes it in the live version.
 
 ### D4a. Adding Journeys to one starter
 
 - **HR or the starter's Line Manager** can add **as many Journeys as they like** to that starter's Applied Pathway, such as scheduled events, team-level onboarding tasks, a team access package or a start delay Journey.
 - **No one can change or remove anything from the HR-published Pathway** on an Applied Pathway. If a starter needs a different Pathway, HR builds and publishes one.
-- **How a Journey is added** (Line Manager on their phone; HR on the starter's page in the Admin Portal):
+- **How a Journey is added** (Line Manager on their phone; HR on the starter's page in the Onboarding Studio):
   1. Tap **"Add a Journey"** on the starter's page.
   2. Pick from the library, filtered by tags (job family, role, grade, platform, location).
   3. Choose when it unlocks: **Now**, **After [a card]** (creates a Dependency) or **On Day N** (creates a Timer anchored to the Start date). No canvas, no arrows.
@@ -241,9 +254,10 @@ Three chains built as seed Journeys and demoed:
 
 Other chain reactions built from the same parts: overdue wait → Line Manager Task (D6); Hard Stop → "Needs decision" (D2f); assistant handover → Line Manager Task (D11).
 
-### D11. The AI Agent is mocked
+### D11. Agents are scripted
 
-- No real LLM in the build. The AI Agent stays in the model as a library item, reached from a "Need help?" button on a Journey.
+- No real LLM in the build. An **Agent** is a scripted library item defined as a file in `agents/` and listed in the **Agent library** in the Onboarding Studio (1.2). Agents are reached from a "Need help?" button on a Journey and from the help chat below.
+- **Help chat** (1.2): on the Starter Preview, a scripted chat routes a question to a named Agent from the library, and "Can I talk to someone?" hands over to the Line Manager with a **simulated Teams handover**, labelled as simulated. Routing follows the starter's chosen suggestion, not free text.
 - **A scripted mock with a real handover**:
   - "Need help?" opens a small chat panel on the Starter Preview, labelled **"Simulated assistant"**.
   - Three tappable suggested questions with pre-written answers, no free-text typing: "What should I bring on my first day?" (from the synthetic policy pack), "When will my laptop arrive?" (uses the starter's real Usual Range), and "Can I talk to someone?" (handover).
@@ -252,7 +266,9 @@ Other chain reactions built from the same parts: overdue wait → Line Manager T
 
 ### D12. Demo personas
 
-Three synthetic personas, each with a synthetic Line Manager and Buddy. HR has published one Pathway template per kind of starter, and each persona has one applied. Use people from the synthetic data pack (A-02) if it has them.
+Bob Warwick (1.2) is the demo's protagonist: a Modern Workplace infrastructure engineer, grade E, with Line Manager Hannah Price and Buddy Leo Grant, who starts with no Pathway applied. HR finds Bob in People and applies "Infrastructure engineer E". Personas A, B and C below are supporting data and keep working.
+
+Three further synthetic personas, each with a synthetic Line Manager and Buddy. HR has published one Pathway template per kind of starter, and each persona has one applied. Use people from the synthetic data pack (A-02) if it has them.
 
 | Persona | Pathway HR applies | Added for this starter | Role in the demo |
 | --- | --- | --- | --- |
@@ -272,13 +288,14 @@ Core Journeys in every template: Contracting, Payroll, Pre-employment checks, ID
 4. A Delegate sees exactly what the starter sees, on the Starter Preview with an "Acting for [name]" banner. Starter only Actions show as "Waiting for [starter]". Never Blocked Flags or check results.
 5. Everything is attributed: "Done by [Delegate] for [Starter]", visible to the Line Manager and counted in observability.
 6. Reminders go to the starter, the Delegate, or both, as the starter chooses. Default: both.
-7. One Delegate per starter, from inside the organisation. Multiple Delegates, and external supporters such as carers, are production-path items.
+7. **Managing the Delegate** (1.2): HR adds, changes or removes a starter's Delegate from the starter's row in People.
+8. One Delegate per starter, from inside the organisation. Multiple Delegates, and external supporters such as carers, are production-path items.
 
 Demo moment (Persona C): the EA, under "Acting for [Exec]", picks the exec's device and ticks two Tasks; the Pre-employment checks Provide shows "Waiting for [Exec]"; the Line Manager sees "Done by [EA] for [Exec]".
 
 ### D13. Demo clock and Demo controls
 
-1. One system-wide **simulated today**, set from a **Demo controls** panel in the Admin Portal header. Every date calculation uses it, never the real clock.
+1. One system-wide **simulated today**, set from a **Demo controls** panel in the Onboarding Studio header. Every date calculation uses it, never the real clock.
 2. Quick jumps per persona: Offer accepted, +3 weeks, Day 1, Day 14, Day 30; plus +1 day and +1 week.
 3. Moving the clock fires everything due, in date order: Timers (and their Reminders and deadlines), overdue waits (D6), Day 30 checks (D7) and Status changes.
 4. **Simulate: Passed / Failed / Returned** buttons on waiting Hidden automations, only in Demo controls, never on the mobile faces. Passed and Failed appear only on automations that set an Outcome; Returned means finished with no pass/fail result.
@@ -288,11 +305,12 @@ Demo moment (Persona C): the EA, under "Acting for [Exec]", picks the exec's dev
 
 ### D14. Stack and live updates (ADR-0006)
 
-- One **Next.js (TypeScript)** app: `/portal` (Admin Portal), `/me` (Starter Preview, also for Delegates), `/team` (Manager and Buddy view).
+- One **Next.js (TypeScript)** app: `/portal` (Onboarding Studio), `/me` (Starter Preview, also for Delegates), `/team` (Manager and Buddy view).
 - **React Flow** for the Pathway builder canvas.
 - A separate **Pathway engine** module with no UI, unit-tested with **Vitest**.
 - **SQLite** with **Drizzle** ORM, seeded with synthetic data; Reset demo reseeds.
-- **Adapter interfaces** with mock implementations for Workday, vetting, IT provisioning and merch.
+- **Adapter interfaces** with mock implementations for Workday, vetting, IT provisioning and merch. The Workday, ServiceNow and Oracle connectors are config files in `connectors/` (ADR-0007).
+- **Config as code**: `journeys/`, `connectors/` and `agents/` hold JSON files, validated on load; the database is a cache rebuilt by seed or sync (ADR-0007).
 - **Server-sent events** for live updates; fall back to polling every 3 seconds.
 - **Azure App Service, UK South**, named to the team convention; secrets in app settings. Fallback: run locally over the same network.
 
@@ -300,11 +318,11 @@ Demo moment (Persona C): the EA, under "Acting for [Exec]", picks the exec's dev
 
 Phasing and build tasks are in `BUILD-PLAN.md`. These are out of scope, stated in the README and slides as deliberate omissions:
 - Login and authentication: a persona switcher replaces login. Real sign-in (such as Entra ID) is production path.
-- Real LLM and multi-agent orchestration; two-way chat; Teams integration.
-- Real system-of-record integrations (adapters are mocked).
+- Real LLM, real Teams, real system-of-record integrations and a second git repo. The chat, the Teams handover, the Agents and the connectors are scripted or mocked and labelled as simulated (1.2).
+- Free-text two-way chat.
 - Automatic matching of Journeys or Pathways to starters; rerouting on events mid-journey; changing or removing an HR-published Pathway's items for one starter; undoing a Hard Stop; multiple or external Delegates.
 - Merging Pathway versions; "behind the live version" alerts.
 
 ## Parked
 
-- **Demo script.** The team will shape the demo later. When it does: the Day 2 private walkthrough is "10 minutes showing the working build on a phone", and the Admin Portal is laptop-only, so check with the mentor how the laptop part is treated.
+- **Demo script.** The team will shape the demo later. When it does: the Day 2 private walkthrough is "10 minutes showing the working build on a phone", and the Onboarding Studio is laptop-only, so check with the mentor how the laptop part is treated.

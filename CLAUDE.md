@@ -12,11 +12,11 @@ This file is the onboarding for the next agent. It is not a changelog. Keep it c
 | --- | --- |
 | Where have we been? | `git log`, plus `docs/feedback-history.md` (created when the first feedback sheet is executed) |
 | What is outstanding? | `docs/decisions.md` (acceptance table and decision log), plus `grep -n "OWNER-PENDING" docs/decisions.md` |
-| What is next? | Current plan: `docs/plans/2026-11-10-launchpad-build.md`, which points at `BUILD-PLAN.md` waves A to E (decision 9). |
+| What is next? | Current plans, running together (decision 31): `docs/plans/2026-11-10-launchpad-build.md` (`BUILD-PLAN.md` waves A to E, decision 9) and `docs/plans/2026-11-10-feedback-1.md` (mentor feedback 1, with the combined file-ownership table). |
 
 ## The goal: never lose sight of it
 
-We are building a **demonstrable product**. It centres on the **Pathway builder and Journey builder UI** in the Admin Portal, with **light front ends we can switch between** to show the result. The pathway-building logic and its UI are the USP, and they have to be fully built to demo building journeys and grouping journeys to build a pathway. (`Design.MD` D1, D2a; ADR-0003).
+We are building a **demonstrable product**. It centres on the **Pathway builder and Journey builder UI** in the Onboarding Studio, with **light front ends we can switch between** to show the result. The pathway-building logic and its UI are the USP, and they have to be fully built to demo building journeys and grouping journeys to build a pathway. (`Design.MD` D1, D2a; ADR-0003).
 
 Before starting any task, check that it makes that demo better. If it doesn't, don't do it, or raise it with the team first. Polish on the builder beats breadth anywhere else.
 
@@ -26,12 +26,12 @@ One Next.js web app with three faces (`Design.MD` D1, D14):
 
 | Face | Route | Device | Weight |
 | --- | --- | --- | --- |
-| **Admin Portal**: Journey library and Journey builder, drag-and-drop Pathway builder, apply a Pathway to a Person, Demo controls | `/portal` | Laptop | **Primary.** Most of the effort goes here. |
+| **Onboarding Studio** (was Admin Portal; route unchanged): Journey library and Journey builder, drag-and-drop Pathway builder, apply a Pathway to a Person, Agent library, Insights, Demo controls | `/portal` | Laptop | **Primary.** Most of the effort goes here. |
 | **Starter Preview** (also used by Delegates) | `/me` | Phone | Light. Shows the Applied Pathway built live from the back end. |
 | **Manager and Buddy view** | `/team` | Phone | Light. What's left and acting on it. |
 
-- A **persona switcher** replaces login, so we can flip between the three synthetic personas (branch colleague, software engineer, executive) and between faces during the demo.
-- Changes made in the Admin Portal must show up live in the mobile faces. That is the key demo move (`Design.MD` D2): HR filters the Pathway library and applies "Branch colleague" to Persona A and "Software engineer" to Persona B, we flip phones to show two different packs, then B's Line Manager adds a Journey and it appears live on B's phone.
+- A **persona switcher** replaces login, so we can flip between personas and between faces, all in one browser window. Bob Warwick (Modern Workplace infrastructure engineer, grade E) is the protagonist; the branch colleague, software engineer and executive personas (A, B and C) are supporting data that must keep working (decision 32) during the demo.
+- Changes made in the Onboarding Studio must show up live in the mobile faces. That is the key demo move (`Design.MD` D1, D2): HR finds Bob in People and applies "Infrastructure engineer E", the phone view shows Bob's pack, then a Line Manager adds a Journey and it appears live on Bob's phone. The earlier move ("Branch colleague" to A, "Software engineer" to B) still works.
 - The mobile faces stay light: read the Applied Pathway, complete Actions, tick Tasks. Don't build anything there that the demo doesn't need.
 
 ### Build priorities
@@ -42,11 +42,11 @@ Work in the order set in `BUILD-PLAN.md`, which is agreed and executable (decisi
 2. **P1:** Manager and Buddy view, Hard Stop end to end, Timer and Hard Stop blocks on the canvas, live updates over server-sent events, chain reactions 1 to 3.
 3. **P2 (only if ahead):** observability page, Delegate, scripted assistant, "Add a Journey" (Additions) by HR and Line Manager.
 
-The deliberate omissions in `Design.MD` D15 are out of scope. Don't build login, a real LLM, chat, Teams integration or real system-of-record integrations; use labelled mock-ups or mocked adapters instead.
+The deliberate omissions in `Design.MD` D15 are out of scope. Don't build login, a real LLM, real Teams, real system-of-record integrations or a second git repo. The help chat, the Teams handover, the Agents and the Workday, ServiceNow and Oracle connectors are scripted or mocked and labelled as simulated. Journeys, connectors and agents are config as code in `journeys/`, `connectors/` and `agents/` (ADR-0007).
 
 ### Source of truth
 
-- `Design.MD`: the agreed spec, version 1.1. Follow it; don't redesign it. It changes only by explicit amendment: bump its version, add a line to its amendment log, record a decision in `docs/decisions.md`, and update `GLOSSARY.md` and any ADR it names in the same change. Where the spec and the code disagree, record it as a finding; never quietly change either to match.
+- `Design.MD`: the agreed spec, version 1.2. Follow it; don't redesign it. It changes only by explicit amendment: bump its version, add a line to its amendment log, record a decision in `docs/decisions.md`, and update `GLOSSARY.md` and any ADR it names in the same change. Where the spec and the code disagree, record it as a finding; never quietly change either to match.
 - `GLOSSARY.md`: use its terms exactly in code, UI copy and docs (Journey, Action, Pathway, Pathway Item, Dependency, Container, Timer, Addition and so on). Don't use the words it lists under "Avoid": for example, it's Container, not Milestone. Nothing matches Journeys or Pathways to a Person automatically (ADR-0004), so there are no Conditions; tags are only for browsing and filtering.
 - `BUILD-PLAN.md`: the agreed waves, briefs, file ownership and closed decisions B1 to B17 (decision 9).
 - `SEED-DATA.md`: the synthetic data the demo and the engine tests use (draft, for team review). Reset demo reseeds exactly this.
@@ -89,7 +89,7 @@ Every task uses these skills, loaded at the point in the sequence where they app
 | **Engineering skills** (`engineering-skills:*`) | Every code task: design, implementation, testing, review and debugging. Use them alongside the engineering standards below; where a skill and the standards disagree, record it in `docs/decisions.md` rather than picking one silently. The ones this project uses most: `senior-frontend`, `senior-backend`, `senior-fullstack`, `senior-architect`, `senior-qa`, `tdd-guide`, `red-green-proof`, `code-reviewer`, `adversarial-reviewer`, `senior-devops` and `azure-cloud-architect`. |
 | **Ponytail skills** (`ponytail:*`) | Every task they cover. Check them before each task: `ponytail` (always on), `ponytail-review` for each task review, `ponytail-audit` and `ponytail-debt` at phase end. |
 | **Matt Pocock skills** (`mattpocock-skills:*`) | `tdd` for engine rules, `domain-modeling` for `GLOSSARY.md` and ADRs, `codebase-design` for module seams, `diagnosing-bugs`, `code-review`, `pr` and `writing-for-agents` (for edits to this file). |
-| **Taste skill** (`taste-skill:design-taste-frontend`) | Visual polish on the Admin Portal canvas and the mobile faces. |
+| **Taste skill** (`taste-skill:design-taste-frontend`) | Visual polish on the Onboarding Studio canvas and the mobile faces. |
 
 At the start of each session, check these are still in the installed skills list. If one is missing, stop and tell the owner rather than carrying on without it.
 

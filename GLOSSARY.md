@@ -1,6 +1,6 @@
 # New-joiner companion
 
-The LaunchPad '26 companion that takes a new joiner from unconditional offer to feeling connected and confident by Day 30. The whole onboarding journey is modelled, with the core concept as the focus. The demo leads with the internal orchestration side: the back end and pathway-building logic, with a front end over them (journey builder and library, pathway builder, observability). It is one web app with three faces: the Admin Portal (laptop-first), the Starter Preview (mobile) and the Manager and Buddy view (mobile). Changes made in the Admin Portal show up live in the mobile faces. Internal systems are mocked with synthetic data behind an interface. See ADR-0003.
+The LaunchPad '26 companion that takes a new joiner from unconditional offer to feeling connected and confident by Day 30. The whole onboarding journey is modelled, with the core concept as the focus. The demo leads with the internal orchestration side: the back end and pathway-building logic, with a front end over them (journey builder and library, pathway builder, observability). It is one web app with three faces: the Onboarding Studio (laptop-first, but it also runs in a phone-sized view), the Starter Preview (mobile) and the Manager and Buddy view (mobile). Changes made in the Onboarding Studio show up live in the mobile faces. Internal systems are mocked with synthetic data behind an interface. See ADR-0003.
 
 ## Language
 
@@ -51,7 +51,7 @@ The event a Timer counts from. One of: Offer accepted, Start date, a chosen Path
 _Avoid_: Trigger event, start point
 
 **Reminder**:
-A one-off message a Timer sends to the starter, their Line Manager or their Buddy about a chosen Pathway Item. Skipped if that Pathway Item is already Done. Never repeats.
+A one-off message a Timer sends (or an HR Partner or Line Manager sends by hand: see Send a Reminder now) to the starter, their Line Manager or their Buddy about a chosen Pathway Item. Skipped if that Pathway Item is already Done. Never repeats.
 _Avoid_: Nudge, notification, alert, chaser
 
 **Applied Pathway**:
@@ -74,9 +74,9 @@ _Avoid_: Phase, state
 Where a starter is with one Journey. One of **Not started** (locked: its Dependencies or Timer are not yet met), **In progress** (available, and the current Action belongs to someone else or a Hidden automation), **Action required** (available, and the current Action is the starter's), **Done** (every Action done, including a Failed Outcome), **Skipped** (an optional Journey the starter marked "Not for me") or **Cancelled** (stopped by a confirmed Hard Stop; sends no Reminders and unlocks nothing).
 _Avoid_: Journey state, progress
 
-**Admin Portal**:
+**Onboarding Studio**:
 The laptop-first part of the app where journey owners and HR Partners work: the Journey library and builder, the Pathway library and builder, applying Pathways to Persons, making Additions, and observability. Not designed for phones.
-_Avoid_: Console, back office, admin app
+_Avoid_: Admin Portal (the name before Design.MD 1.2), console, back office, admin app
 
 **Manager and Buddy view**:
 The mobile-friendly part of the app where a starter's Line Manager and Buddy see what is left and act on it.
@@ -99,7 +99,7 @@ A block on a Pathway that stops work when a Pathway Item ends with a Failed Outc
 _Avoid_: Termination, termination block, kill switch, cancel rule
 
 **Needs decision**:
-The alert a Hard Stop raises, shown to the HR Partner in the Admin Portal and to the Line Manager in the Manager and Buddy view, never to the Buddy or starter. Cleared when one of them chooses Confirm, Extend or Dismiss.
+The alert a Hard Stop raises, shown to the HR Partner in the Onboarding Studio and to the Line Manager in the Manager and Buddy view, never to the Buddy or starter. Cleared when one of them chooses Confirm, Extend or Dismiss.
 _Avoid_: Approval, escalation
 
 **Day N**:
@@ -119,7 +119,7 @@ The single simulated "today" that every date calculation in the demo uses. Moves
 _Avoid_: Time travel, fake date, system time
 
 **Demo controls**:
-The panel in the Admin Portal header that sets the Demo clock, simulates Hidden automation results (Passed, Failed, Returned) and resets the demo data. Never shown on the mobile faces.
+The panel in the Onboarding Studio header that sets the Demo clock, simulates Hidden automation results (Passed, Failed, Returned) and resets the demo data. Never shown on the mobile faces.
 _Avoid_: Admin tools, debug panel, god mode
 
 **Blocked Flag**:
@@ -144,20 +144,24 @@ One of four periods in the joining process. Every Journey must be tagged with ex
 Stages are the lanes on the Pathway builder canvas, group Journeys in the starter's view, and drive the high-level view in observability: how many Journeys sit in each Stage and how long each Stage took. A Stage only groups and labels: it never holds a Journey back; only Dependencies, Containers and Timers do. HR sees the formal names; the starter sees the friendly ones.
 _Avoid_: Milestone, phase, step, the six reference stages
 
-**AI Agent**:
-A separate, versioned library item that answers starters' questions at any time and hands over to a person when needed. Reached from a "Need help?" button on a Journey; it is not an Action. Mocked in the demo, not built on a real model (see Design.MD D11).
-_Avoid_: Bot, assistant, chatbot
+**Agent**:
+A scripted, versioned library item that answers a starter's question and, when needed, hands over to a person. Defined as a file in `agents/`, listed in the Agent library, and reached from a "Need help?" button on a Journey or from the help chat on the Starter Preview. Not an Action. Scripted, not built on a real model (see Design.MD D11).
+_Avoid_: AI Agent (the name before Design.MD 1.2), bot, assistant, chatbot
+
+**Agent library**:
+The Onboarding Studio page that lists the Agents. Not the Journey library.
+_Avoid_: Bot store, assistant list
 
 **HR Partner**:
-The HR person who builds and publishes Pathways in the Admin Portal, filters the Pathway library to apply the right one to each new starter, makes Additions for a starter, sets a starter's Delegate, and handles Needs decision alerts. A Pathway's **Pathway owner** is the HR Partner who alone can publish its new live version.
-_Avoid_: Admin, recruiter, HR user
+The HR person who builds and publishes Pathways in the Onboarding Studio, filters the Pathway library to apply the right one to each new starter, makes Additions for a starter, sets a starter's Delegate, and handles Needs decision alerts. A Pathway's **Pathway owner** is the HR Partner who alone can publish its new live version.
+_Avoid_: Admin, HR user. ("Recruiter" is allowed in starter-facing copy, such as "Your recruiter will be in touch"; decision 36.)
 
 **Journey owner**:
 The person who builds a Journey in the Journey builder and publishes its versions to the library. Can be from any team (HR, IT, Social). In the demo, the HR Partner persona plays this role too.
 _Avoid_: Author, creator
 
 **Library**:
-The searchable, filterable lists of published items. The **Journey library** holds Journeys (and the AI Agent), searchable by Stage and tags; HR Partners drag from it onto the Pathway builder canvas, and HR Partners and Line Managers pick from it when making an Addition. The **Pathway library** holds published Pathways, filterable by tags; HR Partners pick from it to apply a Pathway to a new starter.
+The searchable, filterable lists of published items. The **Journey library** holds Journeys (and the Agent), searchable by Stage and tags; HR Partners drag from it onto the Pathway builder canvas, and HR Partners and Line Managers pick from it when making an Addition. The **Pathway library** holds published Pathways, filterable by tags; HR Partners pick from it to apply a Pathway to a new starter.
 _Avoid_: Catalogue, store, marketplace
 
 **Line Manager**:
@@ -175,3 +179,27 @@ _Avoid_: Proxy, assistant, representative, carer
 **Starter only**:
 A setting on an Action that stops a Delegate completing it. On by default for Provide Actions and the Pulse check's Choose Actions; a journey owner can turn it off for a specific Action. A Delegate sees these as "Waiting for [starter]".
 _Avoid_: Private, restricted, personal
+
+**Connector**:
+A config file in `connectors/` describing a system the Journey builder can draw on (Workday, ServiceNow or Oracle), with the Operations it offers. Simulated in the demo: it names what a Hidden automation could call and does not reach a real system.
+_Avoid_: Plug-in, integration, API
+
+**Operation**:
+One named thing a Connector can do, chosen by a Hidden automation Action, such as "create ticket".
+_Avoid_: Endpoint, method, call
+
+**Send a Reminder now**:
+A manual Reminder that an HR Partner or Line Manager sends to a starter on request, for optional prompts no date decides, such as the company car scheme or "Have you received your merch?". Not tied to a Timer.
+_Avoid_: Trigger, nudge, chaser
+
+**Semantic version**:
+The major.minor.patch label shown on a Journey or Pathway beside its integer version. A fix bumps the patch, an addition the minor, a breaking change the major. The integer version is still the one Applied Pathways pin.
+_Avoid_: Release number, build number
+
+**Grade**:
+A tag on Journeys, Pathways and Persons, from A to G.
+_Avoid_: Level, band, seniority
+
+**Insights**:
+The Onboarding Studio pages that show starters' progress and how long Pathways and Journeys take, by Stage, business area, role and grade. Replaces the term "observability" in the interface.
+_Avoid_: Analytics, reports, dashboard
