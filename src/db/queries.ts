@@ -1,4 +1,5 @@
 import { and, desc, eq } from 'drizzle-orm';
+import { ZodError } from 'zod';
 import { db } from './client';
 import { fileToJourney, loadJourneyFiles, writeJourneyFileRaw } from './files';
 import * as s from './schema';
@@ -76,23 +77,37 @@ const canon = (v: unknown) => JSON.stringify(v, (_k, x: unknown) =>
   x && typeof x === 'object' && !Array.isArray(x) ? Object.fromEntries(Object.entries(x).sort(([a], [b]) => a.localeCompare(b))) : x);
 const content = (j: JourneyDef) => canon({ ...j, id: undefined, version: undefined, semver: undefined });
 
-/** Re-reads journeys/: a new file becomes version 1, a changed semver or content becomes the next version. */
-export function syncJourneysFromFiles(): { added: string[]; updated: string[] } {
+const cmpSemver = (a: string, b: string) => {
+  const [x, y] = [a, b].map((v) => v.split('.').map(Number));
+  return [0, 1, 2].map((i) => (x![i] ?? 0) - (y![i] ?? 0)).find((d) => d !== 0) ?? 0;
+};
+
+/**
+ * Re-reads journeys/: a new file becomes version 1, a file with a higher semver or changed content becomes the next version.
+ * A file with a lower semver, or the same semver but different content, is stale and listed in `skipped`.
+ */
+export function syncJourneysFromFiles(): { added: string[]; updated: string[]; skipped?: string[] } {
   const files = loadJourneyFiles();
   return db.transaction(() => {
     const added: string[] = [];
     const updated: string[] = [];
+    const skipped: string[] = [];
     for (const f of files) {
       const current = getJourney(f.id);
       if (!current) {
         insertJourney({ ...fileToJourney(f, 1), semver: f.semver });
         added.push(f.id);
-      } else if (getJourneySemver(f.id) !== f.semver || content(current) !== content(fileToJourney(f, 0))) {
+        continue;
+      }
+      const dbSemver = getJourneySemver(f.id);
+      const sameContent = content(current) === content(fileToJourney(f, 0));
+      const cmp = dbSemver ? cmpSemver(f.semver, dbSemver) : 1;
+      if (cmp > 0) {
         insertJourney({ ...fileToJourney(f, current.version + 1), semver: f.semver });
         updated.push(f.id);
-      }
+      } else if (cmp < 0 || !sameContent) skipped.push(f.id);
     }
-    return { added, updated };
+    return skipped.length ? { added, updated, skipped } : { added, updated };
   });
 }
 
@@ -102,8 +117,16 @@ export function writeJourneyFile(def: JourneyDef & { semver?: string }, bump: Se
   const own = rows.find((r) => r.version === def.version)?.semver;
   const prev = rows.find((r) => r.version !== def.version && r.semver)?.semver;
   const semver = def.semver ?? own ?? (prev ? bumpSemver(prev, bump) : '1.0.0');
+  let name: string;
+  try {
+    name = writeJourneyFileRaw({ ...def, semver }); // validates before writing, so a bad def changes nothing
+  } catch (e) {
+    if (!(e instanceof ZodError)) throw e;
+    const i = e.issues[0];
+    throw new Error(`That journey is not valid: ${i?.path.join('.') || 'journey'} ${i?.message ?? ''}`.trim());
+  }
   db.update(s.journeys).set({ semver }).where(and(eq(s.journeys.id, def.id), eq(s.journeys.version, def.version))).run();
-  return writeJourneyFileRaw({ ...def, semver });
+  return name;
 }
 
 export { listConnectors } from './files';

@@ -41,7 +41,11 @@ export const PERSONS: SeedPerson[] = [
 
 // Every library Journey lives in its own file under journeys/ (config as code); all are version 1 at reset.
 export const JOURNEYS: JourneyDef[] = loadJourneyFiles().map((f) => ({ ...fileToJourney(f, 1), semver: f.semver }));
-const stageOf = (journeyId: string): StageId => JOURNEYS.find((j) => j.id === journeyId)!.stage;
+const stageOf = (journeyId: string): StageId => {
+  const j = JOURNEYS.find((x) => x.id === journeyId);
+  if (!j) throw new Error(`Template uses ${journeyId} but journeys/${journeyId}.json is missing`);
+  return j.stage;
+};
 
 // ---- Pathway templates -------------------------------------------------------------------
 const LANES: StageId[] = ['pre-contract', 'pre-employment', 'onboarding', 'first-30-days'];

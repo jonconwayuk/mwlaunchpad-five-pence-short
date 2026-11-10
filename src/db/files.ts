@@ -1,6 +1,6 @@
 // Journeys and connectors as config as code: one JSON file each under journeys/ and connectors/, validated on load.
 import { readdirSync, readFileSync, writeFileSync } from 'node:fs';
-import { join } from 'node:path';
+import { join, relative } from 'node:path';
 import { z } from 'zod';
 import type { JourneyDef } from '../engine/types';
 
@@ -59,7 +59,13 @@ export const JourneyFileSchema = z.object({
 export type JourneyFile = z.infer<typeof JourneyFileSchema>;
 
 function parseFile<T extends z.ZodType<{ id: string }>>(schema: T, path: string, expectedId: string): z.infer<T> {
-  const r = schema.safeParse(JSON.parse(readFileSync(path, 'utf8')));
+  let raw: unknown;
+  try {
+    raw = JSON.parse(readFileSync(path, 'utf8'));
+  } catch (e) {
+    throw new Error(`${relative(process.cwd(), path)} is not valid JSON: ${e instanceof Error ? e.message : String(e)}`);
+  }
+  const r = schema.safeParse(raw);
   if (!r.success) throw new Error(`${path} is not valid: ${z.prettifyError(r.error)}`);
   if (r.data.id !== expectedId) throw new Error(`${path}: id ${r.data.id} must match the file name`);
   return r.data;

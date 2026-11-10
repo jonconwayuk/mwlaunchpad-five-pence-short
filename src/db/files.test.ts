@@ -1,8 +1,8 @@
 import { randomUUID } from 'node:crypto';
-import { cpSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
+import { cpSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { beforeAll, describe, expect, it } from 'vitest';
+import { beforeAll, describe, expect, it, vi } from 'vitest';
 
 process.env.DATABASE_URL = `file:/tmp/ft-${randomUUID()}.db`;
 // A copy of journeys/, so sync and write tests never touch the repo folder.
@@ -62,6 +62,51 @@ describe('Journey files', () => {
     expect(m.q.writeJourneyFile(published)).toBe('j-events.json');
     expect(JSON.parse(readFileSync(join(dir, 'j-events.json'), 'utf8'))).toMatchObject({ semver: '1.1.0', title: 'Events near you' });
     expect(m.q.syncJourneysFromFiles().updated).toEqual(['j-lab-env']); // the file changed in the test above; j-events is in step
+  });
+});
+
+describe('Journey file safety', () => {
+  it('skips a stale file, when its semver is lower than the published one', () => {
+    m.seedMod.seed();
+    const path = join(dir, 'j-events.json');
+    const old = readFileSync(path, 'utf8');
+    const published = m.q.publishJourney({ ...m.q.getJourney('j-events')!, title: 'Events v2' });
+    m.q.writeJourneyFile(published);
+    expect(m.q.getJourneySemver('j-events')).toBe('1.1.0');
+    const version = m.q.getJourney('j-events')!.version;
+    writeFileSync(path, old); // restore the 1.0.0 file
+    const r = m.q.syncJourneysFromFiles();
+    expect(r.updated).not.toContain('j-events');
+    expect(r.skipped).toContain('j-events');
+    expect(m.q.getJourney('j-events')!.version).toBe(version);
+    expect(m.q.getJourneySemver('j-events')).toBe('1.1.0');
+  });
+
+  it('names the file, when it is not valid JSON', () => {
+    const bad = join(dir, 'j-broken.json');
+    writeFileSync(bad, '{ nope');
+    expect(() => m.files.loadJourneyFiles()).toThrow(/j-broken\.json is not valid JSON: /);
+    rmSync(bad);
+  });
+
+  it('leaves the db semver unchanged, when the Journey to write is invalid', () => {
+    m.seedMod.seed();
+    const published = m.q.publishJourney({ ...m.q.getJourney('j-events')!, title: '' });
+    const before = m.q.getJourneySemver('j-events');
+    expect(() => m.q.writeJourneyFile(published)).toThrow(/^That journey is not valid: /);
+    expect(m.q.getJourneySemver('j-events')).toBe(before);
+  });
+
+  it('says which Journey is missing, when a template uses one with no file', async () => {
+    const d = mkdtempSync(join(tmpdir(), 'journeys-missing-'));
+    cpSync(dir, d, { recursive: true });
+    rmSync(join(d, 'j-payroll.json'));
+    process.env.JOURNEYS_DIR = d;
+    vi.resetModules();
+    try {
+      const sd = await import('./seedData');
+      expect(() => sd.TEMPLATES.forEach((t) => sd.buildTemplate(t))).toThrow(/Template uses j-payroll but journeys\/j-payroll\.json is missing/);
+    } finally { process.env.JOURNEYS_DIR = dir; }
   });
 });
 
