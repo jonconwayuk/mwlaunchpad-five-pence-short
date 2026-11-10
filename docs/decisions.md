@@ -380,3 +380,9 @@ Numbered once, in order, never renumbered or deleted. A reversed decision gets a
   - Both are listed in the README's known gaps.
 - **Why:** Neither one changes anything the demo shows. Each needs a schema change in `src/db` after the wave G gate, which is a risk for no visible gain.
 - **Evidence:** the wave G reviewer reports; `docs/evidence/feedback-1/`.
+
+### 43. Team demo instance moved to the final build
+
+- **Decision:** the team's demo instance on port 3000 now serves `main` at fc05924 (the final gate), freshly seeded, replacing the `pre-feedback-1` build. Port 3001 serves the same build.
+- **Why:** the owner said "switch to port 3000" at 11:2x on 10 Nov, which is the "until I say" in the feedback brief.
+- **Evidence:** `docs/evidence/feedback-1/final-gate.txt`. The `pre-feedback-1` tag is unchanged, so the old build can still be restored.
