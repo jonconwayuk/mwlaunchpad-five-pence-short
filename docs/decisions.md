@@ -383,6 +383,6 @@ Numbered once, in order, never renumbered or deleted. A reversed decision gets a
 
 ### 43. Team demo instance moved to the final build
 
-- **Decision:** the team's demo instance on port 3000 now serves `main` at fc05924 (the final gate), freshly seeded, replacing the `pre-feedback-1` build. Port 3001 serves the same build.
-- **Why:** the owner said "switch to port 3000" at 11:2x on 10 Nov, which is the "until I say" in the feedback brief.
+- **Decided:** the team's demo instance on port 3000 now serves `main` at fc05924 (the final gate), freshly seeded, replacing the `pre-feedback-1` build. Port 3001 serves the same build.
+- **Why:** the owner said "switch to port 3000" at 11:17 on 10 Nov, which is the "until I say" in the feedback brief.
 - **Evidence:** `docs/evidence/feedback-1/final-gate.txt`. The `pre-feedback-1` tag is unchanged, so the old build can still be restored.
