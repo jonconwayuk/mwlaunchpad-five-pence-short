@@ -99,7 +99,7 @@ describe('canvas model', () => {
     const base = s.items[0]!;
     const twins = {
       ...s,
-      timers: [{ id: 't-14', label: 'x', anchor: { kind: 'start-date' as const }, offsetDays: 14 }],
+      timers: [{ id: 't-14', label: 'x', anchor: { kind: 'start-date' as const }, offsetDays: 13 }],
       items: [base, { ...base, id: 'b', dependsOn: [{ kind: 'timer' as const, timerId: 't-14' }] }, { ...base, id: 'c', dependsOn: [] }],
     };
     expect(cardSubtitle(twins, twins.items[1]!)).toBe('Day 14');

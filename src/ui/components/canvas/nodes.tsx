@@ -47,6 +47,8 @@ export function JourneyNode({ data, selected, dragging }: NodeProps) {
       <span className="truncate text-[13px] leading-[1.3] text-[var(--muted)]">{subtitle}</span>
       <Handle id="right" type="source" position={Position.Right} className={dot} title="Drag to the Journey that waits for this one" />
       <Handle id="bottom" type="source" position={Position.Bottom} isConnectable={false} className={anchor} />
+      {/* Anchors the Hard Stop edge low on the left, beyond the connection radius of the left dot, so drops still connect. */}
+      <Handle id="back" type="source" position={Position.Left} isConnectable={false} className={anchor} style={{ top: '95%' }} />
     </div>
   );
 }
@@ -81,6 +83,7 @@ export function HardStopNode({ data, dragging }: NodeProps) {
   return (
     <div style={{ width: CARD_W, minHeight: HARD_STOP_H }} className={`rounded-[6px] bg-charcoal px-3 py-2 text-paper ${dragging ? 'shadow-lg' : ''}`}>
       <Handle type="target" position={Position.Left} isConnectable={false} className={fixedDot} />
+      <Handle id="right" type="target" position={Position.Right} isConnectable={false} className={anchor} />
       <div className="text-[13px]">Hard Stop</div>
       <div className="text-[15px] font-medium leading-[1.25]">{label}</div>
       <div className="text-[13px]">{detail}</div>

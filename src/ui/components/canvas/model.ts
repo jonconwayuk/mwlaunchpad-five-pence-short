@@ -111,7 +111,8 @@ export function cardSubtitle(s: PathwaySnapshot, item: PathwayItem): string | nu
   for (const d of item.dependsOn) {
     if (d.kind === 'timer') {
       const t = s.timers.find((x) => x.id === d.timerId);
-      if (t) return t.anchor.kind === 'start-date' && t.offsetDays > 0 ? `Day ${t.offsetDays}` : timerLabel(t);
+      // Day N is offset N-1 (decision 17).
+      if (t) return t.anchor.kind === 'start-date' && t.offsetDays > 0 ? `Day ${t.offsetDays + 1}` : timerLabel(t);
     }
     if (d.kind === 'item') return `After ${titleOfItem(s.items, d.itemId)}`;
   }

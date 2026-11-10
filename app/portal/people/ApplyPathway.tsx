@@ -19,7 +19,7 @@ export function ApplyPathway({ personId, personTags, pathways }: {
 
   async function apply(pathwayId: string) {
     const res = await fetch('/api/apply', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ pathwayId, personId }) });
-    const j = (await res.json()) as { ok: boolean; error?: string };
+    const j = (await res.json().catch(() => ({ ok: false, error: 'The server did not answer. Try again.' }))) as { ok: boolean; error?: string };
     setMsg(j.ok ? 'Pathway applied.' : (j.error ?? 'Something went wrong'));
     if (j.ok) router.refresh();
   }
@@ -37,7 +37,7 @@ export function ApplyPathway({ personId, personTags, pathways }: {
       <ul>
         {shown.map((p) => (
           <li key={p.id} className="flex items-center justify-between border-b border-hairline py-1">
-            <span>{p.title} <span className="text-[13px] text-muted">{Object.values(p.tags).join(', ')}</span></span>
+            <span>{p.title} <span className="text-[13px] text-muted">{[...new Set(Object.values(p.tags))].join(', ')}</span></span>
             <button className="rounded-[4px] bg-racing px-3 py-1 text-[13px] text-paper" onClick={() => apply(p.id)}>Apply pathway</button>
           </li>
         ))}

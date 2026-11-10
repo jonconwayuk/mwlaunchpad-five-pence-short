@@ -49,7 +49,12 @@ export function AddJourney({ starter, viewerId, library, onDone }: {
         <select className={FIELD} value={after} onChange={(e) => setAfter(e.target.value)}>
           <option value="">Now</option>
           {starter.engineState.containers.map((c) => <option key={c.containerId} value={`c:${c.containerId}`}>After {c.label}</option>)}
-          {starter.engineState.items.map((i) => <option key={i.itemId} value={i.itemId}>After {i.title}</option>)}
+          {starter.engineState.items.map((i, _, all) => {
+            // Repeated Journeys (Pulse check) share a title, so number them in Pathway order.
+            const twins = all.filter((x) => x.title === i.title);
+            const n = twins.length > 1 ? ` (${twins.indexOf(i) + 1} of ${twins.length})` : '';
+            return <option key={i.itemId} value={i.itemId}>After {i.title}{n}</option>;
+          })}
         </select>
       </label>
       <label className="flex min-h-[44px] items-center gap-3 text-[15px]">

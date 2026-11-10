@@ -1,0 +1,12 @@
+# Final fix 6: re-applying a different Pathway after a Confirm on hs-failed (person-a, freshly reset)
+{"ok":true,"data":{"reset":true}}
+## Simulate failed on Pre-employment checks (Vetting check)
+{"ok":true,"data":{"engineState":{"today":"2026-11-10","stage":"pre-employment","personStatus":"joiner","dayNumber":-55,"items":[{"itemId":"i-contracting","jour ...(truncated)
+{"needsDecisions":[{"hardStopId":"hs-failed","label":"Pre-employment checks failed","stopsItemIds":["i-contracting","i-payroll","i-checks","i-id","i-device","i-manager-ready","i-buddy","i-pulse-14","i-pulse-30","i-uniform","i-induction","i-cash","i-start-delay","i-events"],"wholePathway":true,"reason":"Pre-employment checks failed","raisedOn":"2026-11-10","extendAllowed":false}],"cancelled":[]}
+## Confirm hs-failed
+{"ok":true,"data":{"today":"2026-11-10","stage":"pre-employment","personStatus":"joiner","dayNumber":-55,"items":[{"itemId":"i-contracting","journeyId":"j-contr ...(truncated)
+{"needsDecisions":[],"cancelled":["i-payroll","i-id","i-buddy","i-pulse-14","i-pulse-30","i-induction","i-cash","i-start-delay","i-events"]}
+## Apply pw-engineer to person-a: expect no needsDecisions and nothing cancelled carried over
+{"ok":true,"data":{"appliedPathwayId":"applied-person-a"}}
+{"needsDecisions":[{"hardStopId":"hs-failed","label":"Pre-employment checks failed","stopsItemIds":["i-contracting","i-payroll","i-checks","i-id","i-device","i-manager-ready","i-buddy","i-pulse-14","i-pulse-30","i-community","i-start-delay","i-events"],"wholePathway":true,"reason":"Pre-employment checks failed","raisedOn":"2026-11-10","extendAllowed":false}],"cancelled":[]}
+## Note: no cancelled Items carry over. hs-failed is raised afresh as Needs decision because i-checks keeps its Failed outcome (progress on matching Items is kept); the old Confirm is not applied.

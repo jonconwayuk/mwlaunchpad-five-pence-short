@@ -77,7 +77,10 @@ function buildEdges(s: PathwaySnapshot): Edge[] {
     };
   }));
   const stops: Edge[] = s.hardStops.flatMap((h) => h.trigger.kind === 'on-failed'
-    ? [{ id: `${h.trigger.itemId}->hardStop:${h.id}`, source: h.trigger.itemId, sourceHandle: 'right', target: `hardStop:${h.id}`, type: 'smoothstep', label: 'If Failed',
+    ? [{ id: `${h.trigger.itemId}->hardStop:${h.id}`, source: h.trigger.itemId, target: `hardStop:${h.id}`, type: 'smoothstep',
+        // Hard Stops sit in the left lane, so the edge runs back from the card's left to the block's right and its label sits on top in the gap.
+        sourceHandle: 'back', targetHandle: 'right', label: 'If Failed', zIndex: 1000, labelBgPadding: [6, 3] as [number, number], labelBgBorderRadius: 4,
+        labelBgStyle: { fill: 'var(--paper)', stroke: 'var(--charcoal)', strokeWidth: 1 }, labelStyle: { fill: 'var(--charcoal)', fontSize: 12, fontWeight: 600 },
         style: { stroke: 'var(--charcoal)', strokeWidth: 1.5, strokeDasharray: '4 4' }, selectable: false }]
     : []);
   return [...deps, ...stops];
@@ -153,7 +156,9 @@ function Builder({ draft }: { draft: PathwaySnapshot }) {
 
   useEffect(() => setNodes((prev) => buildNodes(snapshot, prev)), [snapshot]);
   const url = `/api/pathways/${snapshot.pathwayId}`;
+  const published = useRef<PathwaySnapshot | null>(null);
   const saveDraft = useCallback(async (s: PathwaySnapshot) => {
+    if (s === published.current) return; // publish already saved it; keep "Published as version N" until the next edit
     try { await call(url, 'PUT', s); setSaved('Draft saved'); } catch (e) { setSaved(e instanceof Error ? e.message : 'Could not save.'); }
   }, [url]);
   const publish = async () => {
@@ -161,7 +166,8 @@ function Builder({ draft }: { draft: PathwaySnapshot }) {
       await call(url, 'PUT', snapshot);
       const { version } = await call<{ version: number }>(`${url}/publish`, 'POST');
       setVersion(version + 1); // the draft is now the next version
-      setSaved('Draft saved');
+      published.current = snapshot;
+      setSaved(`Published as version ${version}`);
     } catch (e) { setSaved(e instanceof Error ? e.message : 'Could not publish.'); }
   };
   // Autosave the draft one second after the last change; the loaded draft itself is not re-saved.

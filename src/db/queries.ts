@@ -129,7 +129,9 @@ export function applyPathway(pathwayId: string, personId: string, today: ISODate
     prune(s.actionProgress);
     prune(s.itemOverrides);
     for (const r of db.select().from(s.hardStopDecisions).where(eq(s.hardStopDecisions.personId, personId)).all()) {
-      if (!snapshot.hardStops.some((h) => h.id === r.data.hardStopId)) db.delete(s.hardStopDecisions).where(eq(s.hardStopDecisions.id, r.id)).run();
+      // Hard Stop ids are shared across templates, so a different Pathway starts with no decisions (same Pathway: decision 29).
+      const samePathway = old?.snapshot.pathwayId === pathwayId;
+      if (!samePathway || !snapshot.hardStops.some((h) => h.id === r.data.hardStopId)) db.delete(s.hardStopDecisions).where(eq(s.hardStopDecisions.id, r.id)).run();
     }
     const appliedOn = old && old.snapshot.pathwayId === pathwayId ? old.appliedOn : today;
     db.delete(s.appliedPathways).where(eq(s.appliedPathways.personId, personId)).run();

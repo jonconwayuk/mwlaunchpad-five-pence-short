@@ -18,9 +18,10 @@ export function DemoControls({ data, today }: { data: ControlsData; today: strin
 
   async function post(url: string, body?: unknown) {
     const res = await fetch(url, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body ?? {}) });
-    const j = (await res.json()) as { ok: boolean; error?: string };
+    const j = (await res.json().catch(() => ({ ok: false, error: 'The server did not answer. Try again.' }))) as { ok: boolean; error?: string };
     setMsg(j.ok ? '' : (j.error ?? 'Something went wrong'));
-    if (j.ok) router.refresh();
+    // A full reload after Reset demo, so no stale canvas state autosaves over the reseeded draft.
+    if (j.ok) { if (url === '/api/reset') window.location.reload(); else router.refresh(); }
   }
   const setDate_ = (d: string) => post('/api/clock', { set: d });
 

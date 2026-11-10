@@ -38,4 +38,12 @@ describe('applyPathway', () => {
     expect(after.snapshot.items.some((i) => i.addedBy)).toBe(true);
     expect(() => state()).not.toThrow();
   });
+
+  it('drops every Hard Stop decision, when a different Pathway is applied after a Confirm, so the new Pathway is not stopped at once', () => {
+    m.seedMod.seed();
+    m.q.recordHardStopDecision('person-a', { hardStopId: 'hs-failed', decision: 'confirm', at: '2026-11-10' });
+    m.q.applyPathway('pw-engineer', 'person-a', '2026-11-10');
+    expect(m.q.getAppliedPathway('person-a')!.snapshot.hardStops.some((h) => h.id === 'hs-failed')).toBe(true);
+    expect(m.q.buildEngineInput('person-a').hardStopDecisions).toEqual([]);
+  });
 });

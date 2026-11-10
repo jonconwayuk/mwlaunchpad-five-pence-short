@@ -14,7 +14,7 @@ export function NeedsDecisionPanel({ personId, decisions }: { personId: string; 
       method: 'POST', headers: { 'content-type': 'application/json' },
       body: JSON.stringify({ personId, decision, reason, ...(decision === 'extend' && { extendDays: 7 }) }),
     });
-    const j = (await res.json()) as { ok: boolean; error?: string };
+    const j = (await res.json().catch(() => ({ ok: false, error: 'The server did not answer. Try again.' }))) as { ok: boolean; error?: string };
     setMsg(j.ok ? '' : (j.error ?? 'Something went wrong'));
     if (j.ok) { setReason(''); router.refresh(); }
   }

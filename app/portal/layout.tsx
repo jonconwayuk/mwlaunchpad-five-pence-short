@@ -23,7 +23,7 @@ export default function PortalLayout({ children }: { children: React.ReactNode }
         </ul>
       </nav>
       <div className="min-w-0 flex-1">
-        <DemoControls data={loadControlsData()} today={getToday()} />
+        <DemoControls key={getToday()} data={loadControlsData()} today={getToday()} />
         {children}
       </div>
     </div>
