@@ -1,0 +1,29 @@
+{
+  "id": "j-day-one",
+  "semver": "1.0.0",
+  "title": "Your first day",
+  "description": "Where to go, who will meet you and what to collect.",
+  "ownerTeam": "HR",
+  "stage": "onboarding",
+  "tags": {},
+  "declaresOutcome": false,
+  "actions": [
+    {
+      "id": "j-day-one-a1",
+      "type": "read",
+      "label": "Where to go on Day 1"
+    },
+    {
+      "id": "j-day-one-a2",
+      "type": "task",
+      "label": "Meet the new starter at reception",
+      "owner": "line-manager"
+    },
+    {
+      "id": "j-day-one-a3",
+      "type": "task",
+      "label": "Collect your badge and laptop",
+      "owner": "starter"
+    }
+  ]
+}
