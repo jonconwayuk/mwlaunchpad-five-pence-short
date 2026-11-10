@@ -30,7 +30,7 @@ One Next.js web app with three faces (`Design.MD` D1, D14):
 | **Starter Preview** (also used by Delegates) | `/me` | Phone | Light. Shows the Applied Pathway built live from the back end. |
 | **Manager and Buddy view** | `/team` | Phone | Light. What's left and acting on it. |
 
-- A **persona switcher** replaces login, so we can flip between personas and between faces, all in one browser window. Bob Warwick (Modern Workplace infrastructure engineer, grade E) is the protagonist; the branch colleague, software engineer and executive personas (A, B and C) are supporting data that must keep working (decision 32) during the demo.
+- A **persona switcher** replaces login, so we can flip between personas and between faces, all in one browser window. Bob Warwick (Modern Workplace infrastructure engineer, grade E) is the protagonist; the branch colleague, software engineer and executive personas (A, B and C) are supporting data that must keep working (decision 32).
 - Changes made in the Onboarding Studio must show up live in the mobile faces. That is the key demo move (`Design.MD` D1, D2): HR finds Bob in People and applies "Infrastructure engineer E", the phone view shows Bob's pack, then a Line Manager adds a Journey and it appears live on Bob's phone. The earlier move ("Branch colleague" to A, "Software engineer" to B) still works.
 - The mobile faces stay light: read the Applied Pathway, complete Actions, tick Tasks. Don't build anything there that the demo doesn't need.
 

@@ -1,5 +1,7 @@
 # Demo leads with the Admin Portal; one web app, laptop-first for admins, mobile for everyone else
 
+_Since Design.MD 1.2 the Admin Portal is named the Onboarding Studio; the route `/portal` is unchanged._
+
 The demo centres on the back end and pathway-building logic, with a front end over them: the Journey library and builder, the Pathway builder, applying a Pathway to a Person, and observability. This is our USP. The brief's problem is running many onboarding journeys at scale, not polishing one centrally owned app, and the Admin Portal is where that value is created.
 
 We build one web app with three faces:

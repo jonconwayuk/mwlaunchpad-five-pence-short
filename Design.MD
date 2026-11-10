@@ -37,9 +37,9 @@ _Named "Admin Portal" before version 1.2; the route `/portal` is unchanged._
 ### D1a. The starter's side is a live Starter Preview
 
 - A phone page that shows an Applied Pathway as the starter would see it: Journeys grouped by Stage, each with its Journey Status, plus a "what's next" line.
-- It is interactive: the starter (or their Delegate) completes their own Actions here: acknowledging Read cards, ticking Tasks, making Choose selections, submitting Provide forms and answering Pulse checks (D3, D9, D12a). No chat.
+- It is interactive: the starter (or their Delegate) completes their own Actions here: acknowledging Read cards, ticking Tasks, making Choose selections, submitting Provide forms and answering Pulse checks (D3, D9, D12a). No free-text chat; the scripted help chat is in D11 (1.2).
 - Built live from the back end, so a change made in the Onboarding Studio or by a Line Manager shows up in the preview. The key demo move is in D2.
-- Static mock-ups only for things we won't build, such as chat or the Teams integration, and labelled as mock-ups.
+- Static mock-ups only for things we won't build, labelled as mock-ups. The help chat and Teams handover are scripted and labelled as simulated (D11).
 
 ### D2. Pathways are templates that HR chooses and applies (ADR-0004)
 
@@ -168,7 +168,7 @@ Rules:
 2. Only the Pathway's owner publishes a new live version.
 3. Applying snapshots the live version (and its Journey versions, ADR-0001) and records it against the Person as their Applied Pathway. Later changes reach only starters it is applied to afterwards.
 4. The only per-starter change is an **addition**: a Journey added to one starter's Applied Pathway by HR or their Line Manager (D4a). It is recorded on that starter only, never saved as a new Pathway, never reusable, never in the library.
-5. **Semantic versions** (1.2): the Journey and Pathway builders show a semantic version (major.minor.patch) on top of the integer version. A fix bumps the patch, an addition the minor, a breaking change the major. The integer version stays the pin that Applied Pathways record (ADR-0001, ADR-0002 unchanged).
+5. **Semantic versions** (1.2): the Journey and Pathway builders show a semantic version (major.minor.patch) on top of the integer version. A fix bumps the patch, a backwards-compatible change the minor, a breaking change the major. Stored values are `patch`, `minor` and `major`; the UI words them "Fix", "New content" and "Breaking change". The integer version stays the pin that Applied Pathways record (ADR-0001, ADR-0002 unchanged).
 6. No forks, no merging. If the same addition keeps being made, the owner publishes it in the live version.
 
 ### D4a. Adding Journeys to one starter

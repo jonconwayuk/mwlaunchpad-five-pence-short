@@ -1,5 +1,7 @@
 # Stack: one Next.js app, React Flow canvas, a separate Pathway engine, SQLite, server-sent events
 
+_Since Design.MD 1.2 the Admin Portal is named the Onboarding Studio; the route `/portal` is unchanged._
+
 We build one TypeScript Next.js app with three route groups: `/portal` (Admin Portal, laptop), `/me` (Starter Preview, also used by a Delegate) and `/team` (Manager and Buddy view). One codebase and one deploy serve all three faces (ADR-0003).
 
 The Pathway builder canvas uses React Flow, the standard open-source node-and-edge editor. It gives us dragging, connecting, grouping (for Containers) and custom nodes, which we could not build ourselves in the time. It is the main reason for choosing React.

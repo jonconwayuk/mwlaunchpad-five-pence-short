@@ -1,6 +1,6 @@
 # New-joiner companion
 
-The LaunchPad '26 companion that takes a new joiner from unconditional offer to feeling connected and confident by Day 30. The whole onboarding journey is modelled, with the core concept as the focus. The demo leads with the internal orchestration side: the back end and pathway-building logic, with a front end over them (journey builder and library, pathway builder, observability). It is one web app with three faces: the Onboarding Studio (laptop-first, but it also runs in a phone-sized view), the Starter Preview (mobile) and the Manager and Buddy view (mobile). Changes made in the Onboarding Studio show up live in the mobile faces. Internal systems are mocked with synthetic data behind an interface. See ADR-0003.
+The LaunchPad '26 companion that takes a new joiner from unconditional offer to feeling connected and confident by Day 30. The whole onboarding journey is modelled, with the core concept as the focus. The demo leads with the internal orchestration side: the back end and pathway-building logic, with a front end over them (journey builder and library, pathway builder, observability). It is one web app with three faces: the Onboarding Studio (laptop-first), the Starter Preview (mobile) and the Manager and Buddy view (mobile). Changes made in the Onboarding Studio show up live in the mobile faces. Internal systems are mocked with synthetic data behind an interface. See ADR-0003.
 
 ## Language
 
@@ -161,7 +161,7 @@ The person who builds a Journey in the Journey builder and publishes its version
 _Avoid_: Author, creator
 
 **Library**:
-The searchable, filterable lists of published items. The **Journey library** holds Journeys (and the Agent), searchable by Stage and tags; HR Partners drag from it onto the Pathway builder canvas, and HR Partners and Line Managers pick from it when making an Addition. The **Pathway library** holds published Pathways, filterable by tags; HR Partners pick from it to apply a Pathway to a new starter.
+The searchable, filterable lists of published items. The **Journey library** holds Journeys, searchable by Stage and tags; HR Partners drag from it onto the Pathway builder canvas, and HR Partners and Line Managers pick from it when making an Addition. The **Pathway library** holds published Pathways, filterable by tags; HR Partners pick from it to apply a Pathway to a new starter.
 _Avoid_: Catalogue, store, marketplace
 
 **Line Manager**:
@@ -193,7 +193,7 @@ A manual Reminder that an HR Partner or Line Manager sends to a starter on reque
 _Avoid_: Trigger, nudge, chaser
 
 **Semantic version**:
-The major.minor.patch label shown on a Journey or Pathway beside its integer version. A fix bumps the patch, an addition the minor, a breaking change the major. The integer version is still the one Applied Pathways pin.
+The major.minor.patch label shown on a Journey or Pathway beside its integer version. A fix bumps the patch, a backwards-compatible change the minor, a breaking change the major. Stored values are `patch`, `minor` and `major`; the UI words them "Fix", "New content" and "Breaking change". The integer version is still the one Applied Pathways pin.
 _Avoid_: Release number, build number
 
 **Grade**:
