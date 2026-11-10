@@ -436,3 +436,13 @@ Numbered once, in order, never renumbered or deleted. A reversed decision gets a
 - **Why:** owner instruction.
 - **Risk:** building stops at 12:30. Any task not through review and gate by then is parked and not merged. The report will list it.
 - **Evidence:** `docs/evidence/feedback-1/{P1,P2,P3,P4,I1}/`.
+
+### 47. P4 (edit an Applied Pathway) is the demo priority
+
+- **Decided:**
+  - The owner said at about 12:00 that editing an in-flight Pathway after it's assigned is key to the demo. So P4 gets first call on review and gate time.
+  - P4 may run past the 12:30 build stop, to a hard cut-off of 12:50. That leaves time for the gate, the push and a port 3000 refresh before 12:58.
+  - The other tasks still stop at 12:30.
+  - If P4 isn't green by 12:50, it's parked and not merged.
+- **Fallback, already in the build:** the Line Manager's "Add a journey" (Additions, decision 26 era, live on Bob's phone within 3 seconds) already edits Bob's in-flight Pathway. The demo can show that move whatever happens to P4.
+- **Why:** owner instruction. Their latest word on priority overrides the 12:30 stop for this one task only.
