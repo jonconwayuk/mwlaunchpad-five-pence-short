@@ -1,0 +1,4 @@
+Final gate after items 17-19 and H2, 11:49, HEAD b5fc9b4, clean worktree, unseeded db
+      Tests  192 passed (192)
+ƒ  (Dynamic)  server-rendered on demand
+H2 walk (docs/evidence/feedback-1/H2/walk.md): Bob steps 1-8 and new steps a-d PASS in one tab, headless Chrome, before the H2 copy fixes.
