@@ -1,0 +1,12 @@
+$ grep -rE "react|next|drizzle" src/engine/
+src/engine/fixtures.ts:  nextUp: { itemId: 'i-payroll', line: 'Next: add your bank details so we can set up your pay.' },
+src/engine/loops.ts:    for (const next of dependents.get(at) ?? []) if (walk(next)) return true;
+src/engine/types.ts:  nextUp?: { itemId: string; line: string }; // the starter's "what's next" line
+src/engine/computeState.ts:    nextUp: actionable?.currentAction && { itemId: actionable.itemId, line: `Next: ${actionable.currentAction.label}` },
+src/engine/__tests__/engine.test.ts:    expect(state.nextUp).toBeUndefined();
+src/engine/__tests__/engine.test.ts:describe('Tasks, notifications and nextUp', () => {
+src/engine/__tests__/engine.test.ts:  it("nextUp, when the starter has an Action, names the first one", () => {
+src/engine/__tests__/engine.test.ts:    expect(computeState(branchInput()).nextUp).toEqual({ itemId: 'i-contracting', line: 'Next: Read your offer' });
+
+$ grep -rnE "from ['\"](react|next|drizzle)|Date\.now|new Date\(\)" src/engine/
+(no matches)

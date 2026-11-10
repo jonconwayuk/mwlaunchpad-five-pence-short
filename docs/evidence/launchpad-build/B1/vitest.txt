@@ -1,0 +1,9 @@
+
+ RUN  v5.1.0 /Users/naz/mwlaunchpad-five-pence-short
+
+
+ Test Files  1 passed (1)
+      Tests  36 passed (36)
+   Start at  09:12:29
+   Duration  61ms (tests 36%, import 34%, transform 22%, worker 7%)
+
