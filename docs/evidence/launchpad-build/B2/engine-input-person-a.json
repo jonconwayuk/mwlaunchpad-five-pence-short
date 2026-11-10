@@ -1,0 +1,197 @@
+{"usualRangeChecks":[21,35],"samples":60}
+{
+ "today": "2026-11-10",
+ "person": {
+  "id": "person-a",
+  "name": "Alex Morgan",
+  "tags": {
+   "jobFamily": "Branch",
+   "role": "Customer service colleague",
+   "grade": "Colleague",
+   "platform": "Retail",
+   "location": "Cardiff"
+  },
+  "offerAcceptedDate": "2026-10-20",
+  "startDate": "2027-01-05",
+  "lineManagerId": "lm-priya",
+  "buddyId": "buddy-tom"
+ },
+ "pathway": {
+  "id": "pw-branch@1",
+  "pathwayId": "pw-branch",
+  "version": 1,
+  "title": "Branch colleague",
+  "tags": {
+   "jobFamily": "Branch",
+   "platform": "Retail",
+   "grade": "Colleague"
+  },
+  "items": [
+   "i-contracting",
+   "i-payroll",
+   "i-checks",
+   "i-id",
+   "i-device",
+   "i-manager-ready",
+   "i-buddy",
+   "i-pulse-14",
+   "i-pulse-30",
+   "i-uniform",
+   "i-induction",
+   "i-cash",
+   "i-start-delay",
+   "i-events"
+  ],
+  "containers": [
+   {
+    "id": "c-cleared",
+    "label": "Cleared to start",
+    "itemIds": [
+     "i-payroll",
+     "i-checks",
+     "i-id"
+    ]
+   }
+  ],
+  "timers": [
+   {
+    "id": "t-payroll-reminder",
+    "label": "7 days before Start date",
+    "anchor": {
+     "kind": "start-date"
+    },
+    "offsetDays": -7,
+    "reminder": {
+     "to": "starter",
+     "aboutItemId": "i-payroll",
+     "message": "A quick reminder to add your bank details so we can set up your pay."
+    }
+   },
+   {
+    "id": "t-deadline",
+    "label": "5 days before Start date",
+    "anchor": {
+     "kind": "start-date"
+    },
+    "offsetDays": -5
+   },
+   {
+    "id": "t-pulse-14",
+    "label": "Day 14",
+    "anchor": {
+     "kind": "start-date"
+    },
+    "offsetDays": 13
+   },
+   {
+    "id": "t-pulse-30",
+    "label": "Day 30",
+    "anchor": {
+     "kind": "start-date"
+    },
+    "offsetDays": 29
+   },
+   {
+    "id": "t-day-1",
+    "label": "Day 1",
+    "anchor": {
+     "kind": "start-date"
+    },
+    "offsetDays": 0
+   },
+   {
+    "id": "t-day-8",
+    "label": "Day 8",
+    "anchor": {
+     "kind": "start-date"
+    },
+    "offsetDays": 7
+   },
+   {
+    "id": "t-delay",
+    "label": "30 days after Offer accepted",
+    "anchor": {
+     "kind": "offer-accepted"
+    },
+    "offsetDays": 30
+   }
+  ],
+  "hardStops": [
+   {
+    "id": "hs-failed",
+    "label": "Pre-employment checks failed",
+    "trigger": {
+     "kind": "on-failed",
+     "itemId": "i-checks"
+    },
+    "stops": {
+     "wholePathway": true,
+     "itemIds": [],
+     "containerIds": []
+    }
+   },
+   {
+    "id": "hs-deadline",
+    "label": "Pre-employment checks not done in time",
+    "trigger": {
+     "kind": "on-deadline",
+     "timerId": "t-deadline",
+     "watchesItemId": "i-checks"
+    },
+    "stops": {
+     "wholePathway": false,
+     "itemIds": [
+      "i-buddy"
+     ],
+     "containerIds": []
+    }
+   }
+  ]
+ },
+ "journeys": [
+  "j-contracting@1",
+  "j-payroll@1",
+  "j-checks@1",
+  "j-id@1",
+  "j-device-branch@1",
+  "j-manager-ready@1",
+  "j-buddy@1",
+  "j-pulse@1",
+  "j-uniform@1",
+  "j-branch-induction@1",
+  "j-cash-handling@1",
+  "j-start-delay@1",
+  "j-events@1"
+ ],
+ "progress": [
+  {
+   "itemId": "i-checks",
+   "actionId": "j-checks-a1",
+   "state": "done",
+   "doneAt": "2026-10-23",
+   "doneByPersonId": "person-a"
+  },
+  {
+   "itemId": "i-checks",
+   "actionId": "j-checks-a2",
+   "state": "pending"
+  },
+  {
+   "itemId": "i-contracting",
+   "actionId": "j-contracting-a1",
+   "state": "done",
+   "doneAt": "2026-10-21",
+   "doneByPersonId": "person-a"
+  },
+  {
+   "itemId": "i-contracting",
+   "actionId": "j-contracting-a2",
+   "state": "done",
+   "doneAt": "2026-10-23",
+   "doneByPersonId": "person-a"
+  }
+ ],
+ "overrides": [],
+ "hardStopDecisions": [],
+ "history": "580 samples"
+}
